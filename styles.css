@@ -1,0 +1,329 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: #00ff00; /* Neon green text color */
+    font-family: 'Courier New', Courier, monospace; /* Optional: Hacker font style */
+    cursor: none; /* Hide the default cursor */
+    overflow-y: scroll; /* Enable vertical scrolling */
+    overflow-x:hidden;
+}
+
+.background-gif {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('img/bground.gif') no-repeat center center fixed;
+    background-size: cover;
+    z-index: -1;
+}
+
+.navbar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar a {
+    color: #00ff00;
+    text-decoration: none;
+    font-size: 0.8em;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Optional: Slightly darkened overlay for better text readability */
+    border-radius: 10px; /* Optional: Rounded corners for the content box */
+}
+
+/* Typing animation for the name header */
+#name-header {
+    font-size: 4em; /* Adjust font size as needed */
+    margin-bottom: 20px; /* Optional spacing */
+    margin-top: 50px; /* Adjusted top margin */
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide overflow */
+    animation: typing 5s steps(40, end), blink-caret 0.75s step-end infinite;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #00ff00; }
+}
+
+.intro-paragraph {
+  font-family: monospace;
+  overflow: hidden;
+  font-size:15px;
+  display: inline-block;
+  animation: typing 7s steps(100, end) forwards; /* Ensure the animation fills the width */
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+
+.section-heading {
+    margin-bottom: 20px;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+    font-size:40px;
+}
+
+.description-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin: 50px 0; /* Increased margin for space */
+}
+
+.description-section img {
+    width: 500px; /* Increased image size */
+    height: auto;
+    border-radius: 10px;
+}
+
+.description-paragraph {
+    flex: 1;
+    padding: 0 20px;
+    text-align: justify;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #00ff00;
+    margin: 50px 0; /* Increased margin for space */
+}
+
+.buttons-section {
+    display:flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 20px 0; /* Space around buttons */
+}
+
+.hacker-button {
+    background-color: #00ff00;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin:0 10px;
+}
+
+.hacker-button:hover {
+    background-color: black;
+    color: #00ff00;
+}
+
+.centered-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.centered-button {
+    padding: 10px 20px;
+}
+
+.contact-section {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Optional: Slightly darkened overlay */
+    border-radius: 10px; /* Optional: Rounded corners */
+    margin: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Adjust gap between icons */
+    margin-top: 10px; /* Adjust top margin */
+}
+
+.social-links a img {
+    width: 24px; /* Set width of icons */
+    height: 24px; /* Set height of icons */
+    border-radius: 0%; /* Optional: Rounded corners for circular icons */
+}
+
+
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px; /* Set the width of your cursor */
+    height: 32px; /* Set the height of your cursor */
+    pointer-events: none; /* Ensure cursor does not interfere with clickable elements */
+    z-index: 9999; /* Ensure cursor is above all other elements */
+    animation: animateCursor 1s steps(13) infinite; /* Adjust animation timing */
+}
+
+@keyframes animateCursor {
+    0% { background-image: url('img/cursor_page_01.png'); }
+    7.69% { background-image: url('img/cursor_page_02.png'); }
+    15.38% { background-image: url('img/cursor_page_03.png'); }
+    23.07% { background-image: url('img/cursor_page_04.png'); }
+    30.76% { background-image: url('img/cursor_page_05.png'); }
+    38.46% { background-image: url('img/cursor_page_06.png'); }
+    46.15% { background-image: url('img/cursor_page_07.png'); }
+    53.84% { background-image: url('img/cursor_page_08.png'); }
+    61.53% { background-image: url('img/cursor_page_09.png'); }
+    69.23% { background-image: url('img/cursor_page_10.png'); }
+    76.92% { background-image: url('img/cursor_page_11.png'); }
+    84.61% { background-image: url('img/cursor_page_12.png'); }
+    92.30% { background-image: url('img/cursor_page_13.png'); }
+}
+
+
+
+/* Sliding gallery styles */
+ .slider-container {
+  position: relative;
+  width: 100%; /* Adjust width as needed */
+  height: 200px; /* Adjust height as needed */
+  overflow: hidden;
+  margin-top:70px;
+}
+
+.slider {
+  display: flex;
+  animation: sliding 30s linear infinite;
+}
+
+.slide {
+  flex: 0 0 20%; /* Adjust flex properties */
+  position: relative;
+  transition: transform 1s ease;
+  border-radius: 20px; /* Rounded corners */
+  overflow: hidden; /* Ensure overflow doesn't show */
+  margin-right:10px;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide .caption {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 255, 0, 0.7); /* Semi-transparent green background */
+  color: black; /* Black text color */
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+@keyframes sliding {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-20%);
+  }
+  25% {
+    transform: translateX(-20%);
+  }
+  30% {
+    transform: translateX(-40%);
+  }
+  40% {
+    transform: translateX(-40%);
+  }
+  45% {
+    transform: translateX(-60%);
+  }
+  55% {
+    transform: translateX(-60%);
+  }
+  60% {
+    transform: translateX(-80%);
+  }
+  70% {
+    transform: translateX(-80%);
+  }
+  75% {
+    transform: translateX(-100%);
+  }
+  85% {
+    transform: translateX(-100%);
+  }
+  90% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(-120%);
+  }
+}
+
+
+.top-left {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    color: #00ff00; /* Neon green text color */
+    font-size: 0.9em;
+    animation: pulse 2s infinite, glow 2s infinite alternate; /* Apply both pulse and glow animations */
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00; /* Neon glow effect */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00; /* Initial glow color and spread */
+    }
+    100% {
+        text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00, 0 0 80px #00ff00; /* Increased glow size */
+    }
+}
+
+
+
+
+.proti {
+    color:#39FF14; 
+}

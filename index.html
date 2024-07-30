@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Themed Page</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+</head>
+<body>
+    <!-- Audio elements for background music -->
+    <audio id="bgm1" preload="auto">
+        <source src="audio/bgm1.mp3" type="audio/mp3">
+        Your browser does not support the audio tag.
+    </audio>
+    <audio id="bgm2" preload="auto" loop>
+        <source src="audio/bgm2.mp3" type="audio/mp3">
+        Your browser does not support the audio tag.
+    </audio>
+    <audio id="bgm3" preload="auto" loop>
+        <source src="audio/bgm3.mp3" type="audio/mp3">
+        Your browser does not support the audio tag.
+    </audio>
+
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <a href="ctf.txt">CTF'S</a>
+        <a href="https://jaisurya93945.github.io/player/" target="_blank">playlist</a>
+        <a href="resume.html">resume</a>
+        <a href="portfolio.html">portfolio</a>
+        <a href="#contact">contact_me</a>
+    </nav>
+    <p class="top-left">Click anywhere to see the full content...</p>
+
+    <div class="background-gif"></div> <!-- Background GIF -->
+
+    <div class="content">
+        <!-- Typing effect for the name -->
+        <h1 id="name-header"></h1>
+
+        <!-- Sample paragraph -->
+        <p class="intro-paragraph"></p>
+        
+        <!-- Section for the sliding gallery -->
+        
+<div class="slider-container">
+    <div class="slider">
+      <div class="slide">
+        <img src="nice/1.webp" alt="Image 1">
+      </div>
+      <div class="slide">
+        <img src="nice/2.png" alt="Image 2">
+      </div>
+      <div class="slide">
+        <img src="nice/3.png" alt="Image 3">
+      </div>
+      <div class="slide">
+        <img src="nice/4.gif" alt="Image 4">
+      </div>
+      <div class="slide">
+        <img src="nice/5.png" alt="Image 5">
+      </div>
+      <div class="slide">
+        <img src="nice/6.png" alt="Image 6">
+      </div>
+      <div class="slide">
+        <img src="nice/7.gif" alt="Image 7">
+      </div>
+      <div class="slide">
+        <img src="nice/8.png" alt="Image 8">
+      </div>
+      <div class="slide">
+        <img src="nice/9.png" alt="Image 9">
+      </div>
+      <div class="slide">
+        <img src="nice/10.png" alt="Image 10">
+      </div>
+    </div>
+  </div>
+
+        
+        <!-- Divider line -->
+        <hr class="divider">
+
+        <!-- My Projects heading -->
+        <h2 class="section-heading">My Projects</h2>
+
+        <!-- Description section with GIF on right -->
+        <div class="description-section">
+            <p class="description-paragraph"><a class="proti" href="#"><strong><u>USB-Analyzer</u></strong></a> is an advanced cyber security tool I developed to enhance the safety and integrity of digital systems by monitoring and analyzing USB devices. It employs sophisticated algorithms to detect and prevent threats from malicious USBs, ensuring robust protection against unauthorized data access and cyber attacks. This tool continuously scans connected USB devices, scrutinizing their behavior and content in real-time to identify and neutralize potential risks. By providing instant alerts and taking preventive actions, USB-Analyzer helps safeguard sensitive information and mitigate cyber threats. Its user-friendly interface offers clear reports on USB activity and security incidents, making it an essential component in modern cyber security strategies for both individuals and organizations.</p>
+            <img src="img/pro1.gif" alt="Description GIF" class="description-image">
+        </div>
+
+        <!-- Description section with image on left -->
+        <div class="description-section">
+            <img src="img/out.gif" alt="Additional Image" class="description-image">
+            <p class="description-paragraph"><a class="proti" href="#"><strong><u>Malware Generator</u></strong></a> is a project I've developed to simulate various types of malware for research and testing purposes in the field of cyber security. This tool allows security professionals to generate custom malware samples, which can then be used to test and strengthen defenses against real-world threats. By providing a controlled environment for the creation and analysis of malware, Malware Generator helps identify vulnerabilities in systems and improve detection and mitigation strategies. The tool's user-friendly interface makes it accessible for researchers and IT professionals, enabling them to understand the behavior and impact of different malware types without the risk of uncontrolled spread. This project is essential for advancing cyber security research and enhancing the robustness of digital defenses.</p>
+        </div>
+
+        <!-- Buttons section -->
+        <div class="buttons-section">
+            <button class="hacker-button">All Projects</button>
+            <button class="hacker-button">Solo Projects</button>
+            <button class="hacker-button">Group Project</button>
+        </div>
+
+        <!-- Divider line -->
+        <hr class="divider">
+
+        <!-- Additional sample paragraph -->
+        <p class="down-paragraph">Here, check out my full portfolio profile which includes my projects achivements and cf's i played so far though this page is just a trailer of my cv u can see on top right corner for more details and do checkout out my portfolio by clicking the below button and feel free to contact me.. :)</p>
+
+        <!-- Centered button -->
+        <div class="centered-button-container">
+            <button class="hacker-button centered-button">Portfolio</button>
+        </div>
+    </div>
+
+    <!-- Contact Me section -->
+   <!-- Contact Me section -->
+<div id="contact" class="contact-section">
+    <h2><u>Contact Me</u></h2>
+    <div class="social-links">
+        <a href="https://www.instagram.com/your_instagram_profile" target="_blank">
+            <img src="img/instagram.png" alt="Instagram" width="30" height="30">
+        </a>
+        <a href="www.linkedin.com/in/badathala-jaisurya-7b985a224" target="_blank">
+            <img src="img/linkedin-logo.png" alt="LinkedIn" width="30" height="30">
+        </a>
+        <a href="mailto:badathalajaisurya.2021.csbs@ritchennai.edu.in" target="_blank">
+            <img src="img/mail.png" alt="Gmail" width="30" height="30">
+        </a>
+        <a href="https://github.com/jaisurya93945/" target="_blank">
+            <img src="img/github.png" alt="GitHub" width="30" height="30">
+        </a>
+    </div>
+    <p><u>Ph:+91 8143516981</u></p>
+</div>
+
+
+    <!-- Custom cursor -->
+    <div id="cursor" class="custom-cursor"></div>
+    
+    <script src="index.js"></script> <!-- Link to external JavaScript file -->
+</body>
+</html>
