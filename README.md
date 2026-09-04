@@ -1,8 +1,7 @@
 # Badathala Jaisurya — Portfolio
 
-An interactive, graphics-heavy portfolio built with **zero dependencies**: hand-written HTML, CSS
-and vanilla JavaScript. No framework, no build step, no bundler, no trackers, no external fonts —
-the whole site is a handful of static files served straight from GitHub Pages.
+An interactive, editorial portfolio built with **zero JS dependencies**: hand-written HTML, CSS and
+vanilla JavaScript. No framework, no build step, no bundler, no analytics. Available in **11 languages**.
 
 **Live:** https://jaisurya93945.github.io/portfolio/
 
@@ -23,16 +22,14 @@ document chunk and it returns a transparent verdict.
   tool-description poisoning, sensitive-path access, data exfiltration, credential material,
   PII, destructive intent, phishing, and delimiter/role spoofing.
 - **Weighted evidence fusion** with a saturating curve, so no single weak signal pins the score
-  at 100, plus a chained-technique bonus when several high-severity rules fire together
-  (an override *plus* an exfil sink is an actual kill chain).
+  at 100, plus a chained-technique bonus when several high-severity rules fire together.
 - **Defensive-intent damping** so legitimate blue-team questions are not punished by the very
   detector built for that audience.
 - **Policy layer** mapping the 0–100 score to `ALLOW` / `WARN` / `BLOCK`.
 
 Everything runs client-side. No text typed into the panel ever leaves the browser.
 
-Engine: [`assets/js/scanner.js`](assets/js/scanner.js) — pure, side-effect free, and testable
-under Node:
+Engine: [`assets/js/scanner.js`](assets/js/scanner.js) — pure, side-effect free, testable under Node:
 
 ```bash
 node -e "global.window={};require('./assets/js/scanner.js');
@@ -43,28 +40,66 @@ Object.entries(g.SAMPLES).forEach(([k,v])=>{
 });"
 ```
 
-## Other interaction
+## Languages
+
+Eleven locales, chosen for the target markets — UK, Ireland, Germany, Luxembourg, France,
+Belgium, the Netherlands, Spain, Italy, Portugal, Poland and India:
+
+| | | |
+| --- | --- | --- |
+| English `en` | Deutsch `de` | Français `fr` |
+| Nederlands `nl` | Español `es` | Italiano `it` |
+| Português `pt` | Polski `pl` | हिन्दी `hi` |
+| தமிழ் `ta` | తెలుగు `te` | |
+
+**How it works.** English lives in the HTML itself, so it is both the source of truth and the
+no-JavaScript fallback. Every other locale is a small JSON file in
+[`assets/i18n/`](assets/i18n/) fetched **on demand** — a visitor downloads only the one language
+they read (~12 KB), never all eleven. A failed fetch silently falls back to English rather than
+breaking the page.
+
+Language is resolved in this order: `?lang=xx` query parameter → `localStorage` → the browser's
+`navigator.languages` → English. The choice is applied before first paint by a tiny inline
+script, so there is no flash of the wrong language, and `<html lang>` is kept in sync for screen
+readers. Each locale has a `hreflang` alternate for search engines.
+
+To add a locale: copy any file in `assets/i18n/`, translate the values, and add one entry to
+`LOCALES` in [`assets/js/i18n.js`](assets/js/i18n.js). Key coverage is easy to verify — every
+file must carry exactly the keys used by `data-i18n` / `data-i18n-attr` in `index.html`.
+
+## Interaction
 
 | Feature | Notes |
 | --- | --- |
-| Neural-mesh hero canvas | Particle count scales with viewport, DPR capped at 2, pointer repulsion, pauses when off-screen or the tab is hidden, and never starts under `prefers-reduced-motion`. Toggleable from the nav. |
-| Command palette | `Ctrl`/`Cmd` + `K` — fuzzy jump to any section, project or contact link, full keyboard navigation. |
-| Scroll choreography | `IntersectionObserver`-driven reveals, animated counters, skill bars and the hero precision ring. |
-| Project filtering | Filter by AI Security / MLOps / DevSecOps / Product. |
+| Dot-matrix hero canvas | A breathing field that ripples under the pointer. `O(n)` per frame — no pairwise link loop — with DPR capped at 2, and it pauses when off-screen or the tab is hidden. |
+| Preloader curtain | Counter to 100, then the panel slides away. Runs once per session (`sessionStorage`), never under reduced motion. |
+| Line-mask headings | Each headline line sits in its own `overflow:hidden` box and slides up on reveal, staggered. Re-wrapped automatically after a language swap. |
+| Command palette | `Ctrl`/`Cmd` + `K` — jump to any section, project or contact link. Labels follow the active language. |
+| Light + dark themes | Full token swap, remembered in `localStorage`, defaulting to the OS preference and applied before first paint. |
+| Magnetic buttons + custom cursor | Fine-pointer devices only; the cursor stays parked until the pointer actually moves. |
+| Project list | Editorial numbered rows with a pointer-tracked spotlight, filterable by discipline. |
 | Skill tabs | Four capability panels with arrow-key roving focus. |
-| Pointer response | Cursor glow plus per-card spotlight tracking on fine-pointer devices only. |
 
 ## Performance and accessibility
 
-- No frameworks, no external requests — system font stack, inline SVG icons.
-- One stylesheet and two small scripts, both `defer`-loaded.
-- Canvas work is throttled by `IntersectionObserver` and `visibilitychange`; scroll handlers are
+- No JS frameworks. One stylesheet, three small deferred scripts.
+- One external request: the Google Fonts stylesheet for Space Grotesk + Inter. Everything else —
+  icons, artwork, logic — is inline or local. The font stack falls back to system faces cleanly.
+- Canvas work is gated by `IntersectionObserver` and `visibilitychange`; scroll handlers are
   `requestAnimationFrame`-batched and passive.
-- Full `prefers-reduced-motion` path: animation, typing and the canvas all stand down.
-- Semantic landmarks, skip link, visible focus rings, ARIA on tabs, the palette dialog and the
-  live findings region.
+- Full `prefers-reduced-motion` path: preloader, canvas, typing, marquee and reveals all stand down.
+- Semantic landmarks, skip link, visible focus rings, ARIA on tabs, the palette dialog, the
+  language listbox and the live findings region.
 - Responsive from 320px up, with no horizontal overflow.
-- `Person` JSON-LD, Open Graph and Twitter card metadata.
+- `Person` JSON-LD, Open Graph, Twitter card and per-locale `hreflang` metadata.
+
+### A note on Google Fonts and GDPR
+
+The two webfonts load from `fonts.googleapis.com`, which means the visitor's IP reaches Google.
+German courts have found this actionable without consent, and Germany is a target market here.
+To remove the dependency entirely, download the two families, drop the `.woff2` files into
+`assets/fonts/`, replace the `<link rel="stylesheet" href="https://fonts.googleapis.com/...">`
+in `index.html` with local `@font-face` rules, and the site becomes fully self-contained.
 
 ## Layout
 
@@ -72,9 +107,11 @@ Object.entries(g.SAMPLES).forEach(([k,v])=>{
 index.html                 single-page portfolio
 resume.html                print-styled résumé (screen + @page A4)
 assets/
-  css/style.css            all styling, custom-property theming
+  css/style.css            design tokens, both themes, all components
+  js/i18n.js               locale loader, detection, DOM swapping
   js/scanner.js            threat-detection engine (framework-free, unit-testable)
-  js/main.js               canvas, reveals, palette, tabs, filters, lab wiring
+  js/main.js               canvas, reveals, palette, tabs, filters, theme, lab wiring
+  i18n/*.json              10 translated locales (English lives in index.html)
   img/favicon.svg          shield mark
   img/og.svg               social preview card
   Badathala-Jaisurya-Resume.pdf
@@ -83,7 +120,8 @@ assets/
 
 ## Running locally
 
-No build step — open `index.html`, or serve the folder:
+No build step. The i18n files are fetched over HTTP, so serve the folder rather than opening the
+file directly:
 
 ```bash
 python3 -m http.server 8080
@@ -92,8 +130,9 @@ python3 -m http.server 8080
 
 ## Deployment
 
-Pushes to `main` publish via [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
-Enable it once under **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+Pushes to `main` publish via [`.github/workflows/pages.yml`](.github/workflows/pages.yml), which
+gates the deploy on a detector regression check plus a locale key-coverage check. Enable it once
+under **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
 ## Contact
 

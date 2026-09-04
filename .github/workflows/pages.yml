@@ -42,6 +42,29 @@ jobs:
             if (failed) { console.error(failed + ' detector expectation(s) failed'); process.exit(1); }
           "
 
+      - name: Check locale key coverage
+        run: |
+          python3 - <<'EOF'
+          import re, json, glob, os, sys
+          html = open('index.html', encoding='utf-8').read()
+          keys = set(re.findall(r'data-i18n="([^"]+)"', html))
+          for m in re.finditer(r'data-i18n-attr="([^"]+)"', html):
+              for pair in m.group(1).split(','):
+                  keys.add(pair.split(':')[1].strip())
+          failed = 0
+          for f in sorted(glob.glob('assets/i18n/*.json')):
+              d = json.load(open(f, encoding='utf-8'))
+              missing = keys - set(d)
+              empty = [k for k, v in d.items() if not str(v).strip()]
+              if missing or empty:
+                  failed += 1
+                  print('FAIL %s missing=%s empty=%s' % (os.path.basename(f), sorted(missing)[:8], empty[:8]))
+              else:
+                  print('ok   %s (%d keys)' % (os.path.basename(f), len(d)))
+          if failed:
+              sys.exit('%d locale file(s) incomplete' % failed)
+          EOF
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
