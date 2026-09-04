@@ -1,0 +1,50 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanity-check the detection engine
+        run: |
+          node -e "
+            global.window = {};
+            require('./assets/js/scanner.js');
+            const g = global.window.ThreatGateway;
+            const expect = { benign: 'allow', injection: 'block', jailbreak: 'block',
+                             mcp: 'block', exfil: 'block' };
+            let failed = 0;
+            for (const [k, want] of Object.entries(expect)) {
+              const r = g.scan(g.SAMPLES[k]);
+              const ok = r.action === want;
+              if (!ok) failed++;
+              console.log((ok ? 'ok  ' : 'FAIL') + '  ' + k.padEnd(10) +
+                          ' score=' + String(r.score).padStart(3) + ' action=' + r.action);
+            }
+            if (failed) { console.error(failed + ' detector expectation(s) failed'); process.exit(1); }
+          "
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
