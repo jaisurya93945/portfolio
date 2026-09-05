@@ -67,6 +67,32 @@ To add a locale: copy any file in `assets/i18n/`, translate the values, and add 
 `LOCALES` in [`assets/js/i18n.js`](assets/js/i18n.js). Key coverage is easy to verify — every
 file must carry exactly the keys used by `data-i18n` / `data-i18n-attr` in `index.html`.
 
+## Résumé: one document, five conventions
+
+A CV is not one document. Germany expects a *Lebenslauf* with a **Persönliche Daten** block and
+`MM/YYYY` dates; the UK expects a two-page CV opening with a personal statement and closing with
+references; the US expects a one-to-two-page resume with **no** photo and no personal details,
+because hiring convention treats them as a discrimination risk. Same facts, different shape.
+
+[`resume.html`](resume.html) is a live viewer, not a download. Pick a region and the document
+re-renders: section order, headings, date format, the personal block, the photo option, and the
+German signature line all follow that market's convention. Content lives once in
+[`assets/js/resume.js`](assets/js/resume.js); each region decides what is shown and what it is
+called.
+
+| Region | Document | Personal block | Photo | Dates | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Europe / International | Curriculum Vitae | — | — | `Mar 2026` | Neutral across most EU markets |
+| Deutschland · Österreich · Schweiz | Lebenslauf | ✓ | optional | `03/2026` | Full German text, signature line |
+| UK & Ireland | Curriculum Vitae | — | — | `Mar 2026` | Personal statement, references on request |
+| United States | Resume | — | — | `03/2026` | Condensed to two pages, no personal data |
+| India | Resume | ✓ | — | `Mar 2026` | Fuller detail, certifications prominent |
+
+The German variant is fully translated, and the viewer offers an English toggle for
+international teams hiring in Germany. **Save as PDF** prints exactly what is on screen; **Download**
+serves a pre-rendered file for attaching to applications or feeding an ATS. Region is remembered
+and shareable via `?region=de`.
+
 ## Interaction
 
 | Feature | Notes |
@@ -78,6 +104,9 @@ file must carry exactly the keys used by `data-i18n` / `data-i18n-attr` in `inde
 | Light + dark themes | Full token swap, remembered in `localStorage`, defaulting to the OS preference and applied before first paint. |
 | Magnetic buttons + custom cursor | Fine-pointer devices only; the cursor stays parked until the pointer actually moves. |
 | Project list | Editorial numbered rows with a pointer-tracked spotlight, filterable by discipline. |
+| Section rail | A fixed 01–07 index that tracks scroll position and expands the active label. |
+| View Transitions | Theme and language swaps cross-fade the whole page where the browser supports it; the language swap fetches first and applies inside the transition, so the fade covers a finished change. |
+| Scroll-reactive marquee | Skew and speed follow scroll velocity. |
 | Skill tabs | Four capability panels with arrow-key roving focus. |
 
 ## Performance and accessibility
@@ -114,13 +143,15 @@ assets/
   i18n/*.json              10 translated locales (English lives in index.html)
   img/favicon.svg          shield mark
   img/og.svg               social preview card
-scripts/render-resume.mjs    renders resume.html to PDF at deploy time
+  js/resume.js             résumé content + per-region rules
+scripts/render-resume.mjs    renders one PDF per region at deploy time
+scripts/setup-signing.sh     one-time setup for verified commits
 .github/workflows/pages.yml  GitHub Pages deployment
 ```
 
-The résumé PDF is **not** committed — it is rendered from `resume.html` by the deploy workflow
-and shipped with the Pages artefact. Keeping it out of git means it can never drift from the HTML
-it comes from, and leaves the repository entirely text. To produce it locally:
+The résumé PDFs are **not** committed — the deploy workflow renders one per region from
+`resume.html` into `assets/cv/`. Keeping them out of git means they can never drift from the HTML
+they come from, and leaves the repository entirely text. To produce them locally:
 
 ```bash
 npm install --no-save playwright && npx playwright install chromium
@@ -148,6 +179,25 @@ Two one-time steps are needed before the site goes live:
 1. **Create a `main` branch.** The workflow triggers on pushes to `main`; until that branch exists
    nothing is ever published.
 2. **Enable the source.** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+
+The workflow triggers on `main` *and* on `claude/**`, so whichever of those is the default branch
+will publish. If the site ever looks out of date, it is almost always because the workflow never
+fired and Pages is still serving an earlier publish.
+
+## Verified commits
+
+A **Verified** badge means GitHub checked a signature made by a key that belongs to you — so only
+you can produce one. No bot, CI job or API token can sign on your behalf without becoming a key
+you do not control, which is the opposite of what you want on a security repository.
+
+[`scripts/setup-signing.sh`](scripts/setup-signing.sh) does the whole setup in one run: creates an
+SSH key if needed, points git at it, turns on signing, prints the public key to paste into GitHub
+(as a **Signing Key**, which is a separate entry from an authentication key), and shows the command
+to re-sign commits that already exist.
+
+```bash
+bash scripts/setup-signing.sh
+```
 
 ## Contact
 

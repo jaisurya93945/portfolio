@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=3">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -161,6 +161,19 @@
   <a href="#contact" data-i18n="nav.contact">Contact</a>
 </div>
 
+
+<nav class="rail" id="rail" aria-label="Section index">
+  <ol>
+    <li><a href="#focus"><i>01</i><span data-i18n="nav.focus">Focus</span></a></li>
+    <li><a href="#lab"><i>02</i><span data-i18n="nav.lab">Live Lab</span></a></li>
+    <li><a href="#skills"><i>03</i><span data-i18n="nav.skills">Skills</span></a></li>
+    <li><a href="#experience"><i>04</i><span data-i18n="nav.experience">Experience</span></a></li>
+    <li><a href="#projects"><i>05</i><span data-i18n="nav.projects">Work</span></a></li>
+    <li><a href="#certs"><i>06</i><span data-i18n="nav.certs">Credentials</span></a></li>
+    <li><a href="#contact"><i>07</i><span data-i18n="nav.contact">Contact</span></a></li>
+  </ol>
+</nav>
+
 <main id="main">
 
 <!-- ============ HERO ============ -->
@@ -195,7 +208,7 @@
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0-5-5m5 5-5 5"/></svg>
         </a>
         <a class="btn btn-ghost magnet" href="#projects" data-i18n="hero.cta2">View work</a>
-        <a class="btn btn-ghost magnet" href="assets/Badathala-Jaisurya-Resume.pdf" download data-i18n="hero.cta3">Résumé</a>
+        <a class="btn btn-ghost magnet" href="resume.html" data-i18n="hero.cta3">Résumé</a>
       </div>
 
       <ul class="socials" data-anim="fade" data-d="4">
@@ -819,8 +832,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js" defer></script>
-<script src="assets/js/scanner.js" defer></script>
-<script src="assets/js/main.js" defer></script>
+<script src="assets/js/i18n.js?v=3" defer></script>
+<script src="assets/js/scanner.js?v=3" defer></script>
+<script src="assets/js/main.js?v=3" defer></script>
 </body>
 </html>

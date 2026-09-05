@@ -1,175 +1,394 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-region="int">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Résumé — Badathala Jaisurya</title>
-<meta name="description" content="Résumé of Badathala Jaisurya — AI Security, DevSecOps, MLOps and Cloud Security engineer.">
+<meta name="description" content="Résumé of Badathala Jaisurya — AI Security, DevSecOps, MLOps and Cloud Security engineer. Adapts to German, UK/Irish, US, Indian and international CV conventions.">
+<meta name="robots" content="index, follow">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
 <style>
-:root{--ink:#14181f;--mut:#5b6472;--acc:#0e7f95;--line:#dfe4ea;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+:root{
+  --ink:#14151a; --ink-2:#4a4f5a; --ink-3:#858b98;
+  --line:#e3e6ec; --acc:#0d7d72; --paper:#fff; --shell:#eceae5;
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Space Grotesk",var(--sans);
+}
 *{box-sizing:border-box}
-body{margin:0;background:#eef1f5;color:var(--ink);font-family:var(--sans);font-size:10.4pt;line-height:1.52}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--shell);color:var(--ink);font-family:var(--sans);font-size:10.6pt;line-height:1.55}
 a{color:var(--acc);text-decoration:none}
-.sheet{max-width:820px;margin:26px auto;background:#fff;padding:40px 46px 46px;box-shadow:0 12px 40px -18px rgba(0,0,0,.4)}
-.bar{position:sticky;top:0;z-index:5;display:flex;gap:10px;justify-content:center;padding:10px;background:#14181f}
-.bar a{color:#cfe9f2;font-size:.85rem;padding:7px 14px;border:1px solid #2b3543;border-radius:9px}
-.bar a:hover{border-color:var(--acc);color:#fff}
-h1{margin:0;font-size:25pt;letter-spacing:-.5px}
-.tagline{color:var(--acc);font-weight:600;margin:5px 0 8px}
-.meta{color:var(--mut);font-size:9pt;line-height:1.7}
-.rule{height:2px;background:var(--acc);margin:12px 0 4px}
-h2{font-size:10pt;letter-spacing:.13em;text-transform:uppercase;color:var(--acc);margin:19px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
-h3{font-size:11pt;margin:12px 0 1px}
-.role{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap}
-.when{color:var(--mut);font-size:8.8pt;white-space:nowrap}
-.org{color:var(--acc);font-size:9.4pt;margin:0 0 5px}
-ul{margin:4px 0 0;padding-left:16px}
-li{margin:2.5px 0}
-li::marker{color:var(--acc)}
-p{margin:5px 0}
-.kv{margin:5px 0}
-.kv b{color:var(--ink)}
-.inline{color:var(--mut)}
+h1,h2,h3{margin:0;font-family:var(--display);letter-spacing:-.02em;line-height:1.15}
+ul{margin:0;padding:0;list-style:none}
+p{margin:0}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:4px}
+
+/* ---------- toolbar ---------- */
+.bar{
+  position:sticky;top:0;z-index:20;background:#101216;color:#e9ecf2;
+  border-bottom:1px solid #23262e;
+}
+.bar-in{max-width:1000px;margin:0 auto;padding:11px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.bar a.home{display:inline-flex;align-items:center;gap:7px;color:#aeb6c4;font-size:.84rem}
+.bar a.home:hover{color:#fff}
+.grow{flex:1}
+.seg{display:flex;gap:3px;background:#1b1e25;border:1px solid #2a2e37;border-radius:999px;padding:3px;flex-wrap:wrap}
+.seg button{
+  font:inherit;font-size:.78rem;color:#98a0ae;background:none;border:0;cursor:pointer;
+  padding:6px 13px;border-radius:999px;white-space:nowrap;transition:.2s;
+}
+.seg button:hover{color:#e9ecf2}
+.seg button[aria-pressed="true"]{background:var(--acc);color:#fff;font-weight:600}
+.act{
+  font:inherit;font-size:.8rem;display:inline-flex;align-items:center;gap:7px;
+  padding:8px 15px;border-radius:999px;cursor:pointer;
+  border:1px solid #333844;background:#1b1e25;color:#dfe4ec;transition:.2s;
+}
+.act:hover{border-color:var(--acc);color:#fff}
+.act.primary{background:var(--acc);border-color:transparent;color:#fff;font-weight:600}
+.opt{display:flex;align-items:center;gap:7px;font-size:.78rem;color:#98a0ae;cursor:pointer;user-select:none}
+.opt input{accent-color:var(--acc);width:14px;height:14px}
+
+.hint{max-width:1000px;margin:0 auto;padding:10px 18px;font-size:.79rem;color:#8b93a2;border-top:1px solid #23262e;display:flex;gap:9px;align-items:flex-start}
+.hint b{color:#c3cad6;font-weight:600}
+
+/* ---------- sheet ---------- */
+.sheet{
+  max-width:850px;margin:26px auto 60px;background:var(--paper);
+  padding:44px 50px 52px;box-shadow:0 18px 50px -22px rgba(0,0,0,.45);
+}
+.head{display:flex;gap:26px;align-items:flex-start}
+.head-main{flex:1;min-width:0}
+.doctype{font-family:var(--display);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);font-weight:600}
+.name{font-size:27pt;font-weight:700;margin-top:5px}
+.tagline{color:var(--acc);font-weight:600;font-size:11pt;margin-top:4px}
+.contact{margin-top:10px;color:var(--ink-2);font-size:9.1pt;line-height:1.75}
+.contact span::after{content:"  ·  ";color:var(--ink-3)}
+.contact span:last-child::after{content:""}
+.photo{width:104px;height:132px;object-fit:cover;border:1px solid var(--line);border-radius:3px;flex:0 0 auto}
+.rule{height:2.5px;background:var(--acc);margin:16px 0 2px}
+
+h2.sec{
+  font-size:9.6pt;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);
+  margin:20px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line);
+}
+.lede{color:var(--ink-2)}
+.obj{margin-top:7px;font-weight:600;color:var(--ink)}
+
+.kv{display:grid;grid-template-columns:150px 1fr;gap:3px 16px;margin-top:3px}
+.kv dt{color:var(--ink);font-weight:600;font-size:9.6pt}
+.kv dd{margin:0;color:var(--ink-2);font-size:9.8pt}
+
+.item{margin-top:13px;break-inside:avoid}
+.item-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap}
+.item-role{font-size:11.4pt;font-weight:600}
+.item-when{color:var(--ink-3);font-size:9pt;white-space:nowrap;font-variant-numeric:tabular-nums}
+.item-org{color:var(--acc);font-size:9.8pt;margin-top:1px}
+.item-stack{color:var(--ink-3);font-size:8.9pt;margin-top:1px}
+.item ul{margin-top:6px;display:grid;gap:3px}
+.item li{position:relative;padding-left:15px;color:var(--ink-2);font-size:9.9pt}
+.item li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:1.4px;background:var(--acc)}
+
+.cols{columns:2;column-gap:30px;margin-top:4px}
+.cols li{position:relative;padding-left:15px;color:var(--ink-2);font-size:9.8pt;break-inside:avoid;margin-bottom:3px}
+.cols li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:1.4px;background:var(--acc)}
+
+.refs{color:var(--ink-2);font-style:italic}
+.sign{margin-top:30px;display:flex;justify-content:space-between;color:var(--ink-3);font-size:9pt}
+.sign .line{width:190px;border-top:1px solid var(--line);padding-top:5px;text-align:center}
+
+/* ---------- print ---------- */
+/* US resumes are expected to be short; tighten that variant specifically. */
+html[data-region="us"] .item{margin-top:10px}
+html[data-region="us"] .item li,
+html[data-region="us"] .kv dd{font-size:9.4pt}
+html[data-region="us"] h2.sec{margin:15px 0 6px}
+
 @media print{
-  body{background:#fff;font-size:9.6pt}
+  body{background:#fff;font-size:9.5pt}
+  html[data-region="us"] body{font-size:8.9pt;line-height:1.45}
+  html[data-region="us"] .name{font-size:22pt}
+  html[data-region="us"] .item{margin-top:8px}
+  html[data-region="us"] h2.sec{margin:11px 0 5px}
+  /* UK/Irish CVs are conventionally two pages. */
+  html[data-region="uk"] body{font-size:9.1pt;line-height:1.48}
+  html[data-region="uk"] .item{margin-top:9px}
+  html[data-region="uk"] h2.sec{margin:12px 0 5px}
+  .bar,.hint,.noprint{display:none!important}
   .sheet{margin:0;max-width:none;padding:0;box-shadow:none}
-  .bar{display:none}
-  h2{margin-top:14px}
-  h3,.role{break-after:avoid;page-break-after:avoid}
-  li,p{break-inside:avoid}
+  h2.sec{margin-top:13px}
+  .item,.item-head{break-inside:avoid;page-break-inside:avoid}
   @page{size:A4;margin:13mm 14mm}
+}
+@media (max-width:720px){
+  .sheet{padding:26px 22px 34px;margin:14px 10px 40px}
+  .kv{grid-template-columns:1fr}
+  .cols{columns:1}
+  .head{flex-direction:column-reverse}
+  .name{font-size:21pt}
 }
 </style>
 </head>
 <body>
 
 <nav class="bar">
-  <a href="index.html">← Back to portfolio</a>
-  <a href="assets/Badathala-Jaisurya-Resume.pdf" download>Download PDF</a>
-  <a href="mailto:jaisurya524126@gmail.com">Email me</a>
+  <div class="bar-in">
+    <a class="home" href="index.html">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"/></svg>
+      Portfolio
+    </a>
+
+    <div class="seg" role="group" aria-label="CV format by country">
+      <button data-region="int" aria-pressed="true">Europe / Intl</button>
+      <button data-region="de" aria-pressed="false">Deutschland</button>
+      <button data-region="uk" aria-pressed="false">UK &amp; Ireland</button>
+      <button data-region="us" aria-pressed="false">United States</button>
+      <button data-region="in" aria-pressed="false">India</button>
+    </div>
+
+    <span class="grow"></span>
+
+    <label class="opt" id="photoOpt" hidden>
+      <input type="checkbox" id="photoToggle"> <span>Foto</span>
+    </label>
+    <label class="opt" id="langOpt" hidden>
+      <input type="checkbox" id="langToggle" checked> <span>Deutsch</span>
+    </label>
+
+    <a class="act" id="dlBtn" href="assets/cv/Badathala-Jaisurya-CV-International.pdf" download>
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg>
+      <span id="dlLabel">Download</span>
+    </a>
+    <button class="act primary" id="printBtn">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4v-6h16v6h-2M8 14h8v7H8z"/></svg>
+      <span id="printLabel">Save as PDF</span>
+    </button>
+  </div>
+  <p class="hint"><b id="hintLabel">Format</b> <span id="regionNote"></span></p>
 </nav>
 
-<main class="sheet">
-  <h1>BADATHALA JAISURYA</h1>
-  <p class="tagline">AI Security &nbsp;|&nbsp; DevSecOps &nbsp;|&nbsp; MLOps &nbsp;|&nbsp; Cloud Security</p>
-  <p class="meta">
-    Chennai, India &nbsp;•&nbsp; +91-8143516981 &nbsp;•&nbsp; jaisurya524126@gmail.com<br>
-    linkedin.com/in/badathala-jaisurya-7b985a224 &nbsp;•&nbsp; github.com/jaisurya93945 &nbsp;•&nbsp; jaisurya93945.github.io/portfolio
-  </p>
-  <div class="rule"></div>
+<main class="sheet" id="sheet" aria-live="polite"></main>
 
-  <h2>Professional Summary</h2>
-  <p>DevOps and Cybersecurity engineer bridging security operations, cloud infrastructure and applied AI.
-  Certified Ethical Hacker (CEH) with hands-on experience in SIEM monitoring, vulnerability assessment and incident
-  response, now applying that foundation to DevSecOps and cloud infrastructure as a DevOps Engineer at Stackly.
-  Founder of CipherAI, a production AI SaaS platform integrating LLM APIs, authentication and payments for a live,
-  revenue-generating client. Builder of SentinelCore and AegisAI, open-source AI threat gateways for prompt-injection
-  defence. Targeting AI Engineer, AI Security Engineer, DevSecOps and Cloud/Security roles.</p>
+<script src="assets/js/resume.js" defer></script>
+<script defer>
+document.addEventListener('DOMContentLoaded', function () {
+  var R = window.RESUME;
+  if (!R) return;
+  var CV = R.CV, REGIONS = R.REGIONS, pick = R.pick, fmtDate = R.fmtDate;
 
-  <h2>Core Skills</h2>
-  <p class="kv"><b>AI &amp; LLM Security:</b> <span class="inline">Prompt-injection and jailbreak detection, LLM guardrails,
-  MCP tool-poisoning checks, AI red teaming (garak, PyRIT), OWASP LLM Top 10, MITRE ATLAS, NIST AI RMF, detection
-  engineering, evaluation harnesses.</span></p>
-  <p class="kv"><b>Cloud, DevSecOps &amp; MLOps:</b> <span class="inline">AWS, GCP, Docker, CI/CD pipelines, Kubernetes
-  (in progress), Linux administration and hardening, Git/GitHub, dependency and secret scanning, pip-audit, dataset
-  validation, regression testing.</span></p>
-  <p class="kv"><b>Security Operations:</b> <span class="inline">SIEM monitoring, incident response, vulnerability
-  assessment (VAPT), threat monitoring, penetration testing, malware analysis, endpoint security, TCP/IP, DNS,
-  firewalls, Splunk, ELK Stack, Wireshark, Nmap, Metasploit, Burp Suite.</span></p>
-  <p class="kv"><b>Development:</b> <span class="inline">Python, Bash, JavaScript/TypeScript, React, FastAPI, PyTorch,
-  scikit-learn, Firebase, Supabase, LLM API integration (OpenAI, OpenRouter).</span></p>
+  var sheet = document.getElementById('sheet');
+  var noteEl = document.getElementById('regionNote');
+  var photoOpt = document.getElementById('photoOpt');
+  var langOpt = document.getElementById('langOpt');
+  var photoToggle = document.getElementById('photoToggle');
+  var langToggle = document.getElementById('langToggle');
 
-  <h2>Professional Experience</h2>
+  var photoToken = 0;
+  var region = new URLSearchParams(location.search).get('region');
+  if (!REGIONS[region]) {
+    try { region = localStorage.getItem('cvRegion'); } catch (e) {}
+  }
+  if (!REGIONS[region]) region = 'int';
 
-  <div class="role"><h3>DevOps Engineer</h3><span class="when">March 2026 – Present</span></div>
-  <p class="org">Stackly</p>
-  <ul>
-    <li>Manage cloud infrastructure and CI/CD pipelines supporting scalable backend deployment.</li>
-    <li>Operate and maintain containerised applications with Docker to improve system reliability and deployment consistency.</li>
-    <li>Drive DevOps and DevSecOps practice across build, release and deployment workflows.</li>
-  </ul>
+  var PDFS = {
+    int: 'Badathala-Jaisurya-CV-International.pdf',
+    de:  'Badathala-Jaisurya-Lebenslauf.pdf',
+    uk:  'Badathala-Jaisurya-CV-UK.pdf',
+    us:  'Badathala-Jaisurya-Resume-US.pdf',
+    in:  'Badathala-Jaisurya-Resume-India.pdf'
+  };
 
-  <div class="role"><h3>Founder &amp; Engineer</h3><span class="when">2025 – Present</span></div>
-  <p class="org">CipherAI — cipherai.in</p>
-  <ul>
-    <li>Architected and built a multi-product AI SaaS platform spanning LLM chat, image and video generation, cybersecurity education, a job portal, hackathons and certification systems.</li>
-    <li>Integrated LLM APIs (OpenAI, OpenRouter) with Clerk authentication, Firebase Firestore and Supabase storage to power 50+ AI tools on a credit-based usage system.</li>
-    <li>Implemented Razorpay payment processing and an admin dashboard for user, job and certificate management; delivered the platform to a real paying client, generating revenue from a live production SaaS product.</li>
-  </ul>
+  var LABELS = {
+    en: { summary:'Professional Summary', skills:'Core Skills', experience:'Professional Experience',
+          projects:'Selected Projects', certs:'Certifications', education:'Education',
+          achievements:'Achievements', personal:'Personal Details', references:'References',
+          refs:'Available on request.', print:'Save as PDF', hint:'Format', download:'Download' },
+    de: { summary:'Profil', skills:'Kernkompetenzen', experience:'Berufserfahrung',
+          projects:'Ausgewählte Projekte', certs:'Zertifizierungen', education:'Ausbildung',
+          achievements:'Erfolge', personal:'Persönliche Daten', references:'Referenzen',
+          refs:'Auf Anfrage.', print:'Als PDF speichern', hint:'Format', download:'Herunterladen' }
+  };
 
-  <div class="role"><h3>Cybersecurity Intern</h3><span class="when">2024</span></div>
-  <p class="org">Tata Consultancy Services</p>
-  <ul>
-    <li>Conducted vulnerability assessments and risk analysis for enterprise systems, identifying security gaps across infrastructure.</li>
-    <li>Monitored security alerts using SIEM tooling, supported incident triage and response, and prepared technical reports on remediation steps.</li>
-  </ul>
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
 
-  <div class="role"><h3>Cybersecurity Intern</h3><span class="when">2024</span></div>
-  <p class="org">CFSS Pvt Ltd</p>
-  <ul>
-    <li>Assisted penetration testing and ethical hacking exercises across web and network applications.</li>
-    <li>Performed Linux system hardening and configuration security reviews, and documented secure operational procedures.</li>
-  </ul>
+  function bulletList(arr, cls) {
+    var ul = el('ul', cls || '');
+    arr.forEach(function (b) { ul.appendChild(el('li', '', b)); });
+    return ul;
+  }
 
-  <h2>Key Projects</h2>
+  function render() {
+    var cfg = REGIONS[region];
+    var lang = (region === 'de' && langToggle.checked) ? 'de' : 'en';
+    var L = LABELS[lang];
 
-  <div class="role"><h3>SentinelCore — AI Threat Gateway</h3><span class="when">Open source</span></div>
-  <p class="org">Python 3.11, FastAPI, SQLite, Docker, pytest</p>
-  <ul>
-    <li>Model-agnostic security layer between AI applications and their models, tools and data sources; inspects prompts, documents, tool calls and model output.</li>
-    <li>Detects prompt injection, obfuscation (zero-width, bidirectional text, homoglyphs, encoding), PII and secrets, and MCP tool-poisoning; enforces allow / warn / sanitise / approve / block policy.</li>
-    <li>96.8% detector precision across 744 labelled examples, with an attack-replay lab tracking detector improvements across versions; OpenAI-compatible reverse proxy with queryable SQLite audit trails.</li>
-  </ul>
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('data-region', region);
+    noteEl.textContent = cfg.note;
+    document.getElementById('printLabel').textContent = L.print;
+    document.getElementById('hintLabel').textContent = L.hint;
+    document.getElementById('dlLabel').textContent = L.download;
+    document.getElementById('dlBtn').setAttribute('href', 'assets/cv/' + PDFS[region]);
+    photoOpt.hidden = !cfg.photo;
+    langOpt.hidden = region !== 'de';
 
-  <div class="role"><h3>AegisAI — LLM Threat Detection Engine</h3><span class="when">Open source</span></div>
-  <p class="org">Python, FastAPI, scikit-learn, joblib</p>
-  <ul>
-    <li>Layered detection architecture where deterministic rules retain authority over bounded ML evidence, producing transparent 0–100 risk scores with explainable findings.</li>
-    <li>Classifies nine threat intents and separates malicious intent from legitimate defensive security education; trained across roughly 399K labelled examples with leakage detection and cross-dataset evaluation.</li>
-    <li>112 passing tests with automated regression testing and dataset validation tooling.</li>
-  </ul>
+    sheet.textContent = '';
 
-  <div class="role"><h3>NeuroGenesis — Reasoning Verification Framework</h3><span class="when">Research</span></div>
-  <p class="org">Python, PyTorch, symbolic methods</p>
-  <ul>
-    <li>Converts LLM reasoning into structured representations and independently checks logic, factual and constraint violations before an answer is accepted.</li>
-    <li>Implements a reasoning-shortcut oracle that enumerates shortcut spaces before training, testing whether identifiability predicts correct concept learning.</li>
-  </ul>
+    /* ---- header ---- */
+    var head = el('div', 'head');
+    var main = el('div', 'head-main');
+    main.appendChild(el('p', 'doctype', pick(cfg.docTitle, lang)));
+    main.appendChild(el('h1', 'name', CV.name));
+    main.appendChild(el('p', 'tagline', pick(CV.tagline, lang)));
 
-  <div class="role"><h3>Security Operations Centre (SOC) Home Lab</h3><span class="when">Lab</span></div>
-  <p class="org">ELK Stack, Splunk, detection engineering</p>
-  <ul>
-    <li>Deployed ELK and Splunk SIEM stacks, configured detection alerts, simulated real-world attacks and documented end-to-end incident-response workflows.</li>
-  </ul>
+    var c = el('p', 'contact');
+    [pick(CV.contact.location, lang), CV.contact.phone, CV.contact.email,
+     CV.contact.linkedin, CV.contact.github, CV.contact.site]
+      .forEach(function (v) { c.appendChild(el('span', '', v)); });
+    main.appendChild(c);
+    head.appendChild(main);
 
-  <div class="role"><h3>Endpoint Monitoring &amp; Malware Analysis Lab</h3><span class="when">Lab</span></div>
-  <p class="org">Python, sandboxing, automation</p>
-  <ul>
-    <li>Built an isolated sandbox environment to safely analyse malicious software behaviour and evaluate defensive countermeasures.</li>
-    <li>Built a tool detecting unauthorised USB/device activity to prevent data exfiltration, plus Python scripts automating log analysis and network scanning for faster threat detection.</li>
-  </ul>
+    if (cfg.photo && photoToggle.checked) {
+      /* Build the frame detached and attach it only once the avatar has
+         really decoded. An unreachable host then costs nothing visible,
+         instead of leaving an empty grey rectangle on a Lebenslauf. */
+      var img = new Image();
+      img.className = 'photo';
+      img.alt = CV.name;
+      var token = ++photoToken;
+      img.onload = function () {
+        if (token === photoToken && img.naturalWidth > 0 && !img.isConnected) {
+          head.appendChild(img);
+        }
+      };
+      img.src = 'https://avatars.githubusercontent.com/u/94210631?v=4&s=280';
+    }
+    sheet.appendChild(head);
+    sheet.appendChild(el('div', 'rule'));
 
-  <h2>Certifications</h2>
-  <p>Certified Ethical Hacker (CEH) &nbsp;•&nbsp; Linux Foundation: DevSecOps &nbsp;•&nbsp; Linux Foundation: Linux Essentials
-  &nbsp;•&nbsp; Google Cloud Computing Foundations &nbsp;•&nbsp; Python and AI Certifications &nbsp;•&nbsp;
-  CompTIA Security+ and Network+ (in progress)</p>
+    /* ---- sections ---- */
+    cfg.sections.forEach(function (key) {
+      if (key === 'personal' && cfg.personal) {
+        sheet.appendChild(el('h2', 'sec', L.personal));
+        var dl = el('dl', 'kv');
+        CV.personal.forEach(function (row) {
+          dl.appendChild(el('dt', '', pick(row.label, lang)));
+          dl.appendChild(el('dd', '', pick(row.value, lang)));
+        });
+        sheet.appendChild(dl);
 
-  <h2>Education</h2>
-  <div class="role"><h3>B.Tech, Computer Science and Business Systems</h3><span class="when">2025</span></div>
-  <p class="org">Rajalakshmi Institute of Technology, Chennai</p>
+      } else if (key === 'summary') {
+        sheet.appendChild(el('h2', 'sec', L.summary));
+        sheet.appendChild(el('p', 'lede', pick(CV.summary, lang)));
+        sheet.appendChild(el('p', 'obj', pick(CV.objective, lang)));
 
-  <h2>Achievements</h2>
-  <ul>
-    <li>Solved 100+ Capture the Flag (CTF) challenges across multiple platforms.</li>
-    <li>Runner-up, National Cybersecurity Hackathon.</li>
-    <li>Ranked in the top 3% globally in security competitions and on TryHackMe.</li>
-    <li>Generated revenue from a live production AI SaaS product delivered to a paying client.</li>
-  </ul>
+      } else if (key === 'skills') {
+        sheet.appendChild(el('h2', 'sec', L.skills));
+        var sk = el('dl', 'kv');
+        CV.skills.forEach(function (row) {
+          sk.appendChild(el('dt', '', pick(row.label, lang)));
+          sk.appendChild(el('dd', '', pick(row.value, lang)));
+        });
+        sheet.appendChild(sk);
 
-  <h2>Languages</h2>
-  <p>English &nbsp;•&nbsp; Telugu &nbsp;•&nbsp; Tamil &nbsp;•&nbsp; Hindi</p>
-</main>
+      } else if (key === 'experience') {
+        sheet.appendChild(el('h2', 'sec', L.experience));
+        CV.experience.forEach(function (job) {
+          var it = el('div', 'item');
+          var h = el('div', 'item-head');
+          h.appendChild(el('h3', 'item-role', pick(job.role, lang)));
+          h.appendChild(el('span', 'item-when',
+            fmtDate(job.from, region, lang) + ' – ' + fmtDate(job.to, region, lang)));
+          it.appendChild(h);
+          it.appendChild(el('p', 'item-org', job.org));
+          it.appendChild(bulletList(pick(job.bullets, lang)));
+          sheet.appendChild(it);
+        });
 
+      } else if (key === 'projects') {
+        sheet.appendChild(el('h2', 'sec', L.projects));
+        var cap = { us: 2, uk: 3 }[region] || CV.projects.length;
+        var list = CV.projects.slice(0, cap);
+        list.forEach(function (pr) {
+          var it = el('div', 'item');
+          it.appendChild(el('h3', 'item-role', pick(pr.name, lang)));
+          it.appendChild(el('p', 'item-stack', pr.stack));
+          it.appendChild(bulletList(pick(pr.bullets, lang)));
+          sheet.appendChild(it);
+        });
+
+      } else if (key === 'certs') {
+        sheet.appendChild(el('h2', 'sec', L.certs));
+        sheet.appendChild(bulletList(pick(CV.certs, lang), 'cols'));
+
+      } else if (key === 'education') {
+        sheet.appendChild(el('h2', 'sec', L.education));
+        CV.education.forEach(function (ed) {
+          var it = el('div', 'item');
+          var h = el('div', 'item-head');
+          h.appendChild(el('h3', 'item-role', pick(ed.degree, lang)));
+          h.appendChild(el('span', 'item-when',
+            fmtDate(ed.from, region, lang) + ' – ' + fmtDate(ed.to, region, lang)));
+          it.appendChild(h);
+          it.appendChild(el('p', 'item-org', pick(ed.org, lang)));
+          sheet.appendChild(it);
+        });
+
+      } else if (key === 'achievements') {
+        sheet.appendChild(el('h2', 'sec', L.achievements));
+        sheet.appendChild(bulletList(pick(CV.achievements, lang)));
+
+      } else if (key === 'references') {
+        sheet.appendChild(el('h2', 'sec', L.references));
+        sheet.appendChild(el('p', 'refs', L.refs));
+      }
+    });
+
+    /* German Lebenslauf convention: place, date and signature line. */
+    if (region === 'de') {
+      var sign = el('div', 'sign');
+      var d = new Date();
+      sign.appendChild(el('span', '', 'Chennai, ' +
+        String(d.getDate()).padStart(2, '0') + '.' +
+        String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear()));
+      sign.appendChild(el('span', 'line', CV.name));
+      sheet.appendChild(sign);
+    }
+  }
+
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      region = b.dataset.region;
+      document.querySelectorAll('.seg button').forEach(function (o) {
+        o.setAttribute('aria-pressed', String(o === b));
+      });
+      try { localStorage.setItem('cvRegion', region); } catch (e) {}
+      var u = new URL(location.href);
+      u.searchParams.set('region', region);
+      history.replaceState(null, '', u);
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  photoToggle.addEventListener('change', render);
+  langToggle.addEventListener('change', render);
+  document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.region === region));
+  });
+  render();
+});
+</script>
 </body>
 </html>

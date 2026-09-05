@@ -1,5 +1,6 @@
 # Build artefact — rendered from resume.html at deploy time.
 assets/Badathala-Jaisurya-Resume.pdf
+assets/cv/
 
 node_modules/
 .DS_Store
