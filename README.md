@@ -147,6 +147,8 @@ assets/
 scripts/render-resume.mjs    renders one PDF per region at deploy time
 scripts/setup-signing.sh     one-time setup for verified commits
 scripts/parse-resume-docx.py resume-source/*.docx -> structured content
+scripts/commit-verified.py   commits via GitHub's signing API (Verified)
+scripts/report-signature.py  prints the signature status of that commit
 resume-source/en|de/         drop a .docx here to update the résumé
 .github/workflows/pages.yml  GitHub Pages deployment
 ```
@@ -210,11 +212,48 @@ A **Verified** badge means GitHub checked a signature made by a key that belongs
 you can produce one. No bot, CI job or API token can sign on your behalf without becoming a key
 you do not control, which is the opposite of what you want on a security repository.
 
-**Without a computer, use the GitHub web interface.** Every commit made through github.com — the
-file editor, the upload button, merging a pull request — is signed by GitHub's own key as it is
-created, and lands **Verified**, authored by you. No key management, works from a phone. This is
-why the résumé workflow above is built around web uploads: doing your routine work in the browser
-gets you verified commits for free.
+A **Verified** badge means GitHub checked a cryptographic signature made by a key belonging to the
+author. That is why no tool can produce one on your behalf — it would have to hold a key you do not
+control. Commits pushed over plain git come back `"verified": false, "reason": "unsigned"`, which is
+expected rather than a misconfiguration.
+
+There are exactly two ways to get the badge, and **both work from a phone**.
+
+### 1. Commit through github.com — zero setup
+
+Every commit made through the web interface — the file editor, **Add file → Upload files**, merging
+a pull request — is built and signed by GitHub as it is created. It lands **Verified**, authored by
+you. This is why the résumé workflow above is deliberately built around web uploads: your routine
+work produces verified commits for free.
+
+### 2. Let a workflow commit for you — verified *and* authored by you
+
+GitHub's GraphQL `createCommitOnBranch` mutation signs commits server-side. Measured on this
+repository:
+
+```
+committer : GitHub <noreply@github.com>
+VERIFIED  : true      reason: valid
+```
+
+The **Publish verified commit** workflow uses it. Authorship follows the token:
+
+| Token | Author | Verified |
+| --- | --- | --- |
+| `GITHUB_TOKEN` (default) | `github-actions[bot]` | ✓ |
+| `RESUME_PAT` secret | **you** | ✓ |
+
+To author as yourself — all in the browser, about two minutes:
+
+1. **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new**
+   ([direct link](https://github.com/settings/personal-access-tokens/new)).
+2. Repository access: **Only select repositories** → this repo.
+   Permissions: **Contents → Read and write**. Generate, and copy the token.
+3. In this repo: **Settings → Secrets and variables → Actions → New repository secret**,
+   named `RESUME_PAT`, paste the token.
+
+From then on, **Actions → Publish verified commit → Run workflow** produces commits authored by you
+with a Verified badge, from any device.
 
 **On a machine**, [`scripts/setup-signing.sh`](scripts/setup-signing.sh) does the setup in one run:
 creates an SSH key, points git at it, enables signing, prints the public key to register on GitHub
@@ -225,12 +264,11 @@ miss), and shows the command to re-sign existing commits.
 bash scripts/setup-signing.sh
 ```
 
-What cannot be done: signing on your behalf. A Verified badge asserts that a key belonging to you
-made the signature, so any tool that could produce one for you would be holding a key you do not
-control. Commits pushed over plain git, or written through the REST contents API with an ordinary
-token, come back `"verified": false, "reason": "unsigned"` — that is expected, not a misconfiguration.
-The **Signing capability probe** workflow in the Actions tab tests the one server-side exception
-(GitHub's GraphQL `createCommitOnBranch`, which signs as it commits) and prints the result.
+### Commits already in this branch
+
+Commits that were pushed over git cannot be signed retroactively by anyone but you — a signature has
+to be made with your key, over that exact commit. They stay unverified. Everything published through
+either route above is verified from here on.
 
 ## Contact
 
