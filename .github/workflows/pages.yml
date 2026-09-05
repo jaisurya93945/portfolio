@@ -65,6 +65,12 @@ jobs:
               sys.exit('%d locale file(s) incomplete' % failed)
           EOF
 
+      - name: Render resume PDF
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node scripts/render-resume.mjs
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
