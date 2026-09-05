@@ -114,8 +114,17 @@ assets/
   i18n/*.json              10 translated locales (English lives in index.html)
   img/favicon.svg          shield mark
   img/og.svg               social preview card
-  Badathala-Jaisurya-Resume.pdf
+scripts/render-resume.mjs    renders resume.html to PDF at deploy time
 .github/workflows/pages.yml  GitHub Pages deployment
+```
+
+The résumé PDF is **not** committed — it is rendered from `resume.html` by the deploy workflow
+and shipped with the Pages artefact. Keeping it out of git means it can never drift from the HTML
+it comes from, and leaves the repository entirely text. To produce it locally:
+
+```bash
+npm install --no-save playwright && npx playwright install chromium
+node scripts/render-resume.mjs
 ```
 
 ## Running locally
@@ -131,8 +140,14 @@ python3 -m http.server 8080
 ## Deployment
 
 Pushes to `main` publish via [`.github/workflows/pages.yml`](.github/workflows/pages.yml), which
-gates the deploy on a detector regression check plus a locale key-coverage check. Enable it once
-under **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+gates the deploy on a detector regression check plus a locale key-coverage check, then renders the
+résumé PDF before publishing.
+
+Two one-time steps are needed before the site goes live:
+
+1. **Create a `main` branch.** The workflow triggers on pushes to `main`; until that branch exists
+   nothing is ever published.
+2. **Enable the source.** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 
 ## Contact
 
