@@ -225,6 +225,9 @@
   function pick(v, lang) {
     if (v === null || v === undefined) return '';
     if (typeof v === 'string') return v;
+    /* Bullet lists arrive as plain arrays when only one language was
+       uploaded; they are already the value, not a {en,de} pair. */
+    if (Array.isArray(v)) return v;
     return v[lang] !== undefined ? v[lang] : v.en;
   }
 
@@ -237,5 +240,97 @@
     return MONTHS[lang][m - 1] + ' ' + y;
   }
 
-  global.RESUME = { CV: CV, REGIONS: REGIONS, pick: pick, fmtDate: fmtDate };
+  /* ---- adopt uploaded .docx content ------------------------------------
+     scripts/parse-resume-docx.py turns the uploaded Word file into flat
+     per-language content. The curated structure here stays in charge of
+     shape — section order, headings, region rules — and only the facts are
+     replaced. If a language was not uploaded it keeps the curated text, so
+     a German Lebenslauf never silently empties out. */
+  function adopt(payload) {
+    if (!payload || !payload.en) return false;
+    var en = payload.en, de = payload.de || null;
+
+    function bi(enVal, deVal, fallback) {
+      if (de && deVal !== undefined && deVal !== null && deVal !== '') {
+        return { en: enVal, de: deVal };
+      }
+      /* No German upload: keep curated German where we have it. */
+      if (fallback && typeof fallback === 'object' && fallback.de) {
+        return { en: enVal, de: fallback.de };
+      }
+      return enVal;
+    }
+
+    CV.name = en.name || CV.name;
+
+    if (en.contact) {
+      var c = en.contact;
+      if (c.email) CV.contact.email = c.email;
+      if (c.phone) CV.contact.phone = c.phone;
+      if (c.linkedin) CV.contact.linkedin = c.linkedin;
+      if (c.github) CV.contact.github = c.github;
+      if (c.site) CV.contact.site = c.site;
+      if (c.location) CV.contact.location = bi(c.location, de && de.contact && de.contact.location, CV.contact.location);
+    }
+
+    if (en.summary) CV.summary = bi(en.summary, de && de.summary, CV.summary);
+
+    if (en.skills && en.skills.length) {
+      CV.skills = en.skills.map(function (row, i) {
+        var d = de && de.skills && de.skills[i];
+        return { label: bi(row.label, d && d.label), value: bi(row.value, d && d.value) };
+      });
+    }
+
+    if (en.experience && en.experience.length) {
+      CV.experience = en.experience.map(function (job, i) {
+        var d = de && de.experience && de.experience[i];
+        return {
+          role: bi(job.role, d && d.role),
+          org: job.org || (d && d.org) || '',
+          from: job.from, to: job.to, whenRaw: job.whenRaw,
+          bullets: bi(job.bullets, d && d.bullets)
+        };
+      });
+    }
+
+    if (en.projects && en.projects.length) {
+      CV.projects = en.projects.map(function (pr, i) {
+        var d = de && de.projects && de.projects[i];
+        return {
+          name: bi(pr.name, d && d.name),
+          stack: pr.stack || (d && d.stack) || '',
+          bullets: bi(pr.bullets, d && d.bullets)
+        };
+      });
+    }
+
+    if (en.certs && en.certs.length) CV.certs = bi(en.certs, de && de.certs, CV.certs);
+    if (en.achievements && en.achievements.length) {
+      CV.achievements = bi(en.achievements, de && de.achievements, CV.achievements);
+    }
+
+    if (en.education && en.education.length) {
+      CV.education = en.education.map(function (ed, i) {
+        var d = de && de.education && de.education[i];
+        return {
+          degree: bi(ed.degree, d && d.degree),
+          org: bi(ed.org, d && d.org),
+          from: ed.from, to: ed.to, whenRaw: ed.whenRaw
+        };
+      });
+    }
+
+    if (en.languages) {
+      CV.personal = CV.personal.map(function (row) {
+        var isLang = /Languages|Sprachen/.test(pick(row.label, 'en') + pick(row.label, 'de'));
+        return isLang ? { label: row.label, value: bi(en.languages, de && de.languages, row.value) } : row;
+      });
+    }
+
+    CV.source = { file: en.sourceFile, germanUploaded: !!de };
+    return true;
+  }
+
+  global.RESUME = { CV: CV, REGIONS: REGIONS, pick: pick, fmtDate: fmtDate, adopt: adopt };
 })(window);

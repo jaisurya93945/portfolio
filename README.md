@@ -146,6 +146,8 @@ assets/
   js/resume.js             résumé content + per-region rules
 scripts/render-resume.mjs    renders one PDF per region at deploy time
 scripts/setup-signing.sh     one-time setup for verified commits
+scripts/parse-resume-docx.py resume-source/*.docx -> structured content
+resume-source/en|de/         drop a .docx here to update the résumé
 .github/workflows/pages.yml  GitHub Pages deployment
 ```
 
@@ -184,20 +186,51 @@ The workflow triggers on `main` *and* on `claude/**`, so whichever of those is t
 will publish. If the site ever looks out of date, it is almost always because the workflow never
 fired and Pages is still serving an earlier publish.
 
+## Updating the résumé (no computer required)
+
+The résumé is edited as a Word file and everything downstream regenerates.
+
+1. Open **[`resume-source/en/`](resume-source/en/)** on github.com — a phone browser is fine.
+2. **Add file → Upload files**, pick your `.docx`, **Commit changes**.
+3. Two minutes later the site has republished.
+
+[`scripts/parse-resume-docx.py`](scripts/parse-resume-docx.py) reads the structure Word already
+saves — bold ALL-CAPS section headings, bold `Label: value` skill rows, bold tab-delimited role
+lines, list bullets — and emits the structured content the viewer and all five regional PDFs are
+built from. One Word file in, a German *Lebenslauf* and a US resume out.
+
+Drop a German `.docx` into `resume-source/de/` and the Lebenslauf uses it. Without one, the German
+view keeps German headings and an English body — normal for tech roles in Germany, and the viewer
+labels it so nothing is misleading. If a document cannot be parsed the deploy fails loudly and the
+site that is already published stays up.
+
 ## Verified commits
 
 A **Verified** badge means GitHub checked a signature made by a key that belongs to you — so only
 you can produce one. No bot, CI job or API token can sign on your behalf without becoming a key
 you do not control, which is the opposite of what you want on a security repository.
 
-[`scripts/setup-signing.sh`](scripts/setup-signing.sh) does the whole setup in one run: creates an
-SSH key if needed, points git at it, turns on signing, prints the public key to paste into GitHub
-(as a **Signing Key**, which is a separate entry from an authentication key), and shows the command
-to re-sign commits that already exist.
+**Without a computer, use the GitHub web interface.** Every commit made through github.com — the
+file editor, the upload button, merging a pull request — is signed by GitHub's own key as it is
+created, and lands **Verified**, authored by you. No key management, works from a phone. This is
+why the résumé workflow above is built around web uploads: doing your routine work in the browser
+gets you verified commits for free.
+
+**On a machine**, [`scripts/setup-signing.sh`](scripts/setup-signing.sh) does the setup in one run:
+creates an SSH key, points git at it, enables signing, prints the public key to register on GitHub
+as a **Signing Key** (a separate entry from an authentication key — this is the step most people
+miss), and shows the command to re-sign existing commits.
 
 ```bash
 bash scripts/setup-signing.sh
 ```
+
+What cannot be done: signing on your behalf. A Verified badge asserts that a key belonging to you
+made the signature, so any tool that could produce one for you would be holding a key you do not
+control. Commits pushed over plain git, or written through the REST contents API with an ordinary
+token, come back `"verified": false, "reason": "unsigned"` — that is expected, not a misconfiguration.
+The **Signing capability probe** workflow in the Actions tab tests the one server-side exception
+(GitHub's GraphQL `createCommitOnBranch`, which signs as it commits) and prints the result.
 
 ## Contact
 
