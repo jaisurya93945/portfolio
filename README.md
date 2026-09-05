@@ -264,6 +264,27 @@ miss), and shows the command to re-sign existing commits.
 bash scripts/setup-signing.sh
 ```
 
+### Publishing to main
+
+`main` carries the site as a single commit built and signed by GitHub:
+
+```
+commit    : 9def47040d94   Publish portfolio site
+committer : GitHub <noreply@github.com>
+VERIFIED  : true      reason: valid
+```
+
+**Actions → Publish site to main (verified) → Run workflow** republishes it the same way.
+
+Two GitHub behaviours shape this and are worth knowing rather than rediscovering:
+
+* A commit created with `GITHUB_TOKEN` does not start workflows — loop prevention. The workflow
+  therefore asks Pages to deploy explicitly once the commit exists.
+* The `github-pages` environment only accepts deployments from the repository's **default branch**.
+  Until `main` is the default (Settings → General → Default branch), a deploy from it is rejected
+  before any step runs — a job that fails in about two seconds with no logs. That is the signature
+  of this, not a build error.
+
 ### Commits already in this branch
 
 Commits that were pushed over git cannot be signed retroactively by anyone but you — a signature has
