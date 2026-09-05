@@ -1,0 +1,56 @@
+name: Publish verified commit
+
+# Commits pushed over plain git cannot carry a Verified badge: that badge
+# asserts a signature from a key belonging to the author, and no automation
+# can hold such a key on their behalf.
+#
+# GitHub's GraphQL createCommitOnBranch is the exception — the server creates
+# the commit and signs it as it does so. Measured on this repository:
+#
+#   committer : GitHub <noreply@github.com>
+#   VERIFIED  : true      reason: valid
+#
+# Authorship follows the token:
+#   * secrets.RESUME_PAT  -> authored by you, Verified          <- what you want
+#   * GITHUB_TOKEN        -> authored by github-actions[bot], Verified
+#
+# To author as yourself, create a fine-grained PAT in the browser (no machine
+# needed) and save it as the RESUME_PAT secret. See README -> Verified commits.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Commit message'
+        required: false
+        default: 'chore: republish résumé content'
+  push:
+    paths:
+      - 'resume-source/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-verified
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild résumé content from the uploaded .docx
+        run: python3 scripts/parse-resume-docx.py --out content/resume-data.json
+
+      - name: Commit it through the signing API
+        env:
+          GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
+          HEADLINE: "${{ inputs.message || 'chore: rebuild resume content from uploaded .docx' }}"
+        run: python3 scripts/commit-verified.py content/resume-data.json
+
+      - name: Report the signature
+        env:
+          GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 scripts/report-signature.py
