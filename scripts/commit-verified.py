@@ -16,6 +16,7 @@ Environment:
   GITHUB_REPOSITORY owner/repo   (set by Actions)
   GITHUB_REF_NAME   branch       (set by Actions)
 """
+import argparse
 import base64
 import json
 import os
@@ -48,6 +49,22 @@ def gql(token, variables):
     return payload['data']['createCommitOnBranch']['commit']
 
 
+def branch_head(token, repo, branch):
+    """Current tip of a branch, which the mutation needs to guard against races."""
+    url = 'https://api.github.com/repos/%s/git/ref/heads/%s' % (repo, branch)
+    req = urllib.request.Request(url, headers={
+        'Authorization': 'bearer ' + token,
+        'User-Agent': 'portfolio-publish',
+    })
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r)['object']['sha']
+
+
+def tracked_files():
+    out = subprocess.check_output(['git', 'ls-files']).decode().splitlines()
+    return [p for p in out if p and os.path.isfile(p)]
+
+
 def changed(paths):
     """Only commit files git actually sees as modified or new."""
     out = []
@@ -67,17 +84,27 @@ def changed(paths):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('paths', nargs='*')
+    ap.add_argument('--branch', help='target branch (default: the current ref)')
+    ap.add_argument('--all', action='store_true',
+                    help='send every git-tracked file, not just changed ones')
+    args = ap.parse_args()
+
     token = os.environ.get('GH_TOKEN')
     repo = os.environ.get('GITHUB_REPOSITORY')
-    branch = os.environ.get('GITHUB_REF_NAME')
+    branch = args.branch or os.environ.get('GITHUB_REF_NAME')
     if not (token and repo and branch):
-        sys.exit('GH_TOKEN, GITHUB_REPOSITORY and GITHUB_REF_NAME are required')
+        sys.exit('GH_TOKEN, GITHUB_REPOSITORY and a target branch are required')
 
-    paths = sys.argv[1:]
-    if not paths:
-        sys.exit('usage: commit-verified.py <path> [path...]')
+    if args.all:
+        todo = tracked_files()
+        print('sending %d tracked files to %s' % (len(todo), branch))
+    else:
+        if not args.paths:
+            sys.exit('usage: commit-verified.py <path> [path...]  |  --all')
+        todo = changed(args.paths)
 
-    todo = changed(paths)
     if not todo:
         print('nothing changed — no commit needed')
         return 0
@@ -90,7 +117,7 @@ def main():
                 'contents': base64.b64encode(f.read()).decode(),
             })
 
-    head = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
+    head = branch_head(token, repo, branch)
     commit = gql(token, {'i': {
         'branch': {'repositoryNameWithOwner': repo, 'branchName': branch},
         'message': {'headline': os.environ.get('HEADLINE') or 'chore: publish content'},

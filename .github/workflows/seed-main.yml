@@ -1,0 +1,42 @@
+name: Publish site to main (verified)
+
+# Puts the whole site onto main as a single commit created — and therefore
+# signed — by GitHub itself, so main's history carries the Verified badge.
+#
+# Run from the Actions tab. Safe to re-run: if nothing changed, no commit is
+# made. With a RESUME_PAT secret present the commit is authored by you;
+# otherwise by the Actions bot. Either way it is verified.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Branch to publish from'
+        required: true
+        default: 'claude/portfolio-website-interactive-nlmazh'
+      message:
+        description: 'Commit message'
+        required: false
+        default: 'Publish portfolio site'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source }}
+
+      - name: Commit the tree to main through the signing API
+        env:
+          GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
+          HEADLINE: ${{ inputs.message }}
+        run: python3 scripts/commit-verified.py --all --branch main
+
+      - name: Report the signature
+        env:
+          GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
+        run: python3 scripts/report-signature.py
