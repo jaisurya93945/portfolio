@@ -102,7 +102,7 @@ h1,h2,h3,h4{margin:0;font-family:var(--display);font-weight:600;line-height:1.05
 ::selection{background:var(--acc);color:var(--acc-ink)}
 
 /* ---------- display type + line-mask reveal ---------- */
-.display{font-size:clamp(3.1rem,10.5vw,8.4rem);font-weight:700;letter-spacing:-.045em;line-height:.9}
+.display{font-size:clamp(2.9rem,11.6vw,9.4rem);font-weight:700;letter-spacing:-.055em;line-height:.87}
 .h-lg{font-size:clamp(2rem,5.4vw,4.1rem);letter-spacing:-.038em;line-height:1.02}
 .h-xl{font-size:clamp(2.3rem,7vw,5.4rem);letter-spacing:-.042em;line-height:.98}
 [data-split] .l{display:block;overflow:hidden}
@@ -234,7 +234,9 @@ kbd{font-family:var(--mono);font-size:.66rem;padding:2px 5px;border-radius:5px;b
     radial-gradient(760px 440px at 92% 26%,var(--veil-2),transparent 62%),
     linear-gradient(180deg,transparent 58%,var(--bg) 98%);
 }
-.hero-grid{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,.8fr);gap:clamp(28px,4vw,60px);align-items:center}
+.hero-grid{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto}
+.hero-head{margin-bottom:clamp(22px,3vw,40px)}
+.hero-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(28px,4vw,56px);align-items:start}
 
 .status{
   display:inline-flex;align-items:center;gap:9px;padding:6px 14px;border-radius:999px;
@@ -551,7 +553,7 @@ kbd{font-family:var(--mono);font-size:.66rem;padding:2px 5px;border-radius:5px;b
 
 /* ---------- responsive ---------- */
 @media (max-width:1060px){
-  .hero-grid{grid-template-columns:1fr}
+  .hero-body{grid-template-columns:1fr}
   .hero-card{max-width:420px}
   .cert-layout{grid-template-columns:1fr}
 }
@@ -681,3 +683,16 @@ kbd{font-family:var(--mono);font-size:.66rem;padding:2px 5px;border-radius:5px;b
   content:"";width:5px;height:5px;border-top:1.4px solid currentColor;border-right:1.4px solid currentColor;
   transform:rotate(45deg);opacity:.6;margin-left:1px;
 }
+
+
+/* ---------- hero name: decode-on-load ---------- */
+.display .l .inner{white-space:nowrap}
+.display.scrambling .l .inner{color:var(--acc)}
+.display.scrambling .l.accent .inner{
+  -webkit-text-fill-color:currentColor;background:none;color:var(--acc-2);
+}
+/* the glyphs cycling before the name settles */
+.scramble-char{opacity:.75}
+
+/* Give the hero copy more of the viewport now the name is larger. */
+
