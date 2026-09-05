@@ -32,6 +32,15 @@ MUTATION = (
 )
 
 
+def api(token, url):
+    req = urllib.request.Request(url, headers={
+        'Authorization': 'bearer ' + token,
+        'User-Agent': 'portfolio-publish',
+    })
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.load(r)
+
+
 def gql(token, variables):
     body = json.dumps({'query': MUTATION, 'variables': variables}).encode()
     req = urllib.request.Request(API, data=body, method='POST', headers={
@@ -52,12 +61,21 @@ def gql(token, variables):
 def branch_head(token, repo, branch):
     """Current tip of a branch, which the mutation needs to guard against races."""
     url = 'https://api.github.com/repos/%s/git/ref/heads/%s' % (repo, branch)
-    req = urllib.request.Request(url, headers={
-        'Authorization': 'bearer ' + token,
-        'User-Agent': 'portfolio-publish',
-    })
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)['object']['sha']
+    return api(token, url)['object']['sha']
+
+
+def branch_files(token, repo, sha):
+    """Every blob path on the target branch, so removals can be propagated.
+
+    Sending only additions would leave files behind that the source branch
+    deleted — the target would accumulate stale content forever.
+    """
+    url = 'https://api.github.com/repos/%s/git/trees/%s?recursive=1' % (repo, sha)
+    tree = api(token, url)
+    if tree.get('truncated'):
+        print('warning: target tree listing was truncated; '
+              'deletions may be incomplete for very large repositories')
+    return set(e['path'] for e in tree.get('tree', []) if e.get('type') == 'blob')
 
 
 def tracked_files():
@@ -118,11 +136,20 @@ def main():
             })
 
     head = branch_head(token, repo, branch)
+
+    changes = {'additions': additions}
+    if args.all:
+        present = set(p.replace(os.sep, '/') for p in todo)
+        gone = sorted(branch_files(token, repo, head) - present)
+        if gone:
+            print('deleting %d file(s) no longer in the source tree' % len(gone))
+            changes['deletions'] = [{'path': p} for p in gone]
+
     commit = gql(token, {'i': {
         'branch': {'repositoryNameWithOwner': repo, 'branchName': branch},
         'message': {'headline': os.environ.get('HEADLINE') or 'chore: publish content'},
         'expectedHeadOid': head,
-        'fileChanges': {'additions': additions},
+        'fileChanges': changes,
     }})
 
     print('committed %s' % commit['oid'])
