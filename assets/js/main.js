@@ -190,6 +190,65 @@
   });
 
   /* ---------------------------------------------------------
+     3b. Hero name decodes on load
+     A security portfolio should look like one for the second it
+     takes the name to resolve. Cheap: one rAF loop, ~700ms, then
+     the real text is restored and never touched again.
+     --------------------------------------------------------- */
+  function decodeName() {
+    var h = $('.display');
+    if (!h || reduce) return;
+    var lines = $$('.l .inner', h);
+    if (!lines.length) return;
+
+    var GLYPHS = '/\\|<>[]{}#$%&*+=~^01';
+    var state = lines.map(function (el) {
+      var text = el.textContent;
+      el.textContent = '';
+      return { el: el, text: text, spans: null };
+    });
+
+    state.forEach(function (s) {
+      s.spans = s.text.split('').map(function (ch) {
+        var sp = document.createElement('span');
+        if (ch === ' ') { sp.innerHTML = '&nbsp;'; }
+        else { sp.className = 'scramble-char'; sp.textContent = GLYPHS[0]; }
+        s.el.appendChild(sp);
+        return sp;
+      });
+    });
+
+    h.classList.add('scrambling');
+    var total = state.reduce(function (n, s) { return n + s.text.length; }, 0);
+    var t0 = performance.now(), dur = 620, perChar = 34;
+
+    (function tick(now) {
+      var elapsed = now - t0;
+      var settled = 0, i = 0;
+      state.forEach(function (s) {
+        s.spans.forEach(function (sp, j) {
+          var ch = s.text[j];
+          if (ch === ' ') { settled++; i++; return; }
+          var due = j * perChar;
+          if (elapsed >= due + 90) {
+            if (sp.textContent !== ch) { sp.textContent = ch; sp.className = ''; }
+            settled++;
+          } else if (elapsed >= due - 60) {
+            sp.textContent = GLYPHS[(Math.random() * GLYPHS.length) | 0];
+          }
+          i++;
+        });
+      });
+      if (settled < total && elapsed < dur + total * perChar) {
+        requestAnimationFrame(tick);
+      } else {
+        state.forEach(function (s) { s.el.textContent = s.text; });
+        h.classList.remove('scrambling');
+      }
+    })(t0);
+  }
+
+  /* ---------------------------------------------------------
      4. Reveal / counters / bars
      --------------------------------------------------------- */
   function animateCount(el) {
@@ -240,6 +299,7 @@
   var watched = $$('[data-anim], [data-split], .hero-card, .stat, .achieve, .bars');
   preloadDone.then(function () {
     watched.forEach(function (el) { io ? io.observe(el) : activate(el); });
+    setTimeout(decodeName, 260);
   });
 
   /* ---------------------------------------------------------
