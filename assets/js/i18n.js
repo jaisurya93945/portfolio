@@ -89,13 +89,18 @@
     var m = meta(code);
     code = m.code;
     return load(code).then(function (dict) {
-      apply(dict);
-      current = code;
-      document.documentElement.setAttribute('lang', code);
-      document.documentElement.setAttribute('data-lang', code);
-      try { if (!opts.silent) localStorage.setItem('lang', code); } catch (e) {}
-      document.dispatchEvent(new CustomEvent('i18n:change', { detail: { code: code, dict: dict } }));
-      return code;
+      function commit() {
+        apply(dict);
+        current = code;
+        document.documentElement.setAttribute('lang', code);
+        document.documentElement.setAttribute('data-lang', code);
+        try { if (!opts.silent) localStorage.setItem('lang', code); } catch (e) {}
+        document.dispatchEvent(new CustomEvent('i18n:change', { detail: { code: code, dict: dict } }));
+        return code;
+      }
+      /* With defer, the caller decides when the swap lands — so a view
+         transition can wrap a finished change instead of a half-applied one. */
+      return opts.defer ? commit : commit();
     });
   }
 

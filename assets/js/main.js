@@ -13,15 +13,24 @@
   /* ---------------------------------------------------------
      0. Theme
      --------------------------------------------------------- */
+  /* Cross-fade whole-page swaps where the browser supports it. */
+  function transition(fn) {
+    if (reduce || !document.startViewTransition) { fn(); return Promise.resolve(); }
+    return document.startViewTransition(fn).finished.catch(function () {});
+  }
+  window.__pageTransition = transition;
+
   (function theme() {
     var btn = $('#themeToggle');
     if (!btn) return;
     btn.addEventListener('click', function () {
-      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      var m = document.querySelector('meta[name="theme-color"]');
-      if (m) m.setAttribute('content', next === 'light' ? '#f6f5f1' : '#08080a');
+      transition(function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', next === 'light' ? '#f4f2ed' : '#08080a');
+      });
     });
   })();
 
@@ -211,6 +220,8 @@
 
   function activate(el) {
     el.classList.add('in');
+    var eb = el.matches('.eyebrow') ? el : $('.eyebrow', el);
+    if (eb) eb.classList.add('in');
     $$('[data-count]', el).forEach(animateCount);
     if (el.hasAttribute('data-count')) animateCount(el);
     fillBars(el);
@@ -235,6 +246,8 @@
      5. Nav: sticky, progress, active link, burger
      --------------------------------------------------------- */
   var nav = $('#nav'), bar = $('#progressBar'), toTop = $('#toTop');
+  var rail = $('#rail'), railLinks = $$('.rail a');
+  var marquee = $('.marquee'), lastY = 0, vel = 0;
   var sections = $$('main section[id]');
   var navLinks = $$('.nav-links a');
   var ticking = false;
@@ -251,6 +264,20 @@
       if (sections[i].getBoundingClientRect().top <= 130) cur = sections[i].id;
     }
     navLinks.forEach(function (a) { a.classList.toggle('current', a.getAttribute('href') === '#' + cur); });
+    if (rail) {
+      rail.classList.toggle('on', y > innerHeight * 0.65);
+      railLinks.forEach(function (a) { a.classList.toggle('current', a.getAttribute('href') === '#' + cur); });
+    }
+
+    /* Marquee leans into the scroll: speed and skew follow velocity. */
+    if (marquee) {
+      var dy = y - lastY;
+      lastY = y;
+      vel += (dy - vel) * 0.2;
+      var clamped = Math.max(-40, Math.min(40, vel));
+      marquee.style.setProperty('--mq-skew', (clamped * 0.035).toFixed(2) + 'deg');
+      marquee.style.setProperty('--mq-rate', (1 + Math.min(2.2, Math.abs(clamped) / 26)).toFixed(2));
+    }
     ticking = false;
   }
   addEventListener('scroll', function () {
@@ -517,8 +544,13 @@
     function close() { menu.hidden = true;  btn.setAttribute('aria-expanded', 'false'); }
 
     function choose(c) {
-      window.I18N.set(c).then(function () { mark(c); });
       close();
+      var run = window.__pageTransition || function (f) { f(); return Promise.resolve(); };
+      /* Fetch first, then swap inside the transition so the cross-fade
+         covers a completed change rather than a half-applied one. */
+      window.I18N.set(c, { defer: true }).then(function (apply) {
+        run(function () { apply(); mark(c); });
+      });
     }
 
     btn.addEventListener('click', function (e) {
@@ -581,6 +613,11 @@
         { t: 'CipherAI — cipherai.in', h: 'https://cipherai.in', k: 'link' },
         { t: 'GitHub — jaisurya93945', h: 'https://github.com/jaisurya93945', k: 'link' },
         { t: 'LinkedIn', h: 'https://www.linkedin.com/in/badathala-jaisurya-7b985a224', k: 'link' },
+        { t: t('hero.cta3', 'Résumé') + ' — Europe / International', h: 'resume.html?region=int', k: 'cv' },
+        { t: t('hero.cta3', 'Résumé') + ' — Deutschland (Lebenslauf)', h: 'resume.html?region=de', k: 'cv' },
+        { t: t('hero.cta3', 'Résumé') + ' — UK & Ireland', h: 'resume.html?region=uk', k: 'cv' },
+        { t: t('hero.cta3', 'Résumé') + ' — United States', h: 'resume.html?region=us', k: 'cv' },
+        { t: t('hero.cta3', 'Résumé') + ' — India', h: 'resume.html?region=in', k: 'cv' },
         { t: 'jaisurya524126@gmail.com', h: 'mailto:jaisurya524126@gmail.com', k: 'email' },
         { t: '+91 81435 16981', h: 'tel:+918143516981', k: 'phone' }
       ];
@@ -610,6 +647,7 @@
 
     function go(it) {
       close();
+      if (/\.html/.test(it.h)) { location.href = it.h; return; }
       if (it.h.charAt(0) === '#') {
         var target = document.querySelector(it.h);
         if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });

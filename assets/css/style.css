@@ -585,3 +585,99 @@ kbd{font-family:var(--mono);font-size:.66rem;padding:2px 5px;border-radius:5px;b
   .marquee-track{animation:none}
   .preload{display:none}
 }
+
+/* =========================================================
+   Elevation pass
+   ========================================================= */
+
+/* ---------- section rail ---------- */
+.rail{
+  position:fixed;left:max(14px,calc((100vw - var(--maxw)) / 2 - 78px));top:50%;z-index:90;
+  transform:translateY(-50%);opacity:0;pointer-events:none;
+  transition:opacity .5s var(--ease);
+}
+.rail.on{opacity:1;pointer-events:auto}
+.rail ol{display:grid;gap:2px}
+.rail a{
+  display:flex;align-items:center;gap:10px;padding:5px 0;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;color:var(--ink-3);
+  transition:color .3s var(--ease);
+}
+.rail i{
+  font-style:normal;position:relative;padding-left:26px;
+}
+.rail i::before{
+  content:"";position:absolute;left:0;top:50%;width:16px;height:1px;
+  background:currentColor;opacity:.45;
+  transform-origin:left;transform:scaleX(.55);
+  transition:transform .4s var(--ease),opacity .3s;
+}
+.rail a span{
+  opacity:0;transform:translateX(-6px);
+  transition:opacity .35s var(--ease),transform .35s var(--ease);
+  white-space:nowrap;font-family:var(--sans);font-size:.72rem;letter-spacing:0;
+}
+.rail a:hover{color:var(--ink)}
+.rail a:hover span,.rail a.current span{opacity:1;transform:none}
+.rail a.current{color:var(--acc)}
+.rail a.current i::before{transform:scaleX(1);opacity:1}
+@media (max-width:1380px){ .rail{display:none} }
+
+/* ---------- scroll-reactive marquee ---------- */
+.marquee{transform:skewY(var(--mq-skew,0deg));transition:transform .5s var(--ease-out)}
+.marquee-track{animation-duration:calc(48s / var(--mq-rate,1))}
+
+/* ---------- section heading rule that draws in ---------- */
+.sec-head .eyebrow::after{
+  content:"";flex:1;height:1px;background:var(--line);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 1s var(--ease-out) .1s;
+}
+.sec-head .eyebrow.in::after{transform:scaleX(1)}
+
+/* ---------- project rows: ghost numeral + travelling arrow ---------- */
+.pnum{
+  font-family:var(--display);font-size:1.05rem;font-weight:600;letter-spacing:-.02em;
+  color:var(--ink-3);opacity:.5;transition:opacity .35s,color .35s;
+  padding-top:.15em;align-self:start;
+}
+.pcard:hover .pnum{opacity:1;color:var(--acc)}
+.plink{overflow:hidden}
+.plink svg{position:relative}
+.pcard::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--acc);transform:scaleY(0);transform-origin:bottom;
+  transition:transform .45s var(--ease-out);
+}
+.pcard:hover::before{transform:scaleY(1);transform-origin:top}
+
+/* ---------- light theme: warmer paper, crisper ink ---------- */
+:root[data-theme="light"]{
+  --bg:#f4f2ed;
+  --bg-2:#fffefb;
+  --line:rgba(20,18,12,.12);
+  --line-2:rgba(20,18,12,.24);
+  --ink:#12120f;
+  --ink-2:#4e4e57;
+  --ink-3:#7d7d88;
+}
+:root[data-theme="light"] .hero-card,
+:root[data-theme="light"] .lab-panel,
+:root[data-theme="light"] .achieve,
+:root[data-theme="light"] .skills-shell{
+  box-shadow:0 1px 2px rgba(20,18,12,.04),0 12px 32px -22px rgba(20,18,12,.35);
+}
+:root[data-theme="light"] .footer-big{-webkit-text-stroke-color:rgba(20,18,12,.18)}
+:root[data-theme="light"] .btn-primary{box-shadow:0 8px 22px -12px var(--acc)}
+
+/* ---------- view transitions (theme + language swaps) ---------- */
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(root),
+  ::view-transition-new(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.16,1,.3,1)}
+}
+
+/* ---------- résumé button gets a subtle "opens a page" cue ---------- */
+.cta .btn-ghost[href="resume.html"]::after{
+  content:"";width:5px;height:5px;border-top:1.4px solid currentColor;border-right:1.4px solid currentColor;
+  transform:rotate(45deg);opacity:.6;margin-left:1px;
+}

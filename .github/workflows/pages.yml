@@ -2,7 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # The repository's default branch is currently the working branch, so
+    # deploy from either. Without this the workflow never fires and Pages
+    # keeps serving whatever was published first.
+    branches: [main, 'claude/**']
   workflow_dispatch:
 
 permissions:
