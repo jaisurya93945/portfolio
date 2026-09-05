@@ -1,8 +1,9 @@
-# Build artefacts — rendered at deploy time, never committed.
+# Build artefact — rendered from resume.html at deploy time.
 assets/Badathala-Jaisurya-Resume.pdf
 assets/cv/
 
 node_modules/
+.DS_Store
+.github/signing-probe.txt
 __pycache__/
 *.pyc
-.DS_Store
