@@ -1,0 +1,8 @@
+# Build artefacts — rendered at deploy time, never committed.
+assets/Badathala-Jaisurya-Resume.pdf
+assets/cv/
+
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
