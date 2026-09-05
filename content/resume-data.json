@@ -1,0 +1,118 @@
+{
+ "en": {
+  "name": "BADATHALA JAISURYA",
+  "contact": {
+   "raw": [
+    "Chennai, India  |  +91-8143516981  |  jaisurya524126@gmail.com",
+    "linkedin.com/in/badathala-jaisurya-7b985a224  |  github.com/jaisurya93945  |  jaisurya93945.github.io/portfolio"
+   ],
+   "email": "jaisurya524126@gmail.com",
+   "phone": "+91-8143516981",
+   "linkedin": "linkedin.com/in/badathala-jaisurya-7b985a224",
+   "github": "github.com/jaisurya93945",
+   "site": "jaisurya93945.github.io/portfolio",
+   "location": "Chennai, India"
+  },
+  "summary": "DevOps and Cybersecurity engineer bridging security operations, cloud infrastructure, and applied AI. Certified Ethical Hacker (CEH) with hands-on experience in SIEM monitoring, vulnerability assessment, and incident response, now applying that foundation to DevSecOps and cloud infrastructure as a DevOps Engineer at Stackly. Founder of CipherAI, a production AI SaaS platform integrating LLM APIs, authentication, and payments for a live, revenue-generating client. Targeting AI Engineer, AI Security Engineer, DevSecOps, and Cloud/Security roles.",
+  "skills": [
+   {
+    "label": "Security Operations",
+    "value": "SIEM Monitoring, Incident Response, Vulnerability Assessment (VAPT), Threat Monitoring, Penetration Testing, Malware Analysis, Endpoint Security, TCP/IP, DNS, Firewalls, Wireshark, Nmap"
+   },
+   {
+    "label": "Cloud, DevSecOps & Tools",
+    "value": "AWS, GCP, Docker, CI/CD Pipelines, Kubernetes (in progress), Linux Administration & Hardening, Git/GitHub, Splunk, ELK Stack, Metasploit, Burp Suite"
+   },
+   {
+    "label": "AI & Development",
+    "value": "LLM API Integration (OpenAI, OpenRouter), AI SaaS Architecture, Python, Bash, JavaScript/TypeScript, React, Firebase, Supabase"
+   }
+  ],
+  "experience": [
+   {
+    "role": "DevOps Engineer",
+    "org": "Stackly",
+    "from": "2026-03",
+    "to": null,
+    "whenRaw": "March 2026 – Present",
+    "bullets": [
+     "Manage cloud infrastructure and CI/CD pipelines supporting scalable backend deployment.",
+     "Operate and maintain containerized applications with Docker to improve system reliability and deployment consistency.",
+     "Support DevOps best practices across build, release, and deployment workflows."
+    ]
+   },
+   {
+    "role": "Cybersecurity Intern",
+    "org": "Tata Consultancy Services",
+    "from": "2024-01",
+    "to": "2024-01",
+    "whenRaw": "2024",
+    "bullets": [
+     "Conducted vulnerability assessments and risk analysis for enterprise systems, identifying security gaps across infrastructure.",
+     "Monitored security alerts using SIEM tools, supported incident triage and response, and prepared technical reports on remediation steps."
+    ]
+   },
+   {
+    "role": "Cybersecurity Intern",
+    "org": "CFSS Pvt Ltd",
+    "from": "2024-01",
+    "to": "2024-01",
+    "whenRaw": "2024",
+    "bullets": [
+     "Assisted penetration testing and ethical hacking exercises across web and network applications.",
+     "Performed Linux system hardening and configuration security reviews, and documented secure operational procedures."
+    ]
+   }
+  ],
+  "projects": [
+   {
+    "name": "CipherAI — AI SaaS Platform (Founder)",
+    "stack": "React, TypeScript, Firebase, Supabase, OpenRouter API, Clerk, Razorpay",
+    "bullets": [
+     "Architected and built a multi-product AI SaaS platform (cipherai.in) spanning LLM chat, image/video generation, cybersecurity education, a job portal, hackathons, and certification systems.",
+     "Integrated LLM APIs (OpenAI, OpenRouter) with Clerk authentication, Firebase Firestore, and Supabase storage to power 50+ AI tools and a credit-based usage system.",
+     "Implemented Razorpay payment processing and an admin dashboard for user, job, and certificate management; delivered the platform to a real paying client, generating revenue from a live production SaaS product."
+    ]
+   },
+   {
+    "name": "Security Operations Center (SOC) Home Lab",
+    "stack": "",
+    "bullets": [
+     "Deployed ELK and Splunk SIEM stacks in a home-lab environment; configured detection alerts, simulated real-world attacks, and documented end-to-end incident response workflows."
+    ]
+   },
+   {
+    "name": "Additional Security Projects",
+    "stack": "",
+    "bullets": [
+     "Malware Behavior Simulation Lab: Built an isolated sandbox environment to safely analyze malicious software behavior and evaluate defensive countermeasures.",
+     "Endpoint Monitoring & Automation: Built a tool to detect unauthorized USB/device activity and prevent data exfiltration, plus Python scripts to automate log analysis and network scanning for faster threat detection."
+    ]
+   }
+  ],
+  "certs": [
+   "Certified Ethical Hacker (CEH)",
+   "Linux Foundation: Linux Essentials",
+   "Linux Foundation: DevSecOps",
+   "Google Cloud Computing Foundations",
+   "Python and AI Certifications",
+   "CompTIA Security+ and Network+ (In Progress)"
+  ],
+  "education": [
+   {
+    "degree": "B.Tech, Computer Science and Business Systems",
+    "org": "Rajalakshmi Institute of Technology",
+    "from": "2025-01",
+    "to": "2025-01",
+    "whenRaw": "2025"
+   }
+  ],
+  "achievements": [
+   "Solved 100+ Capture the Flag (CTF) challenges across multiple platforms",
+   "Runner-up, National Cybersecurity Hackathon",
+   "Ranked in the top 3% globally in security competitions"
+  ],
+  "languages": "English, Telugu, Tamil, Hindi",
+  "sourceFile": "JAISURYA_RESUME.docx"
+ }
+}
