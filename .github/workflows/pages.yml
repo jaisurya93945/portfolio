@@ -1,0 +1,85 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    # The repository's default branch is currently the working branch, so
+    # deploy from either. Without this the workflow never fires and Pages
+    # keeps serving whatever was published first.
+    branches: [main, 'claude/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanity-check the detection engine
+        run: |
+          node -e "
+            global.window = {};
+            require('./assets/js/scanner.js');
+            const g = global.window.ThreatGateway;
+            const expect = { benign: 'allow', injection: 'block', jailbreak: 'block',
+                             mcp: 'block', exfil: 'block' };
+            let failed = 0;
+            for (const [k, want] of Object.entries(expect)) {
+              const r = g.scan(g.SAMPLES[k]);
+              const ok = r.action === want;
+              if (!ok) failed++;
+              console.log((ok ? 'ok  ' : 'FAIL') + '  ' + k.padEnd(10) +
+                          ' score=' + String(r.score).padStart(3) + ' action=' + r.action);
+            }
+            if (failed) { console.error(failed + ' detector expectation(s) failed'); process.exit(1); }
+          "
+
+      - name: Check locale key coverage
+        run: |
+          python3 - <<'EOF'
+          import re, json, glob, os, sys
+          html = open('index.html', encoding='utf-8').read()
+          keys = set(re.findall(r'data-i18n="([^"]+)"', html))
+          for m in re.finditer(r'data-i18n-attr="([^"]+)"', html):
+              for pair in m.group(1).split(','):
+                  keys.add(pair.split(':')[1].strip())
+          failed = 0
+          for f in sorted(glob.glob('assets/i18n/*.json')):
+              d = json.load(open(f, encoding='utf-8'))
+              missing = keys - set(d)
+              empty = [k for k, v in d.items() if not str(v).strip()]
+              if missing or empty:
+                  failed += 1
+                  print('FAIL %s missing=%s empty=%s' % (os.path.basename(f), sorted(missing)[:8], empty[:8]))
+              else:
+                  print('ok   %s (%d keys)' % (os.path.basename(f), len(d)))
+          if failed:
+              sys.exit('%d locale file(s) incomplete' % failed)
+          EOF
+
+      - name: Build resume content from the uploaded .docx
+        run: python3 scripts/parse-resume-docx.py --out assets/cv/resume-data.json
+
+      - name: Render resume PDF
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node scripts/render-resume.mjs
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
