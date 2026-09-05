@@ -52,6 +52,7 @@ p{margin:0}
 .act.primary{background:var(--acc);border-color:transparent;color:#fff;font-weight:600}
 .opt{display:flex;align-items:center;gap:7px;font-size:.78rem;color:#98a0ae;cursor:pointer;user-select:none}
 .opt input{accent-color:var(--acc);width:14px;height:14px}
+.src{font-size:.7rem;color:#79808d;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .hint{max-width:1000px;margin:0 auto;padding:10px 18px;font-size:.79rem;color:#8b93a2;border-top:1px solid #23262e;display:flex;gap:9px;align-items:flex-start}
 .hint b{color:#c3cad6;font-weight:600}
@@ -159,6 +160,7 @@ html[data-region="us"] h2.sec{margin:15px 0 6px}
       <input type="checkbox" id="langToggle" checked> <span>Deutsch</span>
     </label>
 
+    <span class="src mono" id="srcNote" hidden></span>
     <a class="act" id="dlBtn" href="assets/cv/Badathala-Jaisurya-CV-International.pdf" download>
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 20h16"/></svg>
       <span id="dlLabel">Download</span>
@@ -387,7 +389,26 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.seg button').forEach(function (b) {
     b.setAttribute('aria-pressed', String(b.dataset.region === region));
   });
+
+  /* Content generated from the uploaded .docx, when the deploy produced one.
+     Render immediately from the built-in copy so the page is never blank,
+     then re-render if fresher content arrives. */
   render();
+  fetch('assets/cv/resume-data.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (data && R.adopt(data)) {
+        render();
+        var src = document.getElementById('srcNote');
+        if (src && CV.source) {
+          src.hidden = false;
+          src.textContent = CV.source.germanUploaded
+            ? 'from ' + CV.source.file
+            : 'from ' + CV.source.file + ' · German headings, English body';
+        }
+      }
+    })
+    .catch(function () { /* keep the built-in content */ });
 });
 </script>
 </body>

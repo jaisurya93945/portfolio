@@ -4,3 +4,6 @@ assets/cv/
 
 node_modules/
 .DS_Store
+.github/signing-probe.txt
+__pycache__/
+*.pyc
