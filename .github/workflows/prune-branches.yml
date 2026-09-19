@@ -1,0 +1,59 @@
+name: Prune branches
+
+# The session that built this site pushes over a git proxy that refuses ref
+# deletion, so stale branches cannot be removed from there. GITHUB_TOKEN can,
+# because branch deletion is part of contents:write.
+#
+# Deletes every branch except main. Run from the Actions tab.
+
+on:
+  workflow_dispatch:
+    inputs:
+      keep:
+        description: 'Branch to keep'
+        required: true
+        default: 'main'
+
+permissions:
+  contents: write
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete every branch except the one to keep
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KEEP: ${{ inputs.keep }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+
+          branches=$(curl -sS -H "Authorization: bearer $GH_TOKEN" \
+            "$api/branches?per_page=100" | python3 -c "
+          import sys, json
+          for b in json.load(sys.stdin):
+              print(b['name'])")
+
+          echo "Keeping: $KEEP"
+          deleted=0
+          for b in $branches; do
+            [ "$b" = "$KEEP" ] && continue
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE \
+              -H "Authorization: bearer $GH_TOKEN" \
+              "$api/git/refs/heads/$b")
+            if [ "$code" = "204" ]; then
+              echo "deleted  $b"
+              deleted=$((deleted + 1))
+            else
+              echo "::warning::could not delete $b (HTTP $code) — it may be protected or the default branch"
+            fi
+          done
+          echo "Removed $deleted branch(es)."
+
+          echo "Remaining:"
+          curl -sS -H "Authorization: bearer $GH_TOKEN" "$api/branches?per_page=100" \
+            | python3 -c "
+          import sys, json
+          for b in json.load(sys.stdin):
+              print('  ' + b['name'])"
