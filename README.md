@@ -184,9 +184,8 @@ Two one-time steps are needed before the site goes live:
    nothing is ever published.
 2. **Enable the source.** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 
-The workflow triggers on `main` *and* on `claude/**`, so whichever of those is the default branch
-will publish. If the site ever looks out of date, it is almost always because the workflow never
-fired and Pages is still serving an earlier publish.
+The workflow triggers on pushes to `main`. If the site ever looks out of date, it is almost always
+because the workflow never fired and Pages is still serving an earlier publish.
 
 ## Updating the résumé (no computer required)
 
