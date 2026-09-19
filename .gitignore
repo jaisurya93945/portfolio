@@ -7,3 +7,7 @@ node_modules/
 .github/signing-probe.txt
 __pycache__/
 *.pyc
+
+# Word writes these beside a document it has open; never a résumé source.
+~$*.docx
+~$*.doc
