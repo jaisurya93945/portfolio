@@ -35,257 +35,12 @@
   })();
 
   /* ---------------------------------------------------------
-     1. Preloader — a curtain, not a spinner. Once per session.
-     --------------------------------------------------------- */
-  var preloadDone = new Promise(function (resolve) {
-    var el = $('#preload'), num = $('#preloadNum'), bar = $('#preloadBar');
-    var seen = false;
-    try { seen = sessionStorage.getItem('seen') === '1'; } catch (e) {}
-
-    if (!el || reduce || seen) {
-      if (el) el.remove();
-      return resolve();
-    }
-    try { sessionStorage.setItem('seen', '1'); } catch (e) {}
-
-    var t0 = performance.now(), dur = 1250;
-    (function step(now) {
-      var p = Math.min(1, (now - t0) / dur);
-      var eased = 1 - Math.pow(1 - p, 3);
-      var v = Math.round(eased * 100);
-      num.textContent = v < 10 ? '0' + v : String(v);
-      bar.style.width = (eased * 100) + '%';
-      if (p < 1) requestAnimationFrame(step);
-      else setTimeout(function () {
-        el.classList.add('done');
-        resolve();
-        setTimeout(function () { el.remove(); }, 1100);
-      }, 180);
-    })(t0);
-  });
-
-  /* ---------------------------------------------------------
-     2. Dot-matrix hero canvas
-     O(n) per frame — no pairwise link loop. Pointer creates a
-     ripple of scale and colour. Pauses off-screen and hidden.
-     --------------------------------------------------------- */
-  (function matrix() {
-    var cvs = $('#matrix');
-    if (!cvs || !cvs.getContext || reduce) return;
-    var ctx = cvs.getContext('2d', { alpha: true });
-    var w = 0, h = 0, dpr = 1, cols = 0, rows = 0, gap = 30;
-    var raf = null, running = false, visible = true, t = 0;
-    var px = -9999, py = -9999;
-    var base = 'rgba(255,255,255,.3)', hot = 'rgba(45,212,191,.95)';
-
-    function readColors() {
-      var cs = getComputedStyle(document.documentElement);
-      base = (cs.getPropertyValue('--dot') || base).trim();
-      hot  = (cs.getPropertyValue('--dot-hot') || hot).trim();
-    }
-
-    function size() {
-      var r = cvs.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = r.width; h = r.height;
-      cvs.width = Math.floor(w * dpr);
-      cvs.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      gap = w < 640 ? 34 : 30;
-      cols = Math.ceil(w / gap) + 1;
-      rows = Math.ceil(h / gap) + 1;
-    }
-
-    function frame() {
-      if (!running) return;
-      t += 0.006;
-      ctx.clearRect(0, 0, w, h);
-      var R = 190, R2 = R * R;
-
-      for (var i = 0; i < cols; i++) {
-        for (var j = 0; j < rows; j++) {
-          var x = i * gap, y = j * gap;
-          // slow standing wave so the field breathes
-          var wave = Math.sin(x * 0.008 + t * 2) * Math.cos(y * 0.01 - t * 1.4);
-          var r = 0.7 + wave * 0.45;
-          var a = 0.45 + wave * 0.3;
-          var color = base;
-
-          var dx = x - px, dy = y - py, d2 = dx * dx + dy * dy;
-          if (d2 < R2) {
-            var prox = 1 - Math.sqrt(d2) / R;
-            r += prox * 2.1;
-            a = Math.min(1, a + prox * 0.9);
-            if (prox > 0.42) color = hot;
-          }
-          if (r <= 0.1) continue;
-          ctx.globalAlpha = a;
-          ctx.fillStyle = color;
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, 6.2832);
-          ctx.fill();
-        }
-      }
-      ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(frame);
-    }
-
-    function start() { if (running || !visible) return; running = true; raf = requestAnimationFrame(frame); }
-    function stop()  { running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
-
-    readColors(); size(); start();
-
-    var rt;
-    addEventListener('resize', function () {
-      clearTimeout(rt);
-      rt = setTimeout(function () { size(); }, 180);
-    }, { passive: true });
-
-    addEventListener('pointermove', function (e) {
-      var r = cvs.getBoundingClientRect();
-      if (e.clientY > r.bottom) { px = py = -9999; return; }
-      px = e.clientX - r.left; py = e.clientY - r.top;
-    }, { passive: true });
-    addEventListener('pointerleave', function () { px = py = -9999; });
-
-    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        visible = es[0].isIntersecting;
-        visible ? start() : stop();
-      }, { threshold: 0 }).observe(cvs);
-    }
-    var tb = $('#themeToggle');
-    if (tb) tb.addEventListener('click', function () { setTimeout(readColors, 60); });
-  })();
-
-  /* ---------------------------------------------------------
-     3. Line-mask heading reveal
-     Wrap each line's text in an inner span that starts pushed
-     below its own overflow-hidden box, then slides up.
-     --------------------------------------------------------- */
-  function prepareSplit(root) {
-    $$('[data-split]', root || document).forEach(function (h) {
-      if (h.classList.contains('ready')) return;
-      $$('.l', h).forEach(function (line, i) {
-        if ($('.inner', line)) return;
-        var inner = document.createElement('span');
-        inner.className = 'inner';
-        while (line.firstChild) inner.appendChild(line.firstChild);
-        line.appendChild(inner);
-        inner.style.setProperty('--sd', (i * 0.09) + 's');
-      });
-      h.classList.add('ready');
-    });
-  }
-  prepareSplit();
-  /* re-wrap after a language swap replaces innerHTML */
-  document.addEventListener('i18n:change', function () {
-    $$('[data-split]').forEach(function (h) {
-      var wasIn = h.classList.contains('in');
-      h.classList.remove('ready');
-      prepareSplit(h.parentNode);
-      if (wasIn) h.classList.add('in');
-    });
-  });
-
-  /* ---------------------------------------------------------
-     3b. Hero name decodes on load
-     A security portfolio should look like one for the second it
-     takes the name to resolve. Cheap: one rAF loop, ~700ms, then
-     the real text is restored and never touched again.
-     --------------------------------------------------------- */
-  function decodeName() {
-    var h = $('.display');
-    if (!h || reduce) return;
-    var lines = $$('.l .inner', h);
-    if (!lines.length) return;
-
-    var GLYPHS = '/\\|<>[]{}#$%&*+=~^01';
-    var state = lines.map(function (el) {
-      var text = el.textContent;
-      el.textContent = '';
-      return { el: el, text: text, spans: null };
-    });
-
-    state.forEach(function (s) {
-      s.spans = s.text.split('').map(function (ch) {
-        var sp = document.createElement('span');
-        if (ch === ' ') { sp.innerHTML = '&nbsp;'; }
-        else { sp.className = 'scramble-char'; sp.textContent = GLYPHS[0]; }
-        s.el.appendChild(sp);
-        return sp;
-      });
-    });
-
-    h.classList.add('scrambling');
-    var total = state.reduce(function (n, s) { return n + s.text.length; }, 0);
-    var t0 = performance.now(), dur = 620, perChar = 34;
-
-    (function tick(now) {
-      var elapsed = now - t0;
-      var settled = 0, i = 0;
-      state.forEach(function (s) {
-        s.spans.forEach(function (sp, j) {
-          var ch = s.text[j];
-          if (ch === ' ') { settled++; i++; return; }
-          var due = j * perChar;
-          if (elapsed >= due + 90) {
-            if (sp.textContent !== ch) { sp.textContent = ch; sp.className = ''; }
-            settled++;
-          } else if (elapsed >= due - 60) {
-            sp.textContent = GLYPHS[(Math.random() * GLYPHS.length) | 0];
-          }
-          i++;
-        });
-      });
-      if (settled < total && elapsed < dur + total * perChar) {
-        requestAnimationFrame(tick);
-      } else {
-        state.forEach(function (s) { s.el.textContent = s.text; });
-        h.classList.remove('scrambling');
-      }
-    })(t0);
-  }
-
-  /* ---------------------------------------------------------
      4. Reveal / counters / bars
      --------------------------------------------------------- */
-  function animateCount(el) {
-    var target = parseFloat(el.getAttribute('data-count'));
-    if (isNaN(target)) return;
-    var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
-    var pre = el.getAttribute('data-prefix') || '';
-    var suf = el.getAttribute('data-suffix') || '';
-    if (reduce) { el.textContent = pre + target.toFixed(dec) + suf; return; }
-    var dur = 1500, t0 = performance.now();
-    (function step(now) {
-      var p = Math.min(1, (now - t0) / dur);
-      var e = 1 - Math.pow(1 - p, 3);
-      el.textContent = pre + (target * e).toFixed(dec) + suf;
-      if (p < 1) requestAnimationFrame(step);
-      else el.textContent = pre + target.toFixed(dec) + suf;
-    })(t0);
-  }
-
-  function fillBars(scope) {
-    $$('.bar', scope).forEach(function (b, i) {
-      setTimeout(function () {
-        b.style.setProperty('--w', b.getAttribute('data-v') + '%');
-        b.classList.add('on');
-      }, i * 85);
-    });
-  }
-
   function activate(el) {
     el.classList.add('in');
     var eb = el.matches('.eyebrow') ? el : $('.eyebrow', el);
     if (eb) eb.classList.add('in');
-    $$('[data-count]', el).forEach(animateCount);
-    if (el.hasAttribute('data-count')) animateCount(el);
-    fillBars(el);
-    var ring = $('#ringFg', el);
-    if (ring) ring.style.strokeDashoffset = String(327 - 327 * 0.968);
   }
 
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries, obs) {
@@ -297,17 +52,13 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }) : null;
 
   var watched = $$('[data-anim], [data-split], .hero-card, .stat, .achieve, .bars');
-  preloadDone.then(function () {
-    watched.forEach(function (el) { io ? io.observe(el) : activate(el); });
-    setTimeout(decodeName, 260);
-  });
+  watched.forEach(function (el) { io ? io.observe(el) : activate(el); });
 
   /* ---------------------------------------------------------
      5. Nav: sticky, progress, active link, burger
      --------------------------------------------------------- */
   var nav = $('#nav'), bar = $('#progressBar'), toTop = $('#toTop');
   var rail = $('#rail'), railLinks = $$('.rail a');
-  var marquee = $('.marquee'), lastY = 0, vel = 0;
   var sections = $$('main section[id]');
   var navLinks = $$('.nav-links a');
   var ticking = false;
@@ -329,15 +80,6 @@
       railLinks.forEach(function (a) { a.classList.toggle('current', a.getAttribute('href') === '#' + cur); });
     }
 
-    /* Marquee leans into the scroll: speed and skew follow velocity. */
-    if (marquee) {
-      var dy = y - lastY;
-      lastY = y;
-      vel += (dy - vel) * 0.2;
-      var clamped = Math.max(-40, Math.min(40, vel));
-      marquee.style.setProperty('--mq-skew', (clamped * 0.035).toFixed(2) + 'deg');
-      marquee.style.setProperty('--mq-rate', (1 + Math.min(2.2, Math.abs(clamped) / 26)).toFixed(2));
-    }
     ticking = false;
   }
   addEventListener('scroll', function () {
@@ -365,70 +107,6 @@
   }
 
   /* ---------------------------------------------------------
-     6. Cursor, magnets, card spotlight — fine pointers only
-     --------------------------------------------------------- */
-  if (fine && !reduce) {
-    document.body.classList.add('pointer-fine');
-    var cur = $('#cursor'), dot = $('.cursor-dot'), ring = $('.cursor-ring');
-    var mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my, craf;
-
-    addEventListener('pointermove', function (e) {
-      mx = e.clientX; my = e.clientY;
-      if (!document.body.classList.contains('cursor-live')) {
-        rx = mx; ry = my;
-        document.body.classList.add('cursor-live');
-      }
-      if (dot) dot.style.transform = 'translate(' + mx + 'px,' + my + 'px) translate(-50%,-50%)';
-      if (!craf) craf = requestAnimationFrame(function loop() {
-        rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-        if (ring) ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
-        if (Math.abs(mx - rx) > 0.4 || Math.abs(my - ry) > 0.4) craf = requestAnimationFrame(loop);
-        else craf = null;
-      });
-    }, { passive: true });
-
-    $$('a, button, .magnet, textarea, input').forEach(function (el) {
-      el.addEventListener('pointerenter', function () { document.body.classList.add('cursor-hot'); });
-      el.addEventListener('pointerleave', function () { document.body.classList.remove('cursor-hot'); });
-    });
-
-    /* magnetic pull on small interactive targets */
-    $$('.magnet').forEach(function (el) {
-      var strength = 0.28;
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        var dx = e.clientX - (r.left + r.width / 2);
-        var dy = e.clientY - (r.top + r.height / 2);
-        el.style.transform = 'translate(' + dx * strength + 'px,' + dy * strength + 'px)';
-      });
-      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
-    });
-  }
-
-  if (fine) {
-    $$('.fcard, .pcard').forEach(function (card) {
-      card.addEventListener('pointermove', function (e) {
-        var r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
-        card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
-      }, { passive: true });
-    });
-  }
-
-  /* ---------------------------------------------------------
-     7. Marquee (built in JS so it stays in sync with language)
-     --------------------------------------------------------- */
-  (function marquee() {
-    var track = $('#marqueeTrack');
-    if (!track) return;
-    var words = ['Prompt Injection Defence', 'LLM Gateways', 'MCP Tool Poisoning', 'DevSecOps',
-                 'Kubernetes Hardening', 'Detection Engineering', 'MLOps', 'AWS & GCP',
-                 'Threat Modelling', 'Red Teaming LLMs'];
-    var html = words.map(function (w) { return '<span>' + w + '</span><i>◆</i>'; }).join('');
-    track.innerHTML = html + html;   /* duplicated for a seamless -50% loop */
-  })();
-
-  /* ---------------------------------------------------------
      8. Skill tabs
      --------------------------------------------------------- */
   var tabs = $$('.tab');
@@ -450,7 +128,6 @@
       if (!panel) return;
       panel.hidden = !on;
       panel.classList.toggle('active', on);
-      if (on) fillBars(panel);
     });
   }
 
@@ -476,9 +153,9 @@
     var probe = $('#probe');
     if (!probe || !window.ThreatGateway) return;
 
-    var scoreEl = $('#riskScore'), arc = $('#gaugeArc'), badge = $('#verdictBadge');
+    var scoreEl = $('#riskScore'), badge = $('#verdictBadge');
     var vText = $('#verdictText'), vBox = $('#verdict'), list = $('#findings'), conf = $('#confLine');
-    var ARC = 182, last = null;
+    var last = null;
 
     function copy(action) {
       var d = { allow: 'lab.v.allow', warn: 'lab.v.warn', block: 'lab.v.block' }[action];
@@ -494,7 +171,6 @@
     function render(res) {
       last = res;
       scoreEl.textContent = res.score;
-      arc.style.strokeDashoffset = String(ARC - ARC * (res.score / 100));
       vBox.setAttribute('data-level', res.action);
       badge.textContent = res.action.toUpperCase();
       var damp = '';
