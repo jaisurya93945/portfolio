@@ -31,8 +31,9 @@ a UK CV, a US resume and the rest from it.
 | `en/` | Your English résumé. This is the one that matters. |
 | `de/` | Optional German résumé. Without it the German view keeps German headings and shows the English body — normal for tech roles, but a real German document reads better. |
 
-If several `.docx` files are present the most recently modified one wins, so
-old versions can stay as history.
+If several `.docx` files are present the one **committed most recently** wins,
+so old versions can stay as history. Subfolders are searched too, so
+`en/archive/2025/old.docx` is safe to keep.
 
 ## What the parser expects
 
@@ -48,4 +49,13 @@ It reads the structure Word already saves, so a normal résumé works as-is:
 
 Keep those headings and it will keep working. If a document cannot be read the
 deploy **fails loudly** rather than publishing an empty CV, and the previously
-published site stays up untouched.
+published site stays up untouched. The error names the heading it wanted and
+lists the ones it did find, so it is clear what to rename.
+
+## Checking a build
+
+Every run writes a summary to its Actions page: open the run from the
+repository's **Actions** tab and the **Resume build** panel shows what was read
+out of the document — word count, number of roles, projects, certifications and
+bullets, the most recent role, and which contact details were picked up. Check
+it after an upload to confirm the parse matched the document.

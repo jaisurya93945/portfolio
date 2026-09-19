@@ -328,7 +328,7 @@
       });
     }
 
-    CV.source = { file: en.sourceFile, germanUploaded: !!de };
+    CV.source = { file: en.sourceFile, updated: en.updated || '', germanUploaded: !!de };
     return true;
   }
 

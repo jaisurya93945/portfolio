@@ -23,6 +23,8 @@ import sys
 import html
 import zipfile
 import argparse
+import subprocess
+import datetime
 
 NS_TAB = re.compile(r'<w:tab[^>]*/>')
 TAG = re.compile(r'<[^>]+>')
@@ -215,14 +217,93 @@ def parse_contact(lines):
     }
 
 
-def newest_docx(folder):
+def git_time(path):
+    """Seconds since the epoch of the commit that last touched *path*.
+
+    A fresh ``git clone`` stamps every working-tree file with the checkout
+    time, so ``os.path.getmtime`` cannot tell an old resume from the one that
+    was just uploaded. The commit date can, and it is what the person
+    uploading actually means by "the latest one". Falls back to mtime outside
+    a repository.
+    """
+    try:
+        out = subprocess.run(
+            ['git', 'log', '-1', '--format=%ct', '--', path],
+            capture_output=True, text=True, timeout=20)
+        if out.returncode == 0 and out.stdout.strip():
+            return int(out.stdout.strip())
+    except (OSError, ValueError, subprocess.SubprocessError):
+        pass
+    return int(os.path.getmtime(path))
+
+
+def find_docx(folder):
+    """Every .docx anywhere under *folder*, newest upload last.
+
+    Searched recursively so a file dropped into a subfolder - or uploaded
+    through the GitHub web UI, which happily creates one - is still found.
+    """
     if not os.path.isdir(folder):
-        return None
-    files = [os.path.join(folder, f) for f in os.listdir(folder)
-             if f.lower().endswith('.docx') and not f.startswith('~$')]
-    if not files:
-        return None
-    return max(files, key=os.path.getmtime)
+        return []
+    found = []
+    for root, dirs, names in os.walk(folder):
+        dirs[:] = [d for d in dirs if not d.startswith('.')]
+        for n in names:
+            if n.lower().endswith('.docx') and not n.startswith('~$'):
+                found.append(os.path.join(root, n))
+    return sorted(found, key=git_time)
+
+
+def newest_docx(folder):
+    files = find_docx(folder)
+    return files[-1] if files else None
+
+
+HEADING_HELP = {
+    'summary': 'PROFESSIONAL SUMMARY (or SUMMARY / PROFILE)',
+    'experience': 'PROFESSIONAL EXPERIENCE (or EXPERIENCE / WORK EXPERIENCE)',
+}
+
+
+def summarise(payload, args):
+    """Write a run report to the GitHub Actions job summary.
+
+    Uploading a resume is a blind action: you commit a .docx and hope the
+    parser understood it. This puts what was actually read on the run page,
+    so a heading that stopped matching is visible immediately rather than
+    after the wrong CV is already live.
+    """
+    dest = os.environ.get('GITHUB_STEP_SUMMARY')
+    if not dest:
+        return
+    out = ['## Resume build\n']
+    for lang, data in sorted(payload.items()):
+        out.append('### `%s` — %s\n' % (lang, data['sourceFile']))
+        out.append('| Section | Parsed |')
+        out.append('| --- | --- |')
+        out.append('| Summary | %d words |' % len(data.get('summary', '').split()))
+        for key, label in (('experience', 'Roles'), ('projects', 'Projects'),
+                           ('skills', 'Skill rows'), ('certs', 'Certifications'),
+                           ('education', 'Education'), ('achievements', 'Achievements')):
+            out.append('| %s | %d |' % (label, len(data.get(key) or [])))
+        bullets = sum(len(e.get('bullets') or []) for e in data.get('experience') or [])
+        out.append('| Bullets under roles | %d |' % bullets)
+        out.append('')
+        roles = data.get('experience') or []
+        if roles:
+            top = roles[0]
+            out.append('**Most recent role read:** %s, %s — %s'
+                       % (top.get('role') or '?', top.get('org') or '?',
+                          top.get('whenRaw') or '?'))
+            out.append('')
+        contact = data.get('contact') or {}
+        found = [k for k in ('email', 'phone', 'linkedin', 'github') if contact.get(k)]
+        out.append('**Contact picked up:** %s' % (', '.join(found) if found else 'none'))
+        out.append('')
+    out.append('Built from `%s`. Edit the Word file and the site rebuilds itself.'
+               % args.source)
+    with open(dest, 'a', encoding='utf-8') as f:
+        f.write('\n'.join(out) + '\n')
 
 
 def main():
@@ -240,13 +321,24 @@ def main():
         data = parse(path)
         missing = [k for k in ('summary', 'experience') if not data.get(k)]
         if missing:
-            sys.exit('error: %s parsed but missing %s — check the headings in the document'
-                     % (os.path.basename(path), ', '.join(missing)))
+            got = sorted(set(k for k in HEADINGS.values() if data.get(k)))
+            sys.exit(
+                'error: read %s but could not find %s.\n'
+                '  expected heading(s): %s\n'
+                '  headings it did find: %s\n'
+                '  A heading must be its own paragraph, bold and ALL CAPS.\n'
+                '  Nothing was published; the live site is unchanged.'
+                % (os.path.relpath(path), ' and '.join(missing),
+                   '; '.join(HEADING_HELP[m] for m in missing),
+                   ', '.join(got) or 'none'))
         data['sourceFile'] = os.path.basename(path)
+        data['sourcePath'] = os.path.relpath(path)
+        data['updated'] = datetime.datetime.fromtimestamp(
+            git_time(path), datetime.timezone.utc).strftime('%Y-%m-%d')
         payload[lang] = data
-        print('parsed %-8s %s  (%d roles, %d projects, %d skills)'
+        print('parsed %-3s %-34s %d roles, %d projects, %d skills, updated %s'
               % (lang, os.path.basename(path), len(data['experience']),
-                 len(data['projects']), len(data['skills'])))
+                 len(data['projects']), len(data['skills']), data['updated']))
 
     if not payload:
         print('no .docx found under %s — the site keeps its built-in resume content'
@@ -257,6 +349,7 @@ def main():
     with open(args.out, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=1)
     print('wrote ' + args.out)
+    summarise(payload, args)
     return 0
 
 
