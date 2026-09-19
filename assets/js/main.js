@@ -633,8 +633,8 @@
   (function typer() {
     var el = $('#typed');
     if (!el) return;
-    var roles = ['AI Security Engineer', 'DevSecOps Engineer', 'MLOps & Cloud Security',
-                 'LLM Red Teamer', 'DevOps Engineer @ Stackly'];
+    var roles = ['AI Security Engineer', 'AI Safety & Security Researcher',
+                 'DevSecOps Engineer', 'MLOps & Cloud Security', 'LLM Red Teamer'];
     if (reduce) { el.textContent = roles[0]; return; }
     var r = 0, c = 0, del = false;
     (function tick() {

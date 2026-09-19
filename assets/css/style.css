@@ -696,3 +696,65 @@ kbd{font-family:var(--mono);font-size:.66rem;padding:2px 5px;border-radius:5px;b
 
 /* Give the hero copy more of the viewport now the name is larger. */
 
+
+/* =========================================================
+   Recruiter scan + research
+   ========================================================= */
+
+/* ---------- at a glance ---------- */
+.glance{border-block:1px solid var(--line);background:var(--surface)}
+.glance-in{max-width:var(--maxw);margin:0 auto;padding:clamp(28px,4vw,44px) var(--pad)}
+.glance-eyebrow{color:var(--acc);text-transform:uppercase;letter-spacing:.2em;font-size:.68rem;margin-bottom:20px}
+.glance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px 30px;margin:0}
+.glance-grid dt{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.15em;color:var(--ink-3);margin-bottom:7px}
+.glance-grid dd{margin:0;font-size:.92rem;color:var(--ink);line-height:1.5}
+.glance-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+
+/* ---------- research ---------- */
+.res-wrap{display:grid;gap:14px}
+.res-q{
+  position:relative;padding:clamp(24px,3.4vw,40px);border-radius:var(--r-l);
+  border:1px solid var(--acc-line);background:var(--acc-soft);
+}
+.res-q .ptag{margin-bottom:14px}
+.res-q h3{font-size:clamp(1.3rem,2.9vw,2rem);letter-spacing:-.03em;max-width:24ch}
+.res-q>p{margin-top:14px;color:var(--ink-2);font-size:.95rem;max-width:74ch}
+.res-meta{display:flex;flex-wrap:wrap;gap:28px;margin-top:24px;padding-top:20px;border-top:1px solid var(--acc-line)}
+.res-meta li{display:grid;gap:2px}
+.res-meta b{font-family:var(--display);font-size:1.35rem;font-weight:700;letter-spacing:-.03em;color:var(--acc)}
+.res-meta sup{font-size:.6em}
+.res-meta span{font-size:.74rem;color:var(--ink-2)}
+.res-q .plink{margin-top:22px}
+
+.res-method{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.rm{padding:24px 22px;border-radius:var(--r-l);border:1px solid var(--line);background:var(--surface);transition:border-color .3s}
+.rm:hover{border-color:var(--line-2)}
+.rm-n{display:block;color:var(--acc);font-size:.66rem;margin-bottom:12px}
+.rm h4{font-size:1.02rem;font-family:var(--display);letter-spacing:-.02em;margin-bottom:8px}
+.rm p{font-size:.86rem;color:var(--ink-2)}
+
+.ledger{border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--surface)}
+.ledger-head{padding:24px clamp(18px,2.6vw,28px) 18px;border-bottom:1px solid var(--line)}
+.ledger-head h3{font-size:1.12rem}
+.ledger-head p{margin-top:7px;font-size:.87rem;color:var(--ink-2);max-width:70ch}
+.ledger-rows li{
+  display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center;
+  padding:13px clamp(18px,2.6vw,28px);border-bottom:1px solid var(--line);
+}
+.ledger-rows li:last-child{border-bottom:0}
+.hid{color:var(--ink-3);font-size:.74rem}
+.hdesc{font-size:.89rem;color:var(--ink-2)}
+.hstat{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.03em;white-space:nowrap;
+  padding:4px 10px;border-radius:999px;border:1px solid currentColor;
+}
+.hstat.live{color:var(--ok)}
+.hstat.dead{color:var(--bad)}
+.hstat.warn{color:var(--warn)}
+.ledger-foot{padding:16px clamp(18px,2.6vw,28px);color:var(--ink-3);font-size:.7rem;border-top:1px solid var(--line);line-height:1.7}
+
+@media (max-width:620px){
+  .ledger-rows li{grid-template-columns:40px minmax(0,1fr);row-gap:8px}
+  .ledger-rows .hstat{grid-column:2;justify-self:start}
+  .res-meta{gap:18px}
+}
