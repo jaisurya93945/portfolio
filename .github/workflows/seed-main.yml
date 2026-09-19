@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   publish:
@@ -40,3 +41,23 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
         run: python3 scripts/report-signature.py
+
+      # A commit created with GITHUB_TOKEN deliberately does not start
+      # workflows, so the deploy has to be asked for. This also fails while
+      # main is not the default branch, because the github-pages environment
+      # only accepts deployments from it — hence continue-on-error.
+      - name: Ask Pages to deploy main
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          code=$(curl -sS -o /tmp/r.json -w '%{http_code}' -X POST \
+            -H "Authorization: bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages.yml/dispatches" \
+            -d '{"ref":"main"}')
+          echo "dispatch HTTP $code"
+          if [ "$code" != "204" ]; then
+            cat /tmp/r.json
+            echo "::notice::Pages did not accept a deploy from main. This is expected until main is the repository's default branch (Settings -> General -> Default branch)."
+          fi
