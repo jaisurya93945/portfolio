@@ -97,38 +97,45 @@ and shareable via `?region=de`.
 
 | Feature | Notes |
 | --- | --- |
-| Dot-matrix hero canvas | A breathing field that ripples under the pointer. `O(n)` per frame — no pairwise link loop — with DPR capped at 2, and it pauses when off-screen or the tab is hidden. |
-| Preloader curtain | Counter to 100, then the panel slides away. Runs once per session (`sessionStorage`), never under reduced motion. |
-| Line-mask headings | Each headline line sits in its own `overflow:hidden` box and slides up on reveal, staggered. Re-wrapped automatically after a language swap. |
+| Live threat gateway | Paste a prompt and get a scored verdict with the rules that fired, their evidence and their weights. Seven one-click sample payloads. Runs entirely in the browser. |
 | Command palette | `Ctrl`/`Cmd` + `K` — jump to any section, project or contact link. Labels follow the active language. |
 | Light + dark themes | Full token swap, remembered in `localStorage`, defaulting to the OS preference and applied before first paint. |
-| Magnetic buttons + custom cursor | Fine-pointer devices only; the cursor stays parked until the pointer actually moves. |
-| Project list | Editorial numbered rows with a pointer-tracked spotlight, filterable by discipline. |
-| Section rail | A fixed 01–07 index that tracks scroll position and expands the active label. |
+| Identifiability chart | Hover or focus any bar for its exact value; arrow keys walk the series, and a table view carries the same numbers for screen readers and print. |
+| Project list | Numbered datasheet rows — metrics in a spec column, stack tags beneath — filterable by discipline. |
+| Section rail | A fixed 01–08 index that tracks scroll position and expands the active label. |
 | View Transitions | Theme and language swaps cross-fade the whole page where the browser supports it; the language swap fetches first and applies inside the transition, so the fade covers a finished change. |
-| Scroll-reactive marquee | Skew and speed follow scroll velocity. |
-| Skill tabs | Four capability panels with arrow-key roving focus. |
+| Skill tabs | Four capability panels with arrow-key roving focus, in a strip that scrolls when it has to. |
 
 ## Performance and accessibility
 
 - No JS frameworks. One stylesheet, three small deferred scripts.
-- One external request: the Google Fonts stylesheet for Space Grotesk + Inter. Everything else —
-  icons, artwork, logic — is inline or local. The font stack falls back to system faces cleanly.
-- Canvas work is gated by `IntersectionObserver` and `visibilitychange`; scroll handlers are
-  `requestAnimationFrame`-batched and passive.
-- Full `prefers-reduced-motion` path: preloader, canvas, typing, marquee and reveals all stand down.
+- **Zero third-party requests.** Fonts, icons, artwork and logic are all served from this
+  origin, so loading a page contacts nobody but GitHub Pages.
+- Scroll handlers are `requestAnimationFrame`-batched and passive; observers do the reveal work.
+- Full `prefers-reduced-motion` path: typing and reveals stand down.
+- Scroll reveal is gated on a class the page sets itself, so a browser without JavaScript — or
+  a crawler that never runs it — still sees every section rather than a blank page.
 - Semantic landmarks, skip link, visible focus rings, ARIA on tabs, the palette dialog, the
-  language listbox and the live findings region.
+  language listbox and the live findings region. Chart bars are focusable and arrow-navigable,
+  and every chart carries a table view.
 - Responsive from 320px up, with no horizontal overflow.
 - `Person` JSON-LD, Open Graph, Twitter card and per-locale `hreflang` metadata.
 
-### A note on Google Fonts and GDPR
+### Fonts are self-hosted, and why
 
-The two webfonts load from `fonts.googleapis.com`, which means the visitor's IP reaches Google.
-German courts have found this actionable without consent, and Germany is a target market here.
-To remove the dependency entirely, download the two families, drop the `.woff2` files into
-`assets/fonts/`, replace the `<link rel="stylesheet" href="https://fonts.googleapis.com/...">`
-in `index.html` with local `@font-face` rules, and the site becomes fully self-contained.
+Loading a webfont from `fonts.googleapis.com` sends the visitor's IP address to Google on every
+page view. The Munich regional court held that to be a GDPR violation where the visitor has not
+consented (LG München I, 20 Jan 2022, 3 O 17493/20), and Germany is a target market here.
+
+So Inter and JetBrains Mono are served from `assets/fonts/` instead, declared in
+`assets/css/fonts.css`. Both are variable fonts under the SIL Open Font License 1.1, subset to
+`latin` and `latin-ext`: 172 KB in total, of which a typical visitor fetches 78 KB, and one file
+per family covers every weight. The two faces used above the fold are preloaded.
+
+To add or update a family, edit `FAMILIES` in
+[`scripts/fetch-fonts.py`](scripts/fetch-fonts.py) and run it — it downloads the files and
+regenerates `fonts.css`. It is the only thing here that ever talks to Google, it runs by hand
+rather than in the build, and its output is committed.
 
 ## Layout
 
@@ -137,13 +144,16 @@ index.html                 single-page portfolio
 resume.html                print-styled résumé (screen + @page A4)
 assets/
   css/style.css            design tokens, both themes, all components
+  css/fonts.css            @font-face for the self-hosted families
+  fonts/*.woff2            Inter + JetBrains Mono, variable, latin & latin-ext
   js/i18n.js               locale loader, detection, DOM swapping
   js/scanner.js            threat-detection engine (framework-free, unit-testable)
-  js/main.js               canvas, reveals, palette, tabs, filters, theme, lab wiring
+  js/main.js               reveals, palette, tabs, filters, theme, charts, lab wiring
   i18n/*.json              10 translated locales (English lives in index.html)
   img/favicon.svg          shield mark
   img/og.svg               social preview card
   js/resume.js             résumé content + per-region rules
+scripts/fetch-fonts.py       downloads the webfonts and writes fonts.css
 scripts/render-resume.mjs    renders one PDF per region at deploy time
 scripts/setup-signing.sh     one-time setup for verified commits
 scripts/parse-resume-docx.py resume-source/*.docx -> structured content
@@ -178,14 +188,12 @@ Pushes to `main` publish via [`.github/workflows/pages.yml`](.github/workflows/p
 gates the deploy on a detector regression check plus a locale key-coverage check, then renders the
 résumé PDF before publishing.
 
-Two one-time steps are needed before the site goes live:
+`main` is the only branch and the deploy source is **GitHub Actions** (Settings → Pages → Build and
+deployment). Checkout is deliberately full-depth: the résumé parser picks the newest `.docx` by the
+date of the commit that added it, and a shallow clone collapses every file onto one commit.
 
-1. **Create a `main` branch.** The workflow triggers on pushes to `main`; until that branch exists
-   nothing is ever published.
-2. **Enable the source.** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
-
-The workflow triggers on pushes to `main`. If the site ever looks out of date, it is almost always
-because the workflow never fired and Pages is still serving an earlier publish.
+If the site ever looks out of date, it is almost always because the workflow never fired — check
+**Actions** before suspecting the build.
 
 ## Updating the résumé (no computer required)
 
@@ -206,10 +214,6 @@ labels it so nothing is misleading. If a document cannot be parsed the deploy fa
 site that is already published stays up.
 
 ## Verified commits
-
-A **Verified** badge means GitHub checked a signature made by a key that belongs to you — so only
-you can produce one. No bot, CI job or API token can sign on your behalf without becoming a key
-you do not control, which is the opposite of what you want on a security repository.
 
 A **Verified** badge means GitHub checked a cryptographic signature made by a key belonging to the
 author. That is why no tool can produce one on your behalf — it would have to hold a key you do not
@@ -289,6 +293,10 @@ Two GitHub behaviours shape this and are worth knowing rather than rediscovering
 Commits that were pushed over git cannot be signed retroactively by anyone but you — a signature has
 to be made with your key, over that exact commit. They stay unverified. Everything published through
 either route above is verified from here on.
+
+`RESUME_PAT` is configured, so the workflow route already produces commits authored by you and
+carrying the badge — for example `chore: rebuild resume content from uploaded .docx`, whose
+committer reads `GitHub <noreply@github.com>` with `VERIFIED: true`.
 
 ## Contact
 
