@@ -54,6 +54,26 @@
   var watched = $$('[data-anim], [data-split], .hero-card, .stat, .achieve, .bars');
   watched.forEach(function (el) { io ? io.observe(el) : activate(el); });
 
+  /* Safety net: if the observer never fires - a stale layout, a bfcache
+     restore, a browser that throttles it - nothing may stay invisible.
+     Reveal anything still hidden once the page has settled. */
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      watched.forEach(function (el) {
+        if (el.classList.contains('in')) return;
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) activate(el);
+      });
+    }, 1200);
+  });
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted) return;
+    watched.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) activate(el);
+    });
+  });
+
   /* ---------------------------------------------------------
      5. Nav: sticky, progress, active link, burger
      --------------------------------------------------------- */
@@ -186,6 +206,7 @@
         ' · latency: ' + res.latency.toFixed(2) + ' ms';
 
       list.textContent = '';
+      list.classList.remove('more');
       if (res.empty) return;
 
       if (!res.findings.length) {
@@ -193,9 +214,15 @@
         ok.className = 'finding clean';
         var s = document.createElement('span'); s.className = 'sev'; s.style.background = 'currentColor';
         var box = document.createElement('div');
-        var t = document.createElement('h5'); t.textContent = 'No detections';
+        var tr = function (k, f) {
+          var v = window.I18N ? window.I18N.t(k) : k;
+          return (v === k || v === undefined) ? f : v;
+        };
+        var t = document.createElement('h5');
+        t.textContent = tr('lab.clean.title', 'No detections');
         var p = document.createElement('p');
-        p.textContent = 'payload passed all ' + window.ThreatGateway.RULES.length + ' deterministic checks';
+        p.textContent = tr('lab.clean.sub', 'payload passed all {n} deterministic checks')
+          .replace('{n}', window.ThreatGateway.RULES.length);
         box.appendChild(t); box.appendChild(p);
         ok.appendChild(s); ok.appendChild(box);
         list.appendChild(ok);
@@ -215,7 +242,17 @@
         row.appendChild(dot); row.appendChild(mid); row.appendChild(w);
         list.appendChild(row);
       });
+      markOverflow();
     }
+
+    /* Fade the last row only while the list can still be scrolled, so a
+       clipped finding reads as "more below" instead of as a broken card. */
+    function markOverflow() {
+      var more = list.scrollHeight - list.clientHeight - list.scrollTop > 4;
+      list.classList.toggle('more', more);
+    }
+    list.addEventListener('scroll', markOverflow, { passive: true });
+    window.addEventListener('resize', markOverflow);
 
     var t;
     probe.addEventListener('input', function () {
@@ -443,6 +480,97 @@
       navigator.clipboard.writeText(val).then(function () { toast(val); }, function () { toast(val); });
     } else toast(val);
   });
+
+  /* ---------------------------------------------------------
+     15. Chart hover layer (per-mark tooltip, SVG bar figure)
+     --------------------------------------------------------- */
+  (function () {
+    var figs = document.querySelectorAll('svg.fig');
+    if (!figs.length) return;
+
+    var tip = document.createElement('div');
+    tip.className = 'fig-tip';
+    tip.setAttribute('role', 'status');
+    tip.setAttribute('aria-live', 'polite');
+    document.body.appendChild(tip);
+
+    var current = null;
+
+    var EN = {
+      'res.fig.unit1': 'surviving map',
+      'res.fig.unitN': 'surviving maps',
+      'res.fig.leg1': 'uniquely identifiable'
+    };
+
+    function t(key) {
+      var v = (window.I18N && window.I18N.t) ? window.I18N.t(key) : key;
+      return (v === key || v === undefined) ? (EN[key] || key) : v;
+    }
+
+    function label(bar) {
+      var w = bar.getAttribute('data-w');
+      var v = bar.getAttribute('data-v');
+      var unit = t(v === '1' ? 'res.fig.unit1' : 'res.fig.unitN');
+      var tail = bar.getAttribute('data-ident') === 'true' ? ' · ' + t('res.fig.leg1') : '';
+      return 'w=' + w + '  |RS| = ' + v + ' ' + unit + tail;
+    }
+
+    function place(bar) {
+      var r = bar.getBoundingClientRect();
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      var x = r.left + r.width / 2 - tw / 2;
+      var yy = r.top - th - 8;
+      if (yy < 6) yy = r.bottom + 8;
+      x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
+      tip.style.left = Math.round(x) + 'px';
+      tip.style.top = Math.round(yy) + 'px';
+    }
+
+    function show(bar) {
+      if (current === bar) return;
+      hide();
+      current = bar;
+      bar.classList.add('on');
+      tip.textContent = label(bar);
+      tip.classList.add('on');
+      place(bar);
+    }
+
+    function hide() {
+      if (current) current.classList.remove('on');
+      current = null;
+      tip.classList.remove('on');
+    }
+
+    Array.prototype.forEach.call(figs, function (fig) {
+      var bars = fig.querySelectorAll('.bar');
+      Array.prototype.forEach.call(bars, function (bar, i) {
+        bar.setAttribute('tabindex', '0');
+        bar.setAttribute('role', 'img');
+        bar.setAttribute('aria-label', label(bar));
+        bar.addEventListener('mouseenter', function () { show(bar); });
+        bar.addEventListener('focus', function () { show(bar); });
+        bar.addEventListener('blur', hide);
+        bar.addEventListener('keydown', function (e) {
+          var next = null;
+          if (e.key === 'ArrowRight') next = bars[i + 1];
+          else if (e.key === 'ArrowLeft') next = bars[i - 1];
+          else if (e.key === 'Escape') { hide(); bar.blur(); return; }
+          if (next) { e.preventDefault(); next.focus(); }
+        });
+      });
+      fig.addEventListener('mouseleave', hide);
+    });
+
+    window.addEventListener('scroll', function () { if (current) place(current); }, { passive: true });
+    window.addEventListener('resize', hide);
+    document.addEventListener('i18n:change', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('svg.fig .bar'), function (bar) {
+        bar.setAttribute('aria-label', label(bar));
+      });
+      if (current) tip.textContent = label(current);
+    });
+  })();
 
   var y = $('#year');
   if (y) y.textContent = String(new Date().getFullYear());

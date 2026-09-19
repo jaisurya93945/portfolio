@@ -37,15 +37,16 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/favicon.svg">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/css/style.css?v=6">
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css?v=7">
+<link rel="stylesheet" href="assets/css/style.css?v=7">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
 (function () {
   try {
+    document.documentElement.classList.add('js');
     var t = localStorage.getItem('theme');
     if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', t);
@@ -74,7 +75,7 @@
   "email": "mailto:jaisurya524126@gmail.com",
   "telephone": "+91-8143516981",
   "url": "https://jaisurya93945.github.io/portfolio/",
-  "image": "https://avatars.githubusercontent.com/u/94210631?v=6",
+  "image": "https://avatars.githubusercontent.com/u/94210631?v=7",
   "address": { "@type": "PostalAddress", "addressLocality": "Chennai", "addressCountry": "IN" },
   "worksFor": { "@type": "Organization", "name": "Stackly" },
   "alumniOf": { "@type": "CollegeOrUniversity", "name": "Rajalakshmi Institute of Technology" },
@@ -109,12 +110,12 @@
   </a>
 
   <nav class="nav-links" aria-label="Primary">
-    <a href="#focus"><span data-i18n="nav.focus">Focus</span></a>
+    <a href="#projects"><span data-i18n="nav.projects">Work</span></a>
     <a href="#lab"><span data-i18n="nav.lab">Live Lab</span></a>
     <a href="#research"><span data-i18n="nav.research">Research</span></a>
+    <a href="#focus"><span data-i18n="nav.focus">Focus</span></a>
     <a href="#skills"><span data-i18n="nav.skills">Skills</span></a>
     <a href="#experience"><span data-i18n="nav.experience">Experience</span></a>
-    <a href="#projects"><span data-i18n="nav.projects">Work</span></a>
     <a href="#certs"><span data-i18n="nav.certs">Credentials</span></a>
     <a href="#contact"><span data-i18n="nav.contact">Contact</span></a>
   </nav>
@@ -144,12 +145,12 @@
 </header>
 
 <div class="mobile-menu" id="mobileMenu" hidden>
-  <a href="#focus" data-i18n="nav.focus">Focus</a>
+  <a href="#projects" data-i18n="nav.projects">Work</a>
   <a href="#lab" data-i18n="nav.lab">Live Lab</a>
   <a href="#research" data-i18n="nav.research">Research</a>
+  <a href="#focus" data-i18n="nav.focus">Focus</a>
   <a href="#skills" data-i18n="nav.skills">Skills</a>
   <a href="#experience" data-i18n="nav.experience">Experience</a>
-  <a href="#projects" data-i18n="nav.projects">Work</a>
   <a href="#certs" data-i18n="nav.certs">Credentials</a>
   <a href="#contact" data-i18n="nav.contact">Contact</a>
 </div>
@@ -157,12 +158,12 @@
 
 <nav class="rail" id="rail" aria-label="Section index">
   <ol>
-    <li><a href="#focus"><i>01</i><span data-i18n="nav.focus">Focus</span></a></li>
+    <li><a href="#projects"><i>01</i><span data-i18n="nav.projects">Work</span></a></li>
     <li><a href="#lab"><i>02</i><span data-i18n="nav.lab">Live Lab</span></a></li>
     <li><a href="#research"><i>03</i><span data-i18n="nav.research">Research</span></a></li>
-    <li><a href="#skills"><i>04</i><span data-i18n="nav.skills">Skills</span></a></li>
-    <li><a href="#experience"><i>05</i><span data-i18n="nav.experience">Experience</span></a></li>
-    <li><a href="#projects"><i>06</i><span data-i18n="nav.projects">Work</span></a></li>
+    <li><a href="#focus"><i>04</i><span data-i18n="nav.focus">Focus</span></a></li>
+    <li><a href="#skills"><i>05</i><span data-i18n="nav.skills">Skills</span></a></li>
+    <li><a href="#experience"><i>06</i><span data-i18n="nav.experience">Experience</span></a></li>
     <li><a href="#certs"><i>07</i><span data-i18n="nav.certs">Credentials</span></a></li>
     <li><a href="#contact"><i>08</i><span data-i18n="nav.contact">Contact</span></a></li>
   </ol>
@@ -279,57 +280,183 @@
   </div>
 </section>
 
-<!-- ============ FOCUS ============ -->
-<section class="section" id="focus">
+<!-- ============ PROJECTS ============ -->
+<section class="section" id="projects">
   <header class="sec-head">
-    <p class="eyebrow" data-anim="fade"><span class="idx">01</span><span data-i18n="focus.eyebrow">Focus areas</span></p>
+    <p class="eyebrow" data-anim="fade"><span class="idx">01</span><span data-i18n="proj.eyebrow">Selected work</span></p>
     <h2 class="h-lg" data-split>
-      <span class="l" data-i18n="focus.h1">Four lanes, one thesis:</span>
-      <span class="l" data-i18n="focus.h2">AI is now attack surface.</span>
+      <span class="l" data-i18n="proj.h1">Shipped, documented,</span>
+      <span class="l" data-i18n="proj.h2">open to inspection.</span>
     </h2>
-    <p class="sec-sub" data-anim="fade" data-d="1" data-i18n="focus.sub">Traditional AppSec never covered untrusted prompts, poisoned tools or agent-to-agent traffic. I work where security engineering, cloud infrastructure and applied AI overlap.</p>
+    <p class="sec-sub" data-anim="fade" data-d="1" data-i18n="proj.sub">Every project below is either live in production or public on GitHub.</p>
   </header>
 
-  <div class="focus-grid">
-    <article class="fcard" data-anim="rise" data-accent="a">
-      <span class="fnum mono">01</span>
-      <div class="ficon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 5 6v5.4c0 4.2 2.9 7.8 7 9 4.1-1.2 7-4.8 7-9V6l-7-3Z"/><circle cx="12" cy="11" r="2.4"/><path d="M12 13.4V17"/></svg>
+  <div class="filters" data-anim="fade" role="group" aria-label="Filter projects">
+    <button class="filter active" data-filter="all" data-i18n="proj.f.all">All</button>
+    <button class="filter" data-filter="ai-security" data-i18n="proj.f.ai">AI Security</button>
+    <button class="filter" data-filter="mlops" data-i18n="proj.f.mlops">MLOps &amp; Research</button>
+    <button class="filter" data-filter="devsecops" data-i18n="proj.f.devsecops">DevSecOps</button>
+    <button class="filter" data-filter="product" data-i18n="proj.f.product">Product</button>
+  </div>
+
+  <div class="proj-list" id="projGrid">
+
+    <article class="pcard" data-anim="rise" data-cat="ai-security devsecops">
+      <span class="pnum mono">01</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p1.tag">AI Threat Gateway</span>
+          <span class="pstat mono">v0.3.0</span>
+        </div>
+        <h3>SentinelCore</h3>
+        <p data-i18n="proj.p1.d">A model-agnostic security layer between AI applications and their models, tools and data. Inspects prompts, documents, tool calls and model output; enforces allow / warn / sanitise / approve / block.</p>
+        <ul class="pstack"><li>Python 3.11</li><li>FastAPI</li><li>SQLite</li><li>Docker</li><li>pytest</li></ul>
       </div>
-      <h3 data-i18n="focus.c1.t">AI &amp; LLM Security</h3>
-      <p data-i18n="focus.c1.d">Prompt-injection and jailbreak detection, obfuscation decoding, system-prompt extraction defence, MCP tool-poisoning checks and explainable risk scoring.</p>
-      <ul class="ftags"><li>Guardrails</li><li data-i18n="focus.c1.g2">Red teaming</li><li>OWASP LLM Top 10</li><li>MITRE ATLAS</li></ul>
+      <ul class="pmetrics">
+        <li><b>96.8%</b><span data-i18n="proj.m.precision">precision</span></li>
+        <li><b>744</b><span data-i18n="proj.m.cases">labelled cases</span></li>
+        <li><b>MCP</b><span data-i18n="proj.m.poison">poisoning checks</span></li>
+      </ul>
+      <a class="plink" href="https://github.com/jaisurya93945/sentinelcore" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.source">Source</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
     </article>
 
-    <article class="fcard" data-anim="rise" data-d="1" data-accent="b">
-      <span class="fnum mono">02</span>
-      <div class="ficon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="2" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="17" r="2" fill="currentColor" stroke="none"/></svg>
+    <article class="pcard" data-anim="rise" data-cat="ai-security mlops">
+      <span class="pnum mono">02</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p2.tag">Detection Engine</span>
+          <span class="pstat mono">112 tests</span>
+        </div>
+        <h3>AegisAI</h3>
+        <p data-i18n="proj.p2.d">Layered LLM threat detection: deterministic rules keep authority over bounded ML evidence, producing a 0–100 risk score with explainable findings and nine threat-intent classes.</p>
+        <ul class="pstack"><li>Python</li><li>FastAPI</li><li>TF-IDF + LR</li><li>joblib</li></ul>
       </div>
-      <h3 data-i18n="focus.c2.t">DevSecOps</h3>
-      <p data-i18n="focus.c2.d">Security shifted into the pipeline: SAST/DAST gates, dependency and secret scanning, signed builds, least-privilege runners and policy-as-code on every merge.</p>
-      <ul class="ftags"><li>CI/CD</li><li>pip-audit</li><li data-i18n="focus.c2.g3">Container scanning</li><li data-i18n="focus.c2.g4">Linux hardening</li></ul>
+      <ul class="pmetrics">
+        <li><b>399K</b><span data-i18n="proj.m.train">training examples</span></li>
+        <li><b>9</b><span data-i18n="proj.m.intent">intent classes</span></li>
+        <li><b>0–100</b><span data-i18n="proj.m.scoring">risk scoring</span></li>
+      </ul>
+      <a class="plink" href="https://github.com/jaisurya93945/aegis-ai" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.source">Source</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
     </article>
 
-    <article class="fcard" data-anim="rise" data-d="2" data-accent="c">
-      <span class="fnum mono">03</span>
-      <div class="ficon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16V8l4 4 4-6 4 8 4-5"/><path d="M3 20h18"/></svg>
+    <article class="pcard" data-anim="rise" data-cat="mlops">
+      <span class="pnum mono">03</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p3.tag">Research</span>
+          <span class="pstat mono" data-i18n="proj.active">active</span>
+        </div>
+        <h3>NeuroGenesis</h3>
+        <p data-i18n="proj.p3.d">A verification framework that turns LLM reasoning into structured representations and independently checks logic, factual and constraint violations before an answer is accepted.</p>
+        <ul class="pstack"><li>Python</li><li>PyTorch</li><li>pytest</li></ul>
       </div>
-      <h3 data-i18n="focus.c3.t">MLOps</h3>
-      <p data-i18n="focus.c3.d">Reproducible model pipelines: dataset validation, leakage detection, cross-dataset evaluation, regression suites and versioned artefacts so a detector never silently degrades.</p>
-      <ul class="ftags"><li data-i18n="focus.c3.g1">Eval harnesses</li><li data-i18n="focus.c3.g2">Drift checks</li><li data-i18n="focus.c3.g3">Model registry</li><li>Docker</li></ul>
+      <ul class="pmetrics">
+        <li><b>Oracle</b><span data-i18n="proj.m.oracle">shortcut enumeration</span></li>
+        <li><b>PyTorch</b><span>2.9+</span></li>
+        <li><b>Neuro-symbolic</b><span data-i18n="proj.m.method">methodology</span></li>
+      </ul>
+      <a class="plink" href="https://github.com/jaisurya93945/NeuroGenesis" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.source">Source</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
     </article>
 
-    <article class="fcard" data-anim="rise" data-d="3" data-accent="d">
-      <span class="fnum mono">04</span>
-      <div class="ficon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 18a4 4 0 0 1 .6-8A5.5 5.5 0 0 1 18 10.5 3.75 3.75 0 0 1 17.5 18H7Z"/><path d="M12 12v5m0 0-2-2m2 2 2-2"/></svg>
+    <article class="pcard" data-anim="rise" data-cat="product ai-security">
+      <span class="pnum mono">04</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p4.tag">Production SaaS</span>
+          <span class="pstat mono" data-i18n="proj.revenue">revenue-generating</span>
+        </div>
+        <h3>CipherAI</h3>
+        <p data-i18n="proj.p4.d">Multi-product AI platform spanning LLM chat, image and video generation, cybersecurity education, a job portal, hackathons and certification — with a credit system, payments and an admin console. Delivered to a real paying client.</p>
+        <ul class="pstack"><li>React</li><li>TypeScript</li><li>Firebase</li><li>Supabase</li><li>Clerk</li></ul>
       </div>
-      <h3 data-i18n="focus.c4.t">Cloud Security</h3>
-      <p data-i18n="focus.c4.d">AWS and GCP infrastructure with IAM least privilege, network segmentation, audit logging, SIEM pipelines and incident-response runbooks that were actually rehearsed.</p>
-      <ul class="ftags"><li>IAM</li><li>ELK / Splunk</li><li>Kubernetes</li><li data-i18n="focus.c4.g4">Incident response</li></ul>
+      <ul class="pmetrics">
+        <li><b>50+</b><span data-i18n="proj.m.tools">AI tools</span></li>
+        <li><b data-i18n="proj.m.live">Live</b><span data-i18n="proj.m.client">paying client</span></li>
+        <li><b>Razorpay</b><span data-i18n="proj.m.pay">payments</span></li>
+      </ul>
+      <a class="plink" href="https://cipherai.in" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.visit">Visit</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
     </article>
+
+    <article class="pcard" data-anim="rise" data-cat="ai-security">
+      <span class="pnum mono">05</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p5.tag">Case Study</span>
+          <span class="pstat mono" data-i18n="proj.writeup">writeup</span>
+        </div>
+        <h3>CipherAI Security Case Study</h3>
+        <p data-i18n="proj.p5.d">A public teardown of how the CipherAI platform was secured — prompt-level defences, abuse prevention, auth boundaries and the trade-offs made shipping LLM features to paying users.</p>
+        <ul class="pstack"><li data-i18n="proj.p5.k1">Threat model</li><li data-i18n="proj.p5.k2">Prompt security</li><li data-i18n="proj.p5.k3">Auth design</li></ul>
+      </div>
+      <a class="plink" href="https://github.com/jaisurya93945/cipherai-security-case-study" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.read">Read</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </article>
+
+    <article class="pcard" data-anim="rise" data-cat="ai-security">
+      <span class="pnum mono">06</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p6.tag">Knowledge Base</span>
+          <span class="pstat mono">200+ tools</span>
+        </div>
+        <h3>AI Security Guide</h3>
+        <p data-i18n="proj.p6.d">A curated map of the AI security landscape: OWASP/NIST/NCSC reading, MITRE ATLAS and AVID taxonomies, red-team tooling (garak, PyRIT), guardrails, MCP security, supply chain and privacy techniques.</p>
+        <ul class="pstack"><li data-i18n="proj.p6.k1">Governance</li><li data-i18n="proj.p6.k2">Offensive</li><li data-i18n="proj.p6.k3">Defensive</li><li>CTFs</li></ul>
+      </div>
+      <a class="plink" href="https://github.com/jaisurya93945/ai-security-guide" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.browse">Browse</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </article>
+
+    <article class="pcard" data-anim="rise" data-cat="devsecops">
+      <span class="pnum mono">07</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p7.tag">Home Lab</span>
+          <span class="pstat mono">SOC</span>
+        </div>
+        <h3 data-i18n="proj.p7.t">SOC Detection Lab</h3>
+        <p data-i18n="proj.p7.d">ELK and Splunk SIEM stacks deployed in an isolated lab: custom detection rules, simulated real-world attacks and end-to-end incident-response workflows documented from alert to postmortem.</p>
+        <ul class="pstack"><li>ELK</li><li>Splunk</li><li data-i18n="proj.p7.k3">Detection rules</li><li data-i18n="proj.p7.k4">IR runbooks</li></ul>
+      </div>
+      <a class="plink" href="https://github.com/jaisurya93945" target="_blank" rel="noopener noreferrer">
+        GitHub
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </article>
+
+    <article class="pcard" data-anim="rise" data-cat="devsecops">
+      <span class="pnum mono">08</span>
+      <div class="pbody">
+        <div class="pcard-top">
+          <span class="ptag" data-i18n="proj.p8.tag">Tooling</span>
+          <span class="pstat mono">Python</span>
+        </div>
+        <h3 data-i18n="proj.p8.t">Endpoint Monitoring &amp; Malware Lab</h3>
+        <p data-i18n="proj.p8.d">An isolated sandbox for safely observing malware behaviour, plus a USB/device monitor that flags unauthorised activity and blocks data exfiltration — with scripts automating log analysis and scanning.</p>
+        <ul class="pstack"><li>Python</li><li data-i18n="proj.p8.k2">Sandboxing</li><li data-i18n="proj.p8.k3">Endpoint telemetry</li></ul>
+      </div>
+      <a class="plink" href="https://github.com/jaisurya93945/usb-scanner" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="proj.source">Source</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </article>
+
   </div>
 </section>
 
@@ -420,6 +547,51 @@
       </a>
     </article>
 
+    <figure class="res-fig" data-anim="rise">
+      <figcaption>
+        <h4 data-i18n="res.fig.title">Shortcut space by task, before any training</h4>
+        <p data-i18n="res.fig.note">Concept mappings that satisfy <code>y = (c₁ + w·c₂) mod 10</code>. One surviving map means the task pins the concepts down; ten means every cyclic shift scores identically. The oracle decides this from the constraint set alone — no model, no data.</p>
+      </figcaption>
+      <svg class="fig" viewBox="0 0 680 210" role="img" aria-label="Reasoning-shortcut count by modular weight. w=9 admits all ten cyclic shifts; w=2, 6 and 8 are uniquely identifiable.">
+  <line class="grid" x1="34" y1="180.0" x2="672" y2="180.0"/>
+  <text class="yt" x="26" y="184.0">0</text>
+  <line class="grid" x1="34" y1="98.0" x2="672" y2="98.0"/>
+  <text class="yt" x="26" y="102.0">5</text>
+  <line class="grid" x1="34" y1="16.0" x2="672" y2="16.0"/>
+  <text class="yt" x="26" y="20.0">10</text>
+  <g class="bar" data-w="1" data-v="2" data-ident="false"><rect class="hit" x="35.0" y="16" width="68.9" height="164.0"/><path class="mark" d="M47.4 180.0 V151.2 a4.0 4.0 0 0 1 4.0 -4.0 H87.4 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="2" data-v="1" data-ident="true"><rect class="hit" x="105.9" y="16" width="68.9" height="164.0"/><path class="mark" d="M118.3 180.0 V167.6 a4.0 4.0 0 0 1 4.0 -4.0 H158.3 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="3" data-v="2" data-ident="false"><rect class="hit" x="176.8" y="16" width="68.9" height="164.0"/><path class="mark" d="M189.2 180.0 V151.2 a4.0 4.0 0 0 1 4.0 -4.0 H229.2 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="4" data-v="5" data-ident="false"><rect class="hit" x="247.7" y="16" width="68.9" height="164.0"/><path class="mark" d="M260.1 180.0 V102.0 a4.0 4.0 0 0 1 4.0 -4.0 H300.1 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="5" data-v="2" data-ident="false"><rect class="hit" x="318.6" y="16" width="68.9" height="164.0"/><path class="mark" d="M331.0 180.0 V151.2 a4.0 4.0 0 0 1 4.0 -4.0 H371.0 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="6" data-v="1" data-ident="true"><rect class="hit" x="389.4" y="16" width="68.9" height="164.0"/><path class="mark" d="M401.9 180.0 V167.6 a4.0 4.0 0 0 1 4.0 -4.0 H441.9 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="7" data-v="2" data-ident="false"><rect class="hit" x="460.3" y="16" width="68.9" height="164.0"/><path class="mark" d="M472.8 180.0 V151.2 a4.0 4.0 0 0 1 4.0 -4.0 H512.8 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="8" data-v="1" data-ident="true"><rect class="hit" x="531.2" y="16" width="68.9" height="164.0"/><path class="mark" d="M543.7 180.0 V167.6 a4.0 4.0 0 0 1 4.0 -4.0 H583.7 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <g class="bar" data-w="9" data-v="10" data-ident="false"><rect class="hit" x="602.1" y="16" width="68.9" height="164.0"/><path class="mark" d="M614.6 180.0 V20.0 a4.0 4.0 0 0 1 4.0 -4.0 H654.6 a4.0 4.0 0 0 1 4.0 4.0 V180.0 Z"/></g>
+  <text class="xt" x="69.4" y="200">1</text>
+  <text class="xt" x="140.3" y="200">2</text>
+  <text class="xt" x="211.2" y="200">3</text>
+  <text class="xt" x="282.1" y="200">4</text>
+  <text class="xt" x="353.0" y="200">5</text>
+  <text class="xt" x="423.9" y="200">6</text>
+  <text class="xt" x="494.8" y="200">7</text>
+  <text class="xt" x="565.7" y="200">8</text>
+  <text class="xt" x="636.6" y="200">9</text>
+</svg>
+      <ul class="fig-leg">
+        <li><i class="sw sw-good"></i><span data-i18n="res.fig.leg1">uniquely identifiable</span></li>
+        <li><i class="sw sw-acc"></i><span data-i18n="res.fig.leg2">admits shortcuts</span></li>
+      </ul>
+      <p class="fig-axis mono"><span data-i18n="res.fig.x">weight w</span> · <span data-i18n="res.fig.y">|RS| = surviving maps</span></p>
+      <details class="fig-table">
+        <summary data-i18n="res.fig.table">Table view</summary>
+        <table>
+          <thead><tr><th>w</th><th>|RS|</th></tr></thead>
+          <tbody><tr><td>1</td><td>2</td></tr><tr><td>2</td><td>1</td></tr><tr><td>3</td><td>2</td></tr><tr><td>4</td><td>5</td></tr><tr><td>5</td><td>2</td></tr><tr><td>6</td><td>1</td></tr><tr><td>7</td><td>2</td></tr><tr><td>8</td><td>1</td></tr><tr><td>9</td><td>10</td></tr></tbody>
+        </table>
+      </details>
+    </figure>
+
     <div class="res-method">
       <div class="rm" data-anim="rise"><span class="rm-n mono">01</span>
         <h4 data-i18n="res.m1.t">Preregistered</h4>
@@ -450,10 +622,64 @@
   </div>
 </section>
 
+<!-- ============ FOCUS ============ -->
+<section class="section" id="focus">
+  <header class="sec-head">
+    <p class="eyebrow" data-anim="fade"><span class="idx">04</span><span data-i18n="focus.eyebrow">Focus areas</span></p>
+    <h2 class="h-lg" data-split>
+      <span class="l" data-i18n="focus.h1">Four lanes, one thesis:</span>
+      <span class="l" data-i18n="focus.h2">AI is now attack surface.</span>
+    </h2>
+    <p class="sec-sub" data-anim="fade" data-d="1" data-i18n="focus.sub">Traditional AppSec never covered untrusted prompts, poisoned tools or agent-to-agent traffic. I work where security engineering, cloud infrastructure and applied AI overlap.</p>
+  </header>
+
+  <div class="focus-grid">
+    <article class="fcard" data-anim="rise" data-accent="a">
+      <span class="fnum mono">01</span>
+      <div class="ficon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 5 6v5.4c0 4.2 2.9 7.8 7 9 4.1-1.2 7-4.8 7-9V6l-7-3Z"/><circle cx="12" cy="11" r="2.4"/><path d="M12 13.4V17"/></svg>
+      </div>
+      <h3 data-i18n="focus.c1.t">AI &amp; LLM Security</h3>
+      <p data-i18n="focus.c1.d">Prompt-injection and jailbreak detection, obfuscation decoding, system-prompt extraction defence, MCP tool-poisoning checks and explainable risk scoring.</p>
+      <ul class="ftags"><li>Guardrails</li><li data-i18n="focus.c1.g2">Red teaming</li><li>OWASP LLM Top 10</li><li>MITRE ATLAS</li></ul>
+    </article>
+
+    <article class="fcard" data-anim="rise" data-d="1" data-accent="b">
+      <span class="fnum mono">02</span>
+      <div class="ficon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="2" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="17" r="2" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <h3 data-i18n="focus.c2.t">DevSecOps</h3>
+      <p data-i18n="focus.c2.d">Security shifted into the pipeline: SAST/DAST gates, dependency and secret scanning, signed builds, least-privilege runners and policy-as-code on every merge.</p>
+      <ul class="ftags"><li>CI/CD</li><li>pip-audit</li><li data-i18n="focus.c2.g3">Container scanning</li><li data-i18n="focus.c2.g4">Linux hardening</li></ul>
+    </article>
+
+    <article class="fcard" data-anim="rise" data-d="2" data-accent="c">
+      <span class="fnum mono">03</span>
+      <div class="ficon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16V8l4 4 4-6 4 8 4-5"/><path d="M3 20h18"/></svg>
+      </div>
+      <h3 data-i18n="focus.c3.t">MLOps</h3>
+      <p data-i18n="focus.c3.d">Reproducible model pipelines: dataset validation, leakage detection, cross-dataset evaluation, regression suites and versioned artefacts so a detector never silently degrades.</p>
+      <ul class="ftags"><li data-i18n="focus.c3.g1">Eval harnesses</li><li data-i18n="focus.c3.g2">Drift checks</li><li data-i18n="focus.c3.g3">Model registry</li><li>Docker</li></ul>
+    </article>
+
+    <article class="fcard" data-anim="rise" data-d="3" data-accent="d">
+      <span class="fnum mono">04</span>
+      <div class="ficon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 18a4 4 0 0 1 .6-8A5.5 5.5 0 0 1 18 10.5 3.75 3.75 0 0 1 17.5 18H7Z"/><path d="M12 12v5m0 0-2-2m2 2 2-2"/></svg>
+      </div>
+      <h3 data-i18n="focus.c4.t">Cloud Security</h3>
+      <p data-i18n="focus.c4.d">AWS and GCP infrastructure with IAM least privilege, network segmentation, audit logging, SIEM pipelines and incident-response runbooks that were actually rehearsed.</p>
+      <ul class="ftags"><li>IAM</li><li>ELK / Splunk</li><li>Kubernetes</li><li data-i18n="focus.c4.g4">Incident response</li></ul>
+    </article>
+  </div>
+</section>
+
 <!-- ============ SKILLS ============ -->
 <section class="section" id="skills">
   <header class="sec-head">
-    <p class="eyebrow" data-anim="fade"><span class="idx">04</span><span data-i18n="skills.eyebrow">Capability matrix</span></p>
+    <p class="eyebrow" data-anim="fade"><span class="idx">05</span><span data-i18n="skills.eyebrow">Capability matrix</span></p>
     <h2 class="h-lg" data-split>
       <span class="l" data-i18n="skills.h1">What I actually operate,</span>
       <span class="l" data-i18n="skills.h2">not just list.</span>
@@ -531,7 +757,7 @@
 <!-- ============ EXPERIENCE ============ -->
 <section class="section" id="experience">
   <header class="sec-head">
-    <p class="eyebrow" data-anim="fade"><span class="idx">05</span><span data-i18n="exp.eyebrow">Trajectory</span></p>
+    <p class="eyebrow" data-anim="fade"><span class="idx">06</span><span data-i18n="exp.eyebrow">Trajectory</span></p>
     <h2 class="h-lg" data-split>
       <span class="l" data-i18n="exp.h1">From SOC alerts to</span>
       <span class="l" data-i18n="exp.h2">AI attack surface.</span>
@@ -618,186 +844,6 @@
       </div>
     </li>
   </ol>
-</section>
-
-<!-- ============ PROJECTS ============ -->
-<section class="section" id="projects">
-  <header class="sec-head">
-    <p class="eyebrow" data-anim="fade"><span class="idx">06</span><span data-i18n="proj.eyebrow">Selected work</span></p>
-    <h2 class="h-lg" data-split>
-      <span class="l" data-i18n="proj.h1">Shipped, documented,</span>
-      <span class="l" data-i18n="proj.h2">open to inspection.</span>
-    </h2>
-    <p class="sec-sub" data-anim="fade" data-d="1" data-i18n="proj.sub">Every project below is either live in production or public on GitHub.</p>
-  </header>
-
-  <div class="filters" data-anim="fade" role="group" aria-label="Filter projects">
-    <button class="filter active" data-filter="all" data-i18n="proj.f.all">All</button>
-    <button class="filter" data-filter="ai-security" data-i18n="proj.f.ai">AI Security</button>
-    <button class="filter" data-filter="mlops" data-i18n="proj.f.mlops">MLOps &amp; Research</button>
-    <button class="filter" data-filter="devsecops" data-i18n="proj.f.devsecops">DevSecOps</button>
-    <button class="filter" data-filter="product" data-i18n="proj.f.product">Product</button>
-  </div>
-
-  <div class="proj-list" id="projGrid">
-
-    <article class="pcard" data-anim="rise" data-cat="ai-security devsecops">
-      <span class="pnum mono">01</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p1.tag">AI Threat Gateway</span>
-          <span class="pstat mono">v0.3.0</span>
-        </div>
-        <h3>SentinelCore</h3>
-        <p data-i18n="proj.p1.d">A model-agnostic security layer between AI applications and their models, tools and data. Inspects prompts, documents, tool calls and model output; enforces allow / warn / sanitise / approve / block.</p>
-        <ul class="pmetrics">
-          <li><b>96.8%</b><span data-i18n="proj.m.precision">precision</span></li>
-          <li><b>744</b><span data-i18n="proj.m.cases">labelled cases</span></li>
-          <li><b>MCP</b><span data-i18n="proj.m.poison">poisoning checks</span></li>
-        </ul>
-        <ul class="pstack"><li>Python 3.11</li><li>FastAPI</li><li>SQLite</li><li>Docker</li><li>pytest</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945/sentinelcore" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.source">Source</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="ai-security mlops">
-      <span class="pnum mono">02</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p2.tag">Detection Engine</span>
-          <span class="pstat mono">112 tests</span>
-        </div>
-        <h3>AegisAI</h3>
-        <p data-i18n="proj.p2.d">Layered LLM threat detection: deterministic rules keep authority over bounded ML evidence, producing a 0–100 risk score with explainable findings and nine threat-intent classes.</p>
-        <ul class="pmetrics">
-          <li><b>399K</b><span data-i18n="proj.m.train">training examples</span></li>
-          <li><b>9</b><span data-i18n="proj.m.intent">intent classes</span></li>
-          <li><b>0–100</b><span data-i18n="proj.m.scoring">risk scoring</span></li>
-        </ul>
-        <ul class="pstack"><li>Python</li><li>FastAPI</li><li>TF-IDF + LR</li><li>joblib</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945/aegis-ai" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.source">Source</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="mlops">
-      <span class="pnum mono">03</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p3.tag">Research</span>
-          <span class="pstat mono" data-i18n="proj.active">active</span>
-        </div>
-        <h3>NeuroGenesis</h3>
-        <p data-i18n="proj.p3.d">A verification framework that turns LLM reasoning into structured representations and independently checks logic, factual and constraint violations before an answer is accepted.</p>
-        <ul class="pmetrics">
-          <li><b>Oracle</b><span data-i18n="proj.m.oracle">shortcut enumeration</span></li>
-          <li><b>PyTorch</b><span>2.9+</span></li>
-          <li><b>Neuro-symbolic</b><span data-i18n="proj.m.method">methodology</span></li>
-        </ul>
-        <ul class="pstack"><li>Python</li><li>PyTorch</li><li>pytest</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945/NeuroGenesis" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.source">Source</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="product ai-security">
-      <span class="pnum mono">04</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p4.tag">Production SaaS</span>
-          <span class="pstat mono" data-i18n="proj.revenue">revenue-generating</span>
-        </div>
-        <h3>CipherAI</h3>
-        <p data-i18n="proj.p4.d">Multi-product AI platform spanning LLM chat, image and video generation, cybersecurity education, a job portal, hackathons and certification — with a credit system, payments and an admin console. Delivered to a real paying client.</p>
-        <ul class="pmetrics">
-          <li><b>50+</b><span data-i18n="proj.m.tools">AI tools</span></li>
-          <li><b data-i18n="proj.m.live">Live</b><span data-i18n="proj.m.client">paying client</span></li>
-          <li><b>Razorpay</b><span data-i18n="proj.m.pay">payments</span></li>
-        </ul>
-        <ul class="pstack"><li>React</li><li>TypeScript</li><li>Firebase</li><li>Supabase</li><li>Clerk</li></ul>
-      </div>
-      <a class="plink" href="https://cipherai.in" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.visit">Visit</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="ai-security">
-      <span class="pnum mono">05</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p5.tag">Case Study</span>
-          <span class="pstat mono" data-i18n="proj.writeup">writeup</span>
-        </div>
-        <h3>CipherAI Security Case Study</h3>
-        <p data-i18n="proj.p5.d">A public teardown of how the CipherAI platform was secured — prompt-level defences, abuse prevention, auth boundaries and the trade-offs made shipping LLM features to paying users.</p>
-        <ul class="pstack"><li data-i18n="proj.p5.k1">Threat model</li><li data-i18n="proj.p5.k2">Prompt security</li><li data-i18n="proj.p5.k3">Auth design</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945/cipherai-security-case-study" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.read">Read</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="ai-security">
-      <span class="pnum mono">06</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p6.tag">Knowledge Base</span>
-          <span class="pstat mono">200+ tools</span>
-        </div>
-        <h3>AI Security Guide</h3>
-        <p data-i18n="proj.p6.d">A curated map of the AI security landscape: OWASP/NIST/NCSC reading, MITRE ATLAS and AVID taxonomies, red-team tooling (garak, PyRIT), guardrails, MCP security, supply chain and privacy techniques.</p>
-        <ul class="pstack"><li data-i18n="proj.p6.k1">Governance</li><li data-i18n="proj.p6.k2">Offensive</li><li data-i18n="proj.p6.k3">Defensive</li><li>CTFs</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945/ai-security-guide" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.browse">Browse</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="devsecops">
-      <span class="pnum mono">07</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p7.tag">Home Lab</span>
-          <span class="pstat mono">SOC</span>
-        </div>
-        <h3 data-i18n="proj.p7.t">SOC Detection Lab</h3>
-        <p data-i18n="proj.p7.d">ELK and Splunk SIEM stacks deployed in an isolated lab: custom detection rules, simulated real-world attacks and end-to-end incident-response workflows documented from alert to postmortem.</p>
-        <ul class="pstack"><li>ELK</li><li>Splunk</li><li data-i18n="proj.p7.k3">Detection rules</li><li data-i18n="proj.p7.k4">IR runbooks</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945" target="_blank" rel="noopener noreferrer">
-        GitHub
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-    <article class="pcard" data-anim="rise" data-cat="devsecops">
-      <span class="pnum mono">08</span>
-      <div class="pbody">
-        <div class="pcard-top">
-          <span class="ptag" data-i18n="proj.p8.tag">Tooling</span>
-          <span class="pstat mono">Python</span>
-        </div>
-        <h3 data-i18n="proj.p8.t">Endpoint Monitoring &amp; Malware Lab</h3>
-        <p data-i18n="proj.p8.d">An isolated sandbox for safely observing malware behaviour, plus a USB/device monitor that flags unauthorised activity and blocks data exfiltration — with scripts automating log analysis and scanning.</p>
-        <ul class="pstack"><li>Python</li><li data-i18n="proj.p8.k2">Sandboxing</li><li data-i18n="proj.p8.k3">Endpoint telemetry</li></ul>
-      </div>
-      <a class="plink" href="https://github.com/jaisurya93945/usb-scanner" target="_blank" rel="noopener noreferrer">
-        <span data-i18n="proj.source">Source</span>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </article>
-
-  </div>
 </section>
 
 <!-- ============ CERTS ============ -->
@@ -902,8 +948,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=6" defer></script>
-<script src="assets/js/scanner.js?v=6" defer></script>
-<script src="assets/js/main.js?v=6" defer></script>
+<script src="assets/js/i18n.js?v=7" defer></script>
+<script src="assets/js/scanner.js?v=7" defer></script>
+<script src="assets/js/main.js?v=7" defer></script>
 </body>
 </html>
