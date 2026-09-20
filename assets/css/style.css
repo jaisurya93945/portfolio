@@ -19,6 +19,13 @@
 
   --accent:#3987e5;      /* series-1 (dark step) */
   --accent-dim:rgba(57,135,229,.14);
+  --dot:rgba(148,163,184,.14);
+  --wash-1:rgba(57,135,229,.13);
+  --wash-2:rgba(12,163,12,.07);
+  --grain-o:.030;
+  /* tiles are translucent so the wash and grid read through them */
+  --tile:rgba(18,21,26,.72);
+  --tile-2:rgba(24,28,35,.80);
   --accent-ink:#fff;
 
   --good:#0ca30c;
@@ -47,6 +54,12 @@
   --ink-3:#848d9a;
   --accent:#2a78d6;
   --accent-dim:rgba(42,120,214,.1);
+  --dot:rgba(71,85,105,.13);
+  --wash-1:rgba(42,120,214,.085);
+  --wash-2:rgba(12,163,12,.055);
+  --grain-o:.018;
+  --tile:rgba(255,255,255,.78);
+  --tile-2:rgba(244,245,247,.86);
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -75,7 +88,37 @@ h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.021em;line-height:1.15}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .skip-link{position:fixed;top:-60px;left:14px;z-index:300;background:var(--accent);color:#fff;padding:9px 15px;font-weight:600;border-radius:var(--r)}
 .skip-link:focus{top:8px}
-.grain{display:none}
+/* ==========================================================================
+   BACKGROUND
+   Three fixed, pointer-events-none layers behind everything: a fine dot
+   grid, two very low-opacity accent washes, and a grain tile. All are
+   painted once and never move, so scrolling costs nothing and there is no
+   JavaScript, no canvas and no animation frame to drop.
+   ========================================================================== */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+
+/* dot grid, dissolving toward the bottom so it never competes with content */
+.bg::before{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(var(--dot) 1px,transparent 1px);
+  background-size:26px 26px;background-position:-13px -13px;
+  -webkit-mask-image:radial-gradient(120% 85% at 50% 0%,#000 0%,rgba(0,0,0,.55) 45%,transparent 78%);
+  mask-image:radial-gradient(120% 85% at 50% 0%,#000 0%,rgba(0,0,0,.55) 45%,transparent 78%);
+}
+/* two off-centre washes: warmth behind the name, cool toward the work */
+.bg::after{
+  content:"";position:absolute;inset:-20%;
+  background:
+    radial-gradient(38% 30% at 18% 8%,var(--wash-1),transparent 70%),
+    radial-gradient(42% 34% at 88% 22%,var(--wash-2),transparent 72%);
+}
+/* grain: one 160px tile of SVG noise, so the flat fills stop reading as plastic */
+.grain{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:var(--grain-o);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* everything that is not background sits above it */
+.shell,header,main,footer,.rail,.scroll-progress,.to-top{position:relative;z-index:2}
 .scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:150}
 .scroll-progress i{display:block;height:100%;width:0;background:var(--accent)}
 
@@ -496,12 +539,12 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
 /* --- the tile --- */
 .t{display:flex;flex-direction:column;min-width:0;
    padding:clamp(18px,1.7vw,24px);
-   border:1px solid var(--line);border-radius:14px;background:var(--s1);
+   border:1px solid var(--line);border-radius:14px;background:var(--tile);
    transition:border-color .2s,background .2s}
-.t.link:hover{border-color:var(--line-2);background:var(--s2)}
+.t.link:hover{border-color:var(--line-2);background:var(--tile-2)}
 .t.flush{padding:0;overflow:hidden}
 .t.quiet{background:transparent}
-.t.fill{background:var(--s2)}
+.t.fill{background:var(--tile-2)}
 
 /* tile head: a mono kicker on the left, an optional meta on the right */
 .t-k{display:flex;align-items:center;gap:9px;margin-bottom:10px;
@@ -647,3 +690,64 @@ a.t:hover .t-go{color:var(--accent)}
 .col{display:flex;flex-direction:column;gap:var(--tgap,14px);min-width:0}
 .col > .t{flex:0 0 auto}
 .col > .t:last-child{flex:1 1 auto}
+
+
+/* ==========================================================================
+   CURSOR
+   Drawn by the operating system via the native cursor property, not by
+   JavaScript. A scripted cursor is always at least one frame behind the
+   pointer; this one cannot be, because it *is* the pointer. Zero script,
+   zero animation frames, identical speed on any machine.
+
+   Gated on a fine hover-capable pointer, so phones and tablets - which
+   have no cursor to replace - never load or show it.
+   ========================================================================== */
+@media (hover:hover) and (pointer:fine){
+  html{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Ccircle%20cx='12'%20cy='12'%20r='7.5'%20fill='none'%20stroke='rgba(0,0,0,.5)'%20stroke-width='3.2'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='7.5'%20fill='none'%20stroke='%2523fff'%20stroke-width='1.4'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='1.7'%20fill='%2523fff'/%3E%3C/svg%3E") 12 12,auto}
+  a,button,summary,label,select,[role="button"],[tabindex]:not([tabindex="-1"]),
+  .t.link,.filter,.tab,.bar,.chip{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%3E%3Ccircle%20cx='15'%20cy='15'%20r='10.5'%20fill='rgba(57,135,229,.22)'%20stroke='rgba(0,0,0,.45)'%20stroke-width='3.2'/%3E%3Ccircle%20cx='15'%20cy='15'%20r='10.5'%20fill='none'%20stroke='%25233987e5'%20stroke-width='1.7'/%3E%3Ccircle%20cx='15'%20cy='15'%20r='2.1'%20fill='%25233987e5'/%3E%3C/svg%3E") 15 15,pointer}
+  input,textarea,[contenteditable]{cursor:text}
+  :disabled,[aria-disabled="true"]{cursor:not-allowed}
+}
+
+/* --- the thirty-second case: three claims, each with its own evidence --- */
+.proof .proof-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+                   gap:0;margin:4px 0 0;padding:0;list-style:none;counter-reset:pf}
+.proof .proof-list li{counter-increment:pf;padding:0 26px;border-left:1px solid var(--line)}
+.proof .proof-list li:first-child{padding-left:0;border-left:0}
+.proof .proof-list li::before{content:counter(pf,decimal-leading-zero);
+    display:block;margin-bottom:7px;font-family:var(--mono);font-size:.62rem;color:var(--accent)}
+.proof h4{font-size:.94rem;letter-spacing:-.01em}
+.proof p{margin-top:6px;font-size:.84rem;color:var(--ink-2);line-height:1.6}
+@media (max-width:900px){
+  .proof .proof-list{grid-template-columns:1fr;gap:18px}
+  .proof .proof-list li{padding:18px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .proof .proof-list li:first-child{padding-top:0;border-top:0}
+}
+
+/* ==========================================================================
+   READING DEPTH
+   Two audiences read this page: someone scanning for thirty seconds, and
+   someone who wants the workings. Quick mode folds away the deep material -
+   research method, the hypothesis ledger, secondary work, older roles - so
+   the first reader is not made to scroll past it.
+
+   Full is the default, so a visitor with no JavaScript, and any crawler or
+   assistant reading the page, always receives the complete document.
+   ========================================================================== */
+.depth-btn{display:inline-flex;align-items:center;gap:0;padding:2px;
+  border:1px solid var(--line);border-radius:100px;background:var(--s1);
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase}
+.depth-btn span{padding:5px 10px;border-radius:100px;color:var(--ink-3);transition:.18s}
+.depth-btn .df{background:var(--accent);color:#fff}
+html[data-depth="quick"] .depth-btn .df{background:transparent;color:var(--ink-3)}
+html[data-depth="quick"] .depth-btn .dq{background:var(--accent);color:#fff}
+html[data-depth="quick"] [data-deep]{display:none}
+@media (max-width:880px){.depth-btn{display:none}}
+
+/* Fixed background layers confuse full-page capture and waste ink; drop them
+   for print and for anything asking to save paper. */
+@media print{
+  .bg,.grain{display:none !important}
+  .t{background:#fff !important;border-color:#ddd !important}
+}

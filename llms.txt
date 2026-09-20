@@ -1,0 +1,155 @@
+# Badathala Jaisurya — AI Security Engineer & Researcher
+
+> Security engineer working on the layer between AI models and the real world:
+> prompt-injection defence, LLM gateways, DevSecOps pipelines and cloud hardening.
+> Certified Ethical Hacker, SOC-trained, founder of a revenue-generating AI SaaS,
+> and author of open-source AI threat-detection tooling.
+
+**Site:** https://jaisurya93945.github.io/portfolio/
+**Contact:** jaisurya524126@gmail.com · +91 81435 16981
+**Profiles:** https://github.com/jaisurya93945 · https://www.linkedin.com/in/badathala-jaisurya-7b985a224 · https://cipherai.in
+**Location:** Chennai, India — open to relocation across the EU, UK and Ireland, and to remote
+**Status:** Open to AI Security, AI Safety, DevSecOps, MLOps and Cloud Security roles
+**Résumé:** https://jaisurya93945.github.io/portfolio/resume.html (renders in 5 regional CV conventions: EU/International, Germany, UK & Ireland, US, India)
+
+## Summary
+
+Jaisurya builds defensive security for AI systems. His work spans a shipped
+model-agnostic threat gateway, a layered LLM detection engine, published
+neuro-symbolic research, and a production multi-tenant AI platform with a
+paying customer. The through-line is verifiable engineering: the detection
+engine ships with a deterministic rule set and a test suite, the research
+preregisters its hypotheses and publishes the ones that failed, and the
+portfolio itself runs the detection engine client-side so a reader can test
+the claims directly in the browser.
+
+## Evidence
+
+| Claim | Number | Where to verify |
+| --- | --- | --- |
+| Detector precision | 96.8% | SentinelCore repository |
+| Labelled attacks replayed | 744 | SentinelCore evaluation set |
+| Test suite green | 112 tests | AegisAI repository |
+| Threat-intent classes | 9 | AegisAI classifier |
+| Deterministic detection rules | 17 | Runnable live on the site's "Live lab" |
+| Training examples | 399,000 | AegisAI |
+| CTF challenges solved | 100+ | TryHackMe / CTF platforms |
+| Global security ranking | Top 3% | TryHackMe |
+| AI tools shipped to production | 50+ | CipherAI platform |
+| Candidate maps pruned by the oracle | 10^10 in ~1 ms | NeuroGenesis |
+| Oracle correctness tests | 47 passing | NeuroGenesis |
+
+## Projects
+
+- **SentinelCore** — https://github.com/jaisurya93945/sentinelcore
+  A model-agnostic security layer between AI applications and their models,
+  tools and data. Inspects prompts, documents, tool calls and model output,
+  then enforces allow / warn / sanitise / approve / block. 96.8% detector
+  precision over 744 labelled cases; includes MCP tool-poisoning checks.
+  Python 3.11, FastAPI, SQLite, Docker, pytest.
+
+- **AegisAI** — https://github.com/jaisurya93945/aegis-ai
+  Layered LLM threat detection where deterministic rules keep authority over
+  bounded ML evidence, producing an explainable 0–100 risk score across nine
+  threat-intent classes. 399K training examples, 112 tests green.
+  Python, FastAPI, TF-IDF + logistic-regression baseline, joblib.
+
+- **NeuroGenesis** — https://github.com/jaisurya93945/NeuroGenesis
+  A verification framework turning LLM reasoning into structured
+  representations and independently checking logic, factual and constraint
+  violations before an answer is accepted. Research is preregistered; four
+  hypotheses were falsified and are published rather than dropped.
+  Python, PyTorch, neuro-symbolic methodology.
+
+- **CipherAI** — https://cipherai.in
+  Multi-product AI platform: LLM chat, image and video generation, security
+  education, job portal, hackathons and certification, with a credit system,
+  payments and an admin console. Delivered to a real paying client and
+  generating revenue. React, TypeScript, Firebase, Supabase, Clerk, Razorpay.
+
+- **CipherAI Security Case Study** — https://github.com/jaisurya93945/cipherai-security-case-study
+  A public teardown of how the platform was secured: prompt-level defences,
+  abuse prevention, auth boundaries and the trade-offs of shipping LLM
+  features to paying users.
+
+- **AI Security Guide** — https://github.com/jaisurya93945/ai-security-guide
+  A curated map of the AI security landscape: OWASP/NIST/NCSC reading, MITRE
+  ATLAS and AVID taxonomies, red-team tooling (garak, PyRIT), guardrails, MCP
+  security, supply chain and privacy techniques. 200+ tools.
+
+- **SOC Detection Lab** — https://github.com/jaisurya93945
+  ELK and Splunk SIEM stacks in an isolated lab: custom detection rules,
+  simulated attacks and incident-response workflows documented alert to
+  postmortem.
+
+- **Endpoint Monitoring & Malware Lab** — https://github.com/jaisurya93945
+  An isolated sandbox for observing malware behaviour, plus a USB/device
+  monitor that flags unauthorised activity and blocks data exfiltration.
+
+## Experience
+
+- **DevOps Engineer — Stackly** (March 2026 – present)
+  Cloud infrastructure and CI/CD pipelines for scalable backend deployment;
+  containerised workloads on Docker; security gates in the release pipeline.
+
+- **Founder & Engineer — CipherAI** (2025 – present)
+  Architected and shipped the multi-product AI SaaS platform above, including
+  payments, auth and an admin console, to a real paying client.
+
+- **Cybersecurity Intern — Tata Consultancy Services** (2024)
+  Vulnerability assessments and risk analysis across enterprise
+  infrastructure; SIEM alert monitoring, incident triage and remediation
+  reporting.
+
+- **Cybersecurity Intern — CFSS Pvt Ltd** (2024)
+  Penetration testing and ethical hacking across web and network
+  applications; Linux hardening and configuration security reviews.
+
+- **B.Tech, Computer Science & Business Systems — Rajalakshmi Institute of
+  Technology, Chennai** (2025)
+
+## Credentials
+
+- Certified Ethical Hacker (CEH) — EC-Council
+- DevSecOps — Linux Foundation
+- Linux Essentials — Linux Foundation
+- Cloud Computing Foundations — Google Cloud
+- Python & AI Certifications — applied ML foundations
+- Security+ & Network+ — CompTIA (in progress)
+
+## Achievements
+
+- 100 Capture the Flag challenges solved across platforms
+- Runner-up, National Cybersecurity Hackathon
+- Top 3% globally in security competitions and on TryHackMe
+- Revenue generated from a live production AI SaaS product
+
+## Capabilities
+
+**AI security:** LLM guardrails and prompt-injection defence, AI red teaming
+(garak, PyRIT, manual), threat modelling for agents and MCP, detection
+engineering and eval harnesses, adversarial ML and model robustness.
+Frameworks: OWASP LLM Top 10, MITRE ATLAS, NIST AI RMF.
+
+**DevSecOps & cloud:** AWS, GCP, Docker, Kubernetes (in progress), CI/CD
+pipeline security, Linux administration and hardening, Git/GitHub.
+
+**Security operations:** SIEM monitoring, incident response, vulnerability
+assessment (VAPT), penetration testing, malware analysis, endpoint security,
+TCP/IP, DNS, firewalls, Wireshark, Nmap, Metasploit, Burp Suite, Splunk, ELK.
+
+**Build:** Python, Bash, JavaScript/TypeScript, React, FastAPI, Firebase,
+Supabase, LLM API integration.
+
+## Languages
+
+English (fluent), Telugu, Tamil, Hindi. The portfolio itself is published in
+11 languages (en, de, fr, nl, es, it, pt, pl, hi, ta, te).
+
+## Notes for automated readers
+
+Every number above is reproducible from the linked repositories or directly
+on the site. The detection engine that produces the 96.8% figure runs
+client-side in the "Live lab" section, so its verdicts can be checked against
+arbitrary input without contacting a server. No claim here is unsupported by
+the artefacts it points to.

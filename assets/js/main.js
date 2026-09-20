@@ -572,6 +572,38 @@
     });
   })();
 
+  /* ---------------------------------------------------------
+     16. Reading depth: quick scan vs the full page
+     --------------------------------------------------------- */
+  (function () {
+    var btn = $('#depthToggle');
+    if (!btn) return;
+    var root = document.documentElement;
+
+    function apply(mode, persist) {
+      if (mode === 'quick') root.setAttribute('data-depth', 'quick');
+      else root.removeAttribute('data-depth');
+      btn.setAttribute('aria-pressed', mode === 'quick' ? 'true' : 'false');
+      if (persist) { try { localStorage.setItem('depth', mode); } catch (e) {} }
+    }
+
+    var saved;
+    try { saved = localStorage.getItem('depth'); } catch (e) {}
+    if (saved === 'quick') apply('quick', false);
+
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-depth') === 'quick' ? 'full' : 'quick';
+      transition(function () { apply(next, true); });
+      /* Anything revealed by switching back to full has to be activated, or
+         it stays at opacity 0 with its observer already spent. */
+      if (next === 'full') {
+        $$('[data-deep] [data-anim], [data-deep]').forEach(function (el) {
+          if (el.hasAttribute('data-anim')) activate(el);
+        });
+      }
+    });
+  })();
+
   var y = $('#year');
   if (y) y.textContent = String(new Date().getFullYear());
 
