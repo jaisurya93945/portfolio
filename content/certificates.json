@@ -1,0 +1,63 @@
+[
+  {
+    "id": "ceh",
+    "title": "Certified Ethical Hacker",
+    "issuer": "EC-Council",
+    "date": "",
+    "image": "",
+    "credentialId": "",
+    "verificationUrl": "",
+    "category": "Cybersecurity"
+  },
+  {
+    "id": "lf-devsecops",
+    "title": "DevSecOps",
+    "issuer": "Linux Foundation",
+    "date": "",
+    "image": "",
+    "credentialId": "",
+    "verificationUrl": "",
+    "category": "DevOps"
+  },
+  {
+    "id": "lf-linux-essentials",
+    "title": "Linux Essentials",
+    "issuer": "Linux Foundation",
+    "date": "",
+    "image": "",
+    "credentialId": "",
+    "verificationUrl": "",
+    "category": "Networking"
+  },
+  {
+    "id": "gcp-foundations",
+    "title": "Cloud Computing Foundations",
+    "issuer": "Google Cloud",
+    "date": "",
+    "image": "",
+    "credentialId": "",
+    "verificationUrl": "",
+    "category": "Cloud"
+  },
+  {
+    "id": "python-ai",
+    "title": "Python & AI Certifications",
+    "issuer": "Applied ML foundations",
+    "date": "",
+    "image": "",
+    "credentialId": "",
+    "verificationUrl": "",
+    "category": "AI/ML"
+  },
+  {
+    "id": "comptia-sec-net",
+    "title": "Security+ & Network+",
+    "issuer": "CompTIA",
+    "date": "",
+    "image": "",
+    "credentialId": "",
+    "verificationUrl": "",
+    "category": "Cybersecurity",
+    "status": "in-progress"
+  }
+]

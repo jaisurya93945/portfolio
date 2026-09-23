@@ -1,12 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="15" fill="#05070d"/>
-  <path d="M32 10 16 16.6v13.1c0 10.2 6.6 18.9 16 21.3 9.4-2.4 16-11.1 16-21.3V16.6L32 10Z"
-        fill="none" stroke="url(#g)" stroke-width="3.4" stroke-linejoin="round"/>
-  <path d="M24.5 32.4 30 38l10-11" fill="none" stroke="url(#g)" stroke-width="3.8"
-        stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="J monogram">
+  <title>J — Badathala Jaisurya</title>
+  <!--
+    Geometric J built from one constant-width stroke.
+
+    Three deliberate details, none decorative:
+      * the crossbar overhangs left of the stem, so the mark is asymmetric
+        and does not read as a typed letter centred in a box;
+      * a cut splits the stem — a seam, the security/verification note;
+      * the hook ends on a flat vertical terminal rather than tapering,
+        which keeps the counter open and legible at 16px.
+
+    No enclosing tile, no gradient. currentColor so it inherits wherever
+    it is placed; the standalone file pins the brand coral.
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="4"
+     stroke-linecap="square" stroke-linejoin="miter" color="#ff5f45">
+    <path d="M10 6.5H22"/>
+    <path d="M22 6.5V12.2"/>
+    <path d="M22 16.4V18.6A6.6 6.6 0 0 1 8.8 18.6"/>
+  </g>
 </svg>

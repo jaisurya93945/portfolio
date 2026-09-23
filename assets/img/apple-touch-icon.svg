@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="J monogram">
+  <title>J — Badathala Jaisurya</title>
+  <!-- iOS composites the icon onto its own tile, so this variant carries a
+       solid field rather than relying on transparency. -->
+  <rect width="180" height="180" fill="#100c1f"/>
+  <g fill="none" stroke="#ff5f45" stroke-width="22"
+     stroke-linecap="square" stroke-linejoin="miter" transform="translate(34 34) scale(3.5)">
+    <path d="M10 6.5H22"/><path d="M22 6.5V12.2"/>
+    <path d="M22 16.4V18.6A6.6 6.6 0 0 1 8.8 18.6"/>
+  </g>
+</svg>

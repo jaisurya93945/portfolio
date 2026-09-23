@@ -609,51 +609,8 @@
     });
   })();
 
-  /* ---------------------------------------------------------
-     17. Certificate images, uploaded by hand
-     --------------------------------------------------------- */
-  (function () {
-    var host = $('#certShots');
-    if (!host) return;
-    var empty = $('#certEmpty');
-
-    fetch('assets/cv/uploads.json', { cache: 'no-cache' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (up) {
-        var certs = up && up.certs;
-        if (!certs || !certs.length) return;
-
-        certs.forEach(function (c) {
-          var src = 'assets/img/certs/' + encodeURIComponent(c.file);
-          var a = document.createElement('a');
-          a.href = src; a.target = '_blank'; a.rel = 'noopener noreferrer';
-          a.className = 'cert-shot';
-          if (c.type === 'application/pdf') {
-            var box = document.createElement('span');
-            box.className = 'cert-pdf'; box.textContent = 'PDF';
-            a.appendChild(box);
-            a.setAttribute('aria-label', (c.caption || 'Certificate') + ' (PDF)');
-          } else {
-            var img = document.createElement('img');
-            img.src = src; img.loading = 'lazy'; img.decoding = 'async';
-            /* A caption-less certificate still needs an accessible name, and
-               the file name is the only thing that carries one. */
-            img.alt = c.caption || 'Certificate';
-            a.appendChild(img);
-          }
-          if (c.caption) {
-            var cap = document.createElement('span');
-            cap.className = 'cert-cap'; cap.textContent = c.caption;
-            a.appendChild(cap);
-          }
-          host.appendChild(a);
-        });
-
-        host.hidden = false;
-        if (empty) empty.hidden = true;
-      })
-      .catch(function () { /* uploads are optional */ });
-  })();
+  /* Certificates live in assets/js/certificates.js — data-driven gallery
+     and lightbox, kept out of here so this file stays about page chrome. */
 
   var y = $('#year');
   if (y) y.textContent = String(new Date().getFullYear());

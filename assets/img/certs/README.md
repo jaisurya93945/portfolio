@@ -1,46 +1,55 @@
 # Certificate images
 
-Drop certificate images here and they appear under **Certifications** on the
-résumé page, as a gallery that opens full size when clicked.
+Certificates are now **data-driven**. The metadata lives in
+[`content/certificates.json`](../../../content/certificates.json); the image
+files live here. Both are optional — an entry with no image still appears,
+showing a placeholder rather than a broken picture.
 
-## How
+## Adding one
 
-1. Open this folder on github.com.
-2. **Add file → Upload files**, choose the images, **Commit changes**.
+1. Put the image here. Name it after the entry's `id`, e.g. `ceh.png` for
+   the entry whose `"id": "ceh"`. It is matched automatically.
+2. Fill in that entry in `content/certificates.json`.
 
-## Where the names on the site come from
+```json
+{
+  "id": "ceh",
+  "title": "Certified Ethical Hacker",
+  "issuer": "EC-Council",
+  "date": "2026",
+  "image": "",
+  "credentialId": "",
+  "verificationUrl": "",
+  "category": "Cybersecurity"
+}
+```
 
-**The file name is the name.** There is no separate list to edit — rename the
-file here and the site follows on the next build.
+- `image` can stay empty — a file named after the `id` is picked up on its own.
+  Set it explicitly only to point somewhere else.
+- `credentialId` shows with a copy button when filled.
+- `verificationUrl` becomes a **Verify credential** link when filled.
+- `category` drives the filter row: `Cybersecurity`, `Cloud`, `DevOps`,
+  `AI/ML`, `Networking`, `Programming`, `Other`. Filters only appear for
+  categories that actually have entries.
+- `"status": "in-progress"` marks one as not yet earned.
 
-- `1.png` → shows the image with **no caption**
-- `CEH - EC-Council.png` → shows the caption **CEH - EC-Council**
-- `01 CEH - EC-Council.png` → same caption, sorted first
+**Leave `credentialId` and `verificationUrl` empty unless you have the real
+values.** They are shown to visitors as verification, so a placeholder there
+would be a false claim.
 
-To rename one later: open it here on github.com, and use the pencil/rename
-control, or delete it and upload it again under the new name.
+## Where the name on the site comes from
 
-## Naming
+The `title` and `issuer` fields in `content/certificates.json` — that is the
+one place to edit them.
 
-**The simplest thing works: name them `1`, `2`, `3`.** They appear in that
-order with no caption — the certificate image says what it is.
-
-| File name | Order | Caption shown |
-| --- | --- | --- |
-| `1.png`, `2.png`, `3.png` | 1, 2, 3 | *(none)* |
-| `10.png` | after `9`, not after `1` | *(none)* |
-| `CEH - EC-Council.png` | alphabetical, after the numbered ones | CEH - EC-Council |
-| `01 CEH - EC-Council.png` | first | CEH - EC-Council |
-
-So: numbers alone to control the order, or a name if you want a caption under
-the image. Underscores in a name become spaces.
+An image dropped here with **no** matching entry still shows up, captioned
+from its file name (`1.png` → no caption; `CEH - EC-Council.png` → that
+caption). Useful for a quick upload, but an entry gives you the issuer, date
+and verification link.
 
 ## Formats
 
-`.png`, `.jpg`, `.jpeg`, `.webp`, `.avif`, `.svg`, `.gif` are shown as images.
-A `.pdf` certificate is listed as a PDF tile that opens in a new tab.
+`.png`, `.jpg`, `.jpeg`, `.webp`, `.avif`, `.svg`, `.gif` render as images.
+A `.pdf` opens in the lightbox with an **Open PDF** button.
 
-Screenshots straight from a phone are fine. Keep them under about 1 MB each so
-the page stays fast; anything much larger is worth compressing first.
-
-Empty folder = no gallery, and the text list of certifications is unchanged.
+Images are never cropped (`object-fit: contain`) and are lazy-loaded.
