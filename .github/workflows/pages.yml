@@ -12,7 +12,10 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  # The publish-verified workflow commits résumé content, which starts a
+  # second deploy. Superseding the older run is correct - the newer commit
+  # contains it - and avoids "deployment already in progress" failures.
+  cancel-in-progress: true
 
 jobs:
   deploy:

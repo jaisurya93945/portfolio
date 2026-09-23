@@ -27,6 +27,10 @@ on:
   push:
     paths:
       - 'resume-source/**'
+      # Documentation edits change no résumé content, so they must not
+      # produce a commit - that commit triggers a second Pages deploy which
+      # races the one already running for this push.
+      - '!resume-source/**/*.md'
 
 permissions:
   contents: write
