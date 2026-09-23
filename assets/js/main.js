@@ -379,13 +379,13 @@
         { t: t('nav.certs', 'Credentials'),     h: '#certs',      k: 'section' },
         { t: t('nav.contact', 'Contact'),       h: '#contact',    k: 'section' },
         { t: 'SentinelCore', h: 'https://github.com/jaisurya93945/sentinelcore', k: 'project' },
-        { t: 'AegisAI',      h: 'https://github.com/jaisurya93945/aegis-ai', k: 'project' },
+        { t: 'IdenSec',      h: 'https://github.com/jaisurya93945/idensec',  k: 'project' },
         { t: 'NeuroGenesis', h: 'https://github.com/jaisurya93945/NeuroGenesis', k: 'project' },
         { t: 'AI Security Guide', h: 'https://github.com/jaisurya93945/ai-security-guide', k: 'project' },
         { t: 'CipherAI Security Case Study', h: 'https://github.com/jaisurya93945/cipherai-security-case-study', k: 'project' },
         { t: 'CipherAI — cipherai.in', h: 'https://cipherai.in', k: 'link' },
         { t: 'GitHub — jaisurya93945', h: 'https://github.com/jaisurya93945', k: 'link' },
-        { t: 'LinkedIn', h: 'https://www.linkedin.com/in/badathala-jaisurya-7b985a224', k: 'link' },
+        { t: 'LinkedIn', h: 'https://www.linkedin.com/in/badathala-jaisurya/', k: 'link' },
         { t: t('hero.cta3', 'Résumé') + ' — Europe / International', h: 'resume.html?region=int', k: 'cv' },
         { t: t('hero.cta3', 'Résumé') + ' — Deutschland (Lebenslauf)', h: 'resume.html?region=de', k: 'cv' },
         { t: t('hero.cta3', 'Résumé') + ' — UK & Ireland', h: 'resume.html?region=uk', k: 'cv' },
@@ -607,6 +607,52 @@
         });
       }
     });
+  })();
+
+  /* ---------------------------------------------------------
+     17. Certificate images, uploaded by hand
+     --------------------------------------------------------- */
+  (function () {
+    var host = $('#certShots');
+    if (!host) return;
+    var empty = $('#certEmpty');
+
+    fetch('assets/cv/uploads.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (up) {
+        var certs = up && up.certs;
+        if (!certs || !certs.length) return;
+
+        certs.forEach(function (c) {
+          var src = 'assets/img/certs/' + encodeURIComponent(c.file);
+          var a = document.createElement('a');
+          a.href = src; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          a.className = 'cert-shot';
+          if (c.type === 'application/pdf') {
+            var box = document.createElement('span');
+            box.className = 'cert-pdf'; box.textContent = 'PDF';
+            a.appendChild(box);
+            a.setAttribute('aria-label', (c.caption || 'Certificate') + ' (PDF)');
+          } else {
+            var img = document.createElement('img');
+            img.src = src; img.loading = 'lazy'; img.decoding = 'async';
+            /* A caption-less certificate still needs an accessible name, and
+               the file name is the only thing that carries one. */
+            img.alt = c.caption || 'Certificate';
+            a.appendChild(img);
+          }
+          if (c.caption) {
+            var cap = document.createElement('span');
+            cap.className = 'cert-cap'; cap.textContent = c.caption;
+            a.appendChild(cap);
+          }
+          host.appendChild(a);
+        });
+
+        host.hidden = false;
+        if (empty) empty.hidden = true;
+      })
+      .catch(function () { /* uploads are optional */ });
   })();
 
   var y = $('#year');

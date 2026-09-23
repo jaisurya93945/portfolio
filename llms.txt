@@ -7,7 +7,7 @@
 
 **Site:** https://jaisurya93945.github.io/portfolio/
 **Contact:** jaisurya524126@gmail.com · +91 81435 16981
-**Profiles:** https://github.com/jaisurya93945 · https://www.linkedin.com/in/badathala-jaisurya-7b985a224 · https://cipherai.in
+**Profiles:** https://github.com/jaisurya93945 · https://www.linkedin.com/in/badathala-jaisurya/ · https://cipherai.in
 **Location:** Chennai, India — open to relocation across the EU, UK and Ireland, and to remote
 **Status:** Open to AI Security, AI Safety, DevSecOps, MLOps and Cloud Security roles
 **Résumé:** https://jaisurya93945.github.io/portfolio/resume.html (renders in 5 regional CV conventions: EU/International, Germany, UK & Ireland, US, India)

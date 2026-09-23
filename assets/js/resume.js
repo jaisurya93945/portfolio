@@ -21,7 +21,7 @@
       location: { en: 'Chennai, India', de: 'Chennai, Indien' },
       phone: '+91 8143516981',
       email: 'jaisurya524126@gmail.com',
-      linkedin: 'linkedin.com/in/badathala-jaisurya-7b985a224',
+      linkedin: 'linkedin.com/in/badathala-jaisurya',
       github: 'github.com/jaisurya93945',
       site: 'jaisurya93945.github.io/portfolio'
     },

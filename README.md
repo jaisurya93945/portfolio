@@ -301,6 +301,6 @@ committer reads `GitHub <noreply@github.com>` with `VERIFIED: true`.
 ## Contact
 
 - Email — jaisurya524126@gmail.com
-- LinkedIn — [badathala-jaisurya](https://www.linkedin.com/in/badathala-jaisurya-7b985a224)
+- LinkedIn — [badathala-jaisurya](https://www.linkedin.com/in/badathala-jaisurya/)
 - GitHub — [@jaisurya93945](https://github.com/jaisurya93945)
 - CipherAI — [cipherai.in](https://cipherai.in)

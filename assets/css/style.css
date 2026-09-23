@@ -673,22 +673,11 @@ a.t:hover .t-go{color:var(--accent)}
 .col > .t:last-child{flex:1 1 auto}
 
 
-/* ==========================================================================
-   CURSOR
-   Drawn by the operating system via the native cursor property, not by
-   JavaScript. A scripted cursor is always at least one frame behind the
-   pointer; this one cannot be, because it *is* the pointer. Zero script,
-   zero animation frames, identical speed on any machine.
-
-   Gated on a fine hover-capable pointer, so phones and tablets - which
-   have no cursor to replace - never load or show it.
-   ========================================================================== */
-@media (hover:hover) and (pointer:fine){
-  html{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Ccircle%20cx='12'%20cy='12'%20r='7.5'%20fill='none'%20stroke='rgba(0,0,0,.5)'%20stroke-width='3.2'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='7.5'%20fill='none'%20stroke='%2523fff'%20stroke-width='1.4'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='1.7'%20fill='%2523fff'/%3E%3C/svg%3E") 12 12,auto}
-  a,button,summary,label,select,[role="button"],[tabindex]:not([tabindex="-1"]),
-  .t.link,.filter,.tab,.bar,.chip{cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%3E%3Ccircle%20cx='15'%20cy='15'%20r='10.5'%20fill='rgba(57,135,229,.22)'%20stroke='rgba(0,0,0,.45)'%20stroke-width='3.2'/%3E%3Ccircle%20cx='15'%20cy='15'%20r='10.5'%20fill='none'%20stroke='%25233987e5'%20stroke-width='1.7'/%3E%3Ccircle%20cx='15'%20cy='15'%20r='2.1'%20fill='%25233987e5'/%3E%3C/svg%3E") 15 15,pointer}
-  input,textarea,[contenteditable]{cursor:text}
-  :disabled,[aria-disabled="true"]{cursor:not-allowed}
+/* The custom cursor was removed: it is the system cursor people know, and a
+   portfolio is not the place to retrain it. Pointer/text affordances stay. */
+a,button,summary,label,select,[role="button"],.t.link{cursor:pointer}
+input,textarea,[contenteditable]{cursor:text}
+:disabled,[aria-disabled="true"]{cursor:not-allowed}
 }
 
 /* --- the thirty-second case: three claims, each with its own evidence --- */
@@ -901,3 +890,17 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,
    rather than font-size, so nothing reflows around them. */
 .lab-note a,.fig-table summary,.tl-card a{display:inline-block;padding-block:4px;min-height:24px}
 .fig-table summary{padding-block:5px}
+
+/* ---------- certificate gallery ---------- */
+.cert-shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:4px}
+.cert-shot{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+           background:var(--s1);transition:border-color .22s,transform .22s var(--ease)}
+.cert-shot:hover{border-color:var(--accent-2);transform:translateY(-3px)}
+/* contain, not cover: a certificate cropped to fill a box loses the very
+   text that makes it worth showing. */
+.cert-shot img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;
+               background:var(--s2);padding:8px}
+.cert-pdf{display:grid;place-items:center;width:100%;aspect-ratio:4/3;background:var(--s2);
+          font-family:var(--mono);font-size:.7rem;color:var(--ink-3)}
+.cert-cap{display:block;padding:9px 11px;font-size:.76rem;color:var(--ink-2);line-height:1.35}
+.cert-empty{margin-top:4px;font-size:.84rem;color:var(--ink-3)}

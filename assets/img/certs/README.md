@@ -8,6 +8,18 @@ résumé page, as a gallery that opens full size when clicked.
 1. Open this folder on github.com.
 2. **Add file → Upload files**, choose the images, **Commit changes**.
 
+## Where the names on the site come from
+
+**The file name is the name.** There is no separate list to edit — rename the
+file here and the site follows on the next build.
+
+- `1.png` → shows the image with **no caption**
+- `CEH - EC-Council.png` → shows the caption **CEH - EC-Council**
+- `01 CEH - EC-Council.png` → same caption, sorted first
+
+To rename one later: open it here on github.com, and use the pencil/rename
+control, or delete it and upload it again under the new name.
+
 ## Naming
 
 **The simplest thing works: name them `1`, `2`, `3`.** They appear in that

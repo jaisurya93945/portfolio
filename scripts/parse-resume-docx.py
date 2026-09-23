@@ -210,7 +210,10 @@ def parse_contact(lines):
         'raw': lines,
         'email': find(r'[\w.+-]+@[\w-]+\.[a-z]{2,}'),
         'phone': find(r'\+?\d[\d\s()-]{7,}\d'),
-        'linkedin': find(r'linkedin\.com/in/[\w-]+'),
+        # The uploaded .docx still carries an older vanity URL; the site
+        # publishes the current one regardless of what the document says.
+        'linkedin': 'linkedin.com/in/badathala-jaisurya'
+                    if find(r'linkedin\.com/in/[\w-]+') else '',
         'github': find(r'github\.com/[\w-]+'),
         'site': find(r'[\w.-]+\.github\.io[\w/-]*'),
         'location': (lines[0].split('|')[0].strip() if lines else ''),
