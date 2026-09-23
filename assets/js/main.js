@@ -584,11 +584,16 @@
       if (mode === 'quick') root.setAttribute('data-depth', 'quick');
       else root.removeAttribute('data-depth');
       btn.setAttribute('aria-pressed', mode === 'quick' ? 'true' : 'false');
-      if (persist) { try { localStorage.setItem('depth', mode); } catch (e) {} }
+      if (persist) { try { sessionStorage.setItem('depth', mode); } catch (e) {} }
     }
 
+    /* Full is the default and stays the default. An earlier build persisted
+       the choice under 'depth', which left people on Quick with no memory of
+       choosing it and sections apparently missing; that key is ignored and
+       cleared. The preference is only restored inside one browsing session. */
+    try { localStorage.removeItem('depth'); } catch (e) {}
     var saved;
-    try { saved = localStorage.getItem('depth'); } catch (e) {}
+    try { saved = sessionStorage.getItem('depth'); } catch (e) {}
     if (saved === 'quick') apply('quick', false);
 
     btn.addEventListener('click', function () {

@@ -16,11 +16,18 @@ commit also lands with a **Verified** badge.
 
 | You upload | Visitor sees |
 | --- | --- |
-| `.pdf` | The document **embedded in the page**, plus a Download button. This is the one to use. |
-| `.docx`, `.doc`, `.odt`, `.rtf`, `.txt` | A **Download** button only — browsers cannot display these inline. |
+| `.pdf` | The document **exactly as you made it**, embedded in the page. |
+| `.docx` | Converted and **shown in the page**; Download still gives the original `.docx`. |
+| `.doc`, `.odt`, `.rtf`, `.txt` | Shown in the page if the converter can read it, otherwise Download only. |
 
-So: **export to PDF before uploading** if you want it shown on screen rather
-than downloaded.
+Both a PDF and a `.docx` display on the page — you asked for that and it works.
+A PDF is still the safer choice if the exact layout matters, because it is
+shown byte-for-byte rather than re-rendered.
+
+**How `.docx` is converted.** LibreOffice runs first and keeps the page
+layout. If it cannot read the file, a second converter takes over that keeps
+the text, headings, bold runs and bullets but not the exact page geometry.
+Either way the file you uploaded is what the Download button hands over.
 
 ## Notes
 

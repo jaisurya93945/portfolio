@@ -8,19 +8,20 @@ résumé page, as a gallery that opens full size when clicked.
 1. Open this folder on github.com.
 2. **Add file → Upload files**, choose the images, **Commit changes**.
 
-## Naming sets the caption and the order
+## Naming
 
-The file name becomes the caption, so name the files the way you want them
-read:
+**The simplest thing works: name them `1`, `2`, `3`.** They appear in that
+order with no caption — the certificate image says what it is.
 
-| File name | Caption shown |
-| --- | --- |
-| `CEH - EC-Council.png` | CEH - EC-Council |
-| `01 CEH - EC-Council.png` | CEH - EC-Council *(sorts first)* |
-| `Cloud_Computing_Foundations.jpg` | Cloud Computing Foundations |
+| File name | Order | Caption shown |
+| --- | --- | --- |
+| `1.png`, `2.png`, `3.png` | 1, 2, 3 | *(none)* |
+| `10.png` | after `9`, not after `1` | *(none)* |
+| `CEH - EC-Council.png` | alphabetical, after the numbered ones | CEH - EC-Council |
+| `01 CEH - EC-Council.png` | first | CEH - EC-Council |
 
-A leading number orders the gallery and is stripped from the caption.
-Underscores become spaces.
+So: numbers alone to control the order, or a name if you want a caption under
+the image. Underscores in a name become spaces.
 
 ## Formats
 

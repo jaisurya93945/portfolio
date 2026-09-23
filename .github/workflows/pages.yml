@@ -76,6 +76,14 @@ jobs:
       - name: Build resume content from the uploaded .docx
         run: python3 scripts/parse-resume-docx.py --out assets/cv/resume-data.json
 
+      - name: Install the document converter
+        # LibreOffice keeps a .docx's layout and is tried first; mammoth is
+        # the fallback that keeps its content when LibreOffice cannot read a
+        # file. Neither is needed when the upload is already a PDF.
+        run: |
+          python3 -m pip install --quiet mammoth
+          sudo apt-get install -y --no-install-recommends libreoffice-writer >/dev/null 2>&1 ||             echo "LibreOffice unavailable; .docx will render through mammoth"
+
       - name: Collect hand-uploaded résumé and certificate images
         run: python3 scripts/collect-uploads.py
 

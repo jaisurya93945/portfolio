@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-region="int">
+<html lang="en" data-region="in">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -164,11 +164,11 @@ html[data-region="us"] h2.sec{margin:15px 0 6px}
 
     <div class="seg" role="group" aria-label="CV format by country">
       <button data-region="orig" id="origBtn" aria-pressed="false" hidden>Original</button>
-      <button data-region="int" aria-pressed="true">Europe / Intl</button>
+      <button data-region="int" aria-pressed="false">Europe / Intl</button>
       <button data-region="de" aria-pressed="false">Deutschland</button>
       <button data-region="uk" aria-pressed="false">UK &amp; Ireland</button>
       <button data-region="us" aria-pressed="false">United States</button>
-      <button data-region="in" aria-pressed="false">India</button>
+      <button data-region="in" aria-pressed="true">India</button>
     </div>
 
     <span class="grow"></span>
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!REGIONS[region]) {
     try { region = localStorage.getItem('cvRegion'); } catch (e) {}
   }
-  if (region !== 'orig' && !REGIONS[region]) region = 'int';
+  if (region !== 'orig' && !REGIONS[region]) region = 'in';   // India is the default
 
   var PDFS = {
     int: 'Badathala-Jaisurya-CV-International.pdf',
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.seg button').forEach(function (b) {
     b.addEventListener('click', function () {
       region = b.dataset.region;
-      if (region !== 'orig' && !REGIONS[region]) region = 'int';
+      if (region !== 'orig' && !REGIONS[region]) region = 'in';
       document.querySelectorAll('.seg button').forEach(function (o) {
         o.setAttribute('aria-pressed', String(o === b));
       });
@@ -499,7 +499,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var fb = document.getElementById('origFallback');
         if (btn) btn.hidden = false;
         if (orig.inline && frame) {
-          frame.src = 'assets/cv/' + encodeURIComponent(orig.file);
+          /* view is the renderable copy - the PDF itself, or a PDF/HTML
+             rendering of a .docx - while file stays the real upload for
+             Download. */
+          frame.src = 'assets/cv/' + encodeURIComponent(orig.view || orig.file);
         } else if (fb) {
           if (frame) frame.hidden = true;
           fb.hidden = false;
