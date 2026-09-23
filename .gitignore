@@ -11,3 +11,6 @@ __pycache__/
 # Word writes these beside a document it has open; never a résumé source.
 ~$*.docx
 ~$*.doc
+
+# Design preview, not part of the published site.
+preview.html

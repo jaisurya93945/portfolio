@@ -23,7 +23,9 @@ import re
 import subprocess
 import sys
 
-FAMILIES = ['Inter:wght@400..700', 'JetBrains+Mono:wght@400..600']
+FAMILIES = ['Bricolage+Grotesque:opsz,wght@12..96,200..800',
+            'Inter:wght@400..700',
+            'JetBrains+Mono:wght@400..600']
 SUBSETS = {'latin', 'latin-ext'}
 FONT_DIR = 'assets/fonts'
 CSS_OUT = 'assets/css/fonts.css'

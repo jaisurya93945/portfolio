@@ -73,6 +73,9 @@ jobs:
       - name: Build resume content from the uploaded .docx
         run: python3 scripts/parse-resume-docx.py --out assets/cv/resume-data.json
 
+      - name: Collect hand-uploaded résumé and certificate images
+        run: python3 scripts/collect-uploads.py
+
       - name: Render resume PDF
         run: |
           npm install --no-save playwright@1.56.1

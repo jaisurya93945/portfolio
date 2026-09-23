@@ -27,6 +27,25 @@ p{margin:0}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:4px}
 
+/* ---------- uploaded résumé, shown verbatim ---------- */
+#origWrap{max-width:900px;margin:0 auto;padding:20px var(--pad,16px) 60px}
+#origFrame{width:100%;height:min(82vh,1150px);border:1px solid var(--line);
+           border-radius:6px;background:var(--paper);display:block}
+.orig-fallback{margin:18px 0 0;padding:18px;border:1px solid var(--line);border-radius:6px;
+               background:var(--paper);font-size:.92rem;color:var(--ink-2)}
+html[data-region="orig"] #sheet,html[data-region="orig"] .hint{display:none}
+html:not([data-region="orig"]) #origWrap{display:none}
+
+/* ---------- certificate images ---------- */
+.cert-shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+            gap:12px;margin-top:10px}
+.cert-shots a{display:block;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+              background:var(--paper);transition:border-color .2s}
+.cert-shots a:hover{border-color:var(--acc)}
+.cert-shots img{display:block;width:100%;height:132px;object-fit:cover;background:var(--shell)}
+.cert-shots figcaption{padding:8px 10px;font-size:.76rem;color:var(--ink-2);line-height:1.35}
+@media print{.cert-shots img{height:auto}}
+
 /* ---------- toolbar ---------- */
 .bar{
   position:sticky;top:0;z-index:20;background:#101216;color:#e9ecf2;
@@ -144,6 +163,7 @@ html[data-region="us"] h2.sec{margin:15px 0 6px}
     </a>
 
     <div class="seg" role="group" aria-label="CV format by country">
+      <button data-region="orig" id="origBtn" aria-pressed="false" hidden>Original</button>
       <button data-region="int" aria-pressed="true">Europe / Intl</button>
       <button data-region="de" aria-pressed="false">Deutschland</button>
       <button data-region="uk" aria-pressed="false">UK &amp; Ireland</button>
@@ -175,6 +195,11 @@ html[data-region="us"] h2.sec{margin:15px 0 6px}
 
 <main class="sheet" id="sheet" aria-live="polite"></main>
 
+<section id="origWrap" hidden aria-label="Résumé as uploaded">
+  <iframe id="origFrame" title="Résumé as uploaded" loading="lazy"></iframe>
+  <p id="origFallback" class="orig-fallback" hidden></p>
+</section>
+
 <script src="assets/js/resume.js" defer></script>
 <script defer>
 document.addEventListener('DOMContentLoaded', function () {
@@ -190,11 +215,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var langToggle = document.getElementById('langToggle');
 
   var photoToken = 0;
+  var ORIGINAL = null;   // the résumé uploaded to be shown verbatim
+  var CERTS = [];        // uploaded certificate images
   var region = new URLSearchParams(location.search).get('region');
   if (!REGIONS[region]) {
     try { region = localStorage.getItem('cvRegion'); } catch (e) {}
   }
-  if (!REGIONS[region]) region = 'int';
+  if (region !== 'orig' && !REGIONS[region]) region = 'int';
 
   var PDFS = {
     int: 'Badathala-Jaisurya-CV-International.pdf',
@@ -228,7 +255,64 @@ document.addEventListener('DOMContentLoaded', function () {
     return ul;
   }
 
+  /* The Original view is the uploaded file itself, so there is nothing to
+     lay out: swap the document for the frame and point Download at it. */
+  function applyRegion(r) {
+    document.documentElement.setAttribute('data-region', r);
+    var wrap = document.getElementById('origWrap');
+    var dl = document.getElementById('dlBtn');
+    var lbl = document.getElementById('dlLabel');
+    if (r === 'orig' && ORIGINAL) {
+      if (wrap) wrap.hidden = false;
+      if (dl) {
+        dl.setAttribute('href', 'assets/cv/' + encodeURIComponent(ORIGINAL.file));
+        dl.setAttribute('download', ORIGINAL.name);
+      }
+      if (lbl) lbl.textContent = 'Download original';
+      var pb = document.getElementById('printBtn');
+      if (pb) pb.hidden = true;
+      var note = document.getElementById('regionNote');
+      if (note) note.textContent = ORIGINAL.name + ' — shown exactly as uploaded.';
+      return true;
+    }
+    if (wrap) wrap.hidden = true;
+    if (dl) dl.removeAttribute('download');
+    var pb2 = document.getElementById('printBtn');
+    if (pb2) pb2.hidden = false;
+    return false;
+  }
+
+  function renderCertShots(certs) {
+    var host = document.getElementById('certShots');
+    if (!host) return;
+    host.textContent = '';
+    certs.forEach(function (c) {
+      var src = 'assets/img/certs/' + encodeURIComponent(c.file);
+      var fig = document.createElement('figure');
+      var a = document.createElement('a');
+      a.href = src; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      if (c.type === 'application/pdf') {
+        var box = document.createElement('div');
+        box.className = 'cert-pdf';
+        box.textContent = 'PDF';
+        a.appendChild(box);
+      } else {
+        var img = document.createElement('img');
+        img.src = src; img.alt = c.caption; img.loading = 'lazy'; img.decoding = 'async';
+        a.appendChild(img);
+      }
+      var cap = document.createElement('figcaption');
+      cap.textContent = c.caption;
+      a.appendChild(cap);
+      fig.appendChild(a);
+      host.appendChild(fig);
+    });
+    host.hidden = false;
+  }
+
   function render() {
+    if (region === 'orig' && ORIGINAL) { applyRegion('orig'); return; }
+    applyRegion(region);
     var cfg = REGIONS[region];
     var lang = (region === 'de' && langToggle.checked) ? 'de' : 'en';
     var L = LABELS[lang];
@@ -331,6 +415,13 @@ document.addEventListener('DOMContentLoaded', function () {
       } else if (key === 'certs') {
         sheet.appendChild(el('h2', 'sec', L.certs));
         sheet.appendChild(bulletList(pick(CV.certs, lang), 'cols'));
+        /* Uploaded certificate images sit under the text list, so the CV
+           still reads correctly when none have been added. */
+        var shots = el('div', 'cert-shots');
+        shots.id = 'certShots';
+        shots.hidden = true;
+        sheet.appendChild(shots);
+        if (CERTS.length) renderCertShots(CERTS);
 
       } else if (key === 'education') {
         sheet.appendChild(el('h2', 'sec', L.education));
@@ -370,6 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.seg button').forEach(function (b) {
     b.addEventListener('click', function () {
       region = b.dataset.region;
+      if (region !== 'orig' && !REGIONS[region]) region = 'int';
       document.querySelectorAll('.seg button').forEach(function (o) {
         o.setAttribute('aria-pressed', String(o === b));
       });
@@ -394,6 +486,32 @@ document.addEventListener('DOMContentLoaded', function () {
      Render immediately from the built-in copy so the page is never blank,
      then re-render if fresher content arrives. */
   render();
+  /* Files uploaded by hand: a résumé to show exactly as supplied, and
+     certificate images. Both are optional; absent, the page is unchanged. */
+  fetch('assets/cv/uploads.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (up) {
+      if (!up) return;
+      var orig = up.resume;
+      if (orig) {
+        var btn = document.getElementById('origBtn');
+        var frame = document.getElementById('origFrame');
+        var fb = document.getElementById('origFallback');
+        if (btn) btn.hidden = false;
+        if (orig.inline && frame) {
+          frame.src = 'assets/cv/' + encodeURIComponent(orig.file);
+        } else if (fb) {
+          if (frame) frame.hidden = true;
+          fb.hidden = false;
+          fb.textContent = orig.name + ' cannot be shown in the browser. Use Download to open it.';
+        }
+        ORIGINAL = orig;
+        if (region === 'orig') applyRegion('orig');
+      }
+      if (up.certs && up.certs.length) { CERTS = up.certs; renderCertShots(CERTS); }
+    })
+    .catch(function () { /* uploads are optional */ });
+
   fetch('assets/cv/resume-data.json', { cache: 'no-cache' })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
