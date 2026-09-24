@@ -39,31 +39,51 @@
     ]).then(function (res) { return merge(res[0] || [], (res[1] && res[1].certs) || []); });
   }
 
-  /* An uploaded file is matched to an entry by id or by a slug of its title;
-     anything left over still gets shown rather than silently dropped. */
+  /* An uploaded file is matched to an entry by id or by a slug of its title,
+     then - for files named 1, 2, 3 - by position in certificates.json.
+     Anything left over still gets shown rather than silently dropped. */
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function stem(f) { return String(f).replace(/\.[^.]+$/, ''); }
+
+  function attach(c, u) {
+    c.image = 'assets/img/certs/' + u.file;
+    c.type = u.type;
+  }
 
   function merge(meta, uploads) {
     var used = {};
+
+    /* 1. by id or title */
     meta.forEach(function (c) {
       if (c.image) return;
       var want = [slug(c.id), slug(c.title)];
       for (var i = 0; i < uploads.length; i++) {
-        var u = uploads[i], base = slug(u.file.replace(/\.[^.]+$/, ''));
+        var u = uploads[i];
         if (used[u.file]) continue;
-        if (want.indexOf(base) !== -1 || (u.caption && want.indexOf(slug(u.caption)) !== -1)) {
-          c.image = 'assets/img/certs/' + u.file;
-          c.type = u.type;
-          used[u.file] = 1;
-          break;
+        if (want.indexOf(slug(stem(u.file))) !== -1 ||
+            (u.caption && want.indexOf(slug(u.caption)) !== -1)) {
+          attach(c, u); used[u.file] = 1; break;
         }
       }
     });
+
+    /* 2. by position: 1.png is the first entry, 2.png the second. This is the
+       naming the upload folder documents, so it must not fall through to the
+       leftover branch and create a second, untitled card for the same cert. */
     uploads.forEach(function (u) {
       if (used[u.file]) return;
-      meta.push({ id: slug(u.file), title: u.caption || '', issuer: '', date: '',
-                  image: 'assets/img/certs/' + u.file, type: u.type,
-                  credentialId: '', verificationUrl: '', category: 'Other' });
+      if (!/^\d+$/.test(stem(u.file))) return;
+      var c = meta[parseInt(stem(u.file), 10) - 1];
+      if (c && !c.image) { attach(c, u); used[u.file] = 1; }
+    });
+
+    /* 3. whatever is left becomes an entry of its own */
+    uploads.forEach(function (u) {
+      if (used[u.file]) return;
+      meta.push({ id: slug(stem(u.file)) || slug(u.file), title: u.caption || '',
+                  issuer: '', date: '', image: 'assets/img/certs/' + u.file,
+                  type: u.type, credentialId: '', verificationUrl: '',
+                  category: 'Other' });
     });
     return meta;
   }

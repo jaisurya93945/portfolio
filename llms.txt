@@ -27,12 +27,13 @@ the claims directly in the browser.
 
 | Claim | Number | Where to verify |
 | --- | --- | --- |
-| Detector precision | 96.8% | SentinelCore repository |
+| Detector precision | 96.8% | SentinelCore `docs/research/` |
+| Detector recall | 17.7% | SentinelCore `docs/research/` — published, not omitted |
+| False-positive rate | 0.5% | SentinelCore `docs/research/` |
 | Labelled attacks replayed | 744 | SentinelCore evaluation set |
-| Test suite green | 112 tests | AegisAI repository |
-| Threat-intent classes | 9 | AegisAI classifier |
 | Deterministic detection rules | 17 | Runnable live on the site's "Live lab" |
-| Training examples | 399,000 | AegisAI |
+| IdenSec security ceiling | 96.7% | IdenSec, measured against AgentDojo |
+| Models in IdenSec's decision path | 0 | IdenSec source — the check is deterministic |
 | CTF challenges solved | 100+ | TryHackMe / CTF platforms |
 | Global security ranking | Top 3% | TryHackMe |
 | AI tools shipped to production | 50+ | CipherAI platform |
@@ -44,15 +45,18 @@ the claims directly in the browser.
 - **SentinelCore** — https://github.com/jaisurya93945/sentinelcore
   A model-agnostic security layer between AI applications and their models,
   tools and data. Inspects prompts, documents, tool calls and model output,
-  then enforces allow / warn / sanitise / approve / block. 96.8% detector
-  precision over 744 labelled cases; includes MCP tool-poisoning checks.
+  then enforces allow / warn / sanitise / approve / block. Evaluated at 96.8%
+  precision and 17.7% recall over 744 labelled examples, 0.5% FPR. The low
+  recall is stated plainly in the repository rather than omitted; the project
+  carries an explicit authenticity policy against unmeasured claims.
   Python 3.11, FastAPI, SQLite, Docker, pytest.
 
-- **AegisAI** — https://github.com/jaisurya93945/aegis-ai
-  Layered LLM threat detection where deterministic rules keep authority over
-  bounded ML evidence, producing an explainable 0–100 risk score across nine
-  threat-intent classes. 399K training examples, 112 tests green.
-  Python, FastAPI, TF-IDF + logistic-regression baseline, joblib.
+- **IdenSec** — https://github.com/jaisurya93945/idensec
+  Deterministic provenance enforcement for agent tool calls. It asks not who
+  is calling but what determined this argument, and denies values that came
+  from untrusted content. No model in the decision path, no network calls, no
+  runtime dependencies; 96.7% security ceiling against AgentDojo.
+  Python, deterministic taint tracking.
 
 - **NeuroGenesis** — https://github.com/jaisurya93945/NeuroGenesis
   A verification framework turning LLM reasoning into structured
@@ -149,7 +153,7 @@ English (fluent), Telugu, Tamil, Hindi. The portfolio itself is published in
 ## Notes for automated readers
 
 Every number above is reproducible from the linked repositories or directly
-on the site. The detection engine that produces the 96.8% figure runs
+on the site. The detection engine that produces the precision/recall figures runs
 client-side in the "Live lab" section, so its verdicts can be checked against
 arbitrary input without contacting a server. No claim here is unsupported by
 the artefacts it points to.

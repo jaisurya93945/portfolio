@@ -12,7 +12,8 @@ belonging to the repository owner produces a commit authored by them.
 
 Environment:
   GH_TOKEN          token with contents:write
-  HEADLINE          commit message (optional)
+  HEADLINE          commit headline (optional)
+  BODY              commit body (optional; --message-file overrides both)
   GITHUB_REPOSITORY owner/repo   (set by Actions)
   GITHUB_REF_NAME   branch       (set by Actions)
 """
@@ -101,9 +102,28 @@ def changed(paths):
     return out
 
 
+def message(args):
+    """headline + body, so a commit made here reads like any other.
+
+    A file wins over the environment; within a file the first line is the
+    headline and everything after the blank line is the body, exactly as
+    `git commit -F` reads it.
+    """
+    if args.message_file:
+        text = open(args.message_file, encoding='utf-8').read().strip()
+        head, _, body = text.partition('\n')
+        return {'headline': head.strip(), 'body': body.strip()}
+    out = {'headline': os.environ.get('HEADLINE') or 'chore: publish content'}
+    body = os.environ.get('BODY', '').strip()
+    if body:
+        out['body'] = body
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('paths', nargs='*')
+    ap.add_argument('--message-file', help='commit message file; first line is the headline')
     ap.add_argument('--branch', help='target branch (default: the current ref)')
     ap.add_argument('--all', action='store_true',
                     help='send every git-tracked file, not just changed ones')
@@ -147,7 +167,7 @@ def main():
 
     commit = gql(token, {'i': {
         'branch': {'repositoryNameWithOwner': repo, 'branchName': branch},
-        'message': {'headline': os.environ.get('HEADLINE') or 'chore: publish content'},
+        'message': message(args),
         'expectedHeadOid': head,
         'fileChanges': changes,
     }})

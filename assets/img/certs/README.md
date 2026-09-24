@@ -7,9 +7,16 @@ showing a placeholder rather than a broken picture.
 
 ## Adding one
 
-1. Put the image here. Name it after the entry's `id`, e.g. `ceh.png` for
-   the entry whose `"id": "ceh"`. It is matched automatically.
-2. Fill in that entry in `content/certificates.json`.
+Put the image here, then fill in its entry in `content/certificates.json`.
+Two naming schemes are matched automatically:
+
+- **By number** — `1.png` is the first entry in `certificates.json`, `2.png`
+  the second, and so on. Simplest if you are uploading a batch.
+- **By id** — `ceh.png` matches the entry whose `"id": "ceh"`. Order-proof,
+  so it survives reordering the file.
+
+Either way the image is attached to that entry; it never creates a second,
+untitled card for the same certificate.
 
 ```json
 {
@@ -42,10 +49,10 @@ would be a false claim.
 The `title` and `issuer` fields in `content/certificates.json` — that is the
 one place to edit them.
 
-An image dropped here with **no** matching entry still shows up, captioned
-from its file name (`1.png` → no caption; `CEH - EC-Council.png` → that
-caption). Useful for a quick upload, but an entry gives you the issuer, date
-and verification link.
+An image dropped here that matches **no** entry — a name that is neither an
+`id` nor a position that exists — still shows up, captioned from its file
+name (`CEH - EC-Council.png` → that caption). Useful for a quick upload, but
+an entry gives you the issuer, date and verification link.
 
 ## Formats
 

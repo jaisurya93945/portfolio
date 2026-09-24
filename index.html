@@ -42,8 +42,8 @@
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=8">
-<link rel="stylesheet" href="assets/css/style.css?v=8">
+<link rel="stylesheet" href="assets/css/fonts.css?v=9">
+<link rel="stylesheet" href="assets/css/style.css?v=9">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -84,7 +84,7 @@
       "email": "mailto:jaisurya524126@gmail.com",
       "telephone": "+91-8143516981",
       "url": "https://jaisurya93945.github.io/portfolio/",
-      "image": "https://avatars.githubusercontent.com/u/94210631?v=8",
+      "image": "https://avatars.githubusercontent.com/u/94210631?v=4",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Chennai",
@@ -281,7 +281,7 @@
             "item": {
               "@type": "SoftwareSourceCode",
               "name": "SentinelCore",
-              "description": "A model-agnostic security layer between AI applications and their models, tools and data. Inspects prompts, documents, tool calls and model output, then enforces allow / warn / sanitise / approve / block. 96.8% detector precision over 744 labelled cases, with MCP tool-poisoning checks.",
+              "description": "A model-agnostic security layer between AI applications and their models, tools and data. Inspects prompts, documents, tool calls and model output, then enforces allow / warn / sanitise / approve / block. 96.8% precision and 17.7% recall over 744 labelled examples at a 0.5% false-positive rate; the low recall is published rather than omitted. Includes MCP tool-poisoning checks.",
               "codeRepository": "https://github.com/jaisurya93945/sentinelcore",
               "url": "https://github.com/jaisurya93945/sentinelcore",
               "programmingLanguage": "Python",
@@ -513,10 +513,10 @@
 
     <aside class="t c5 fill" data-anim="rise" data-d="1" aria-label="Threat posture summary">
       <div class="t-k"><span class="chip live"><span class="pulse sm" aria-hidden="true"></span> gateway::online</span>
-        <span class="meta">v0.3.0</span></div>
+        <span class="meta">v0.4.0</span></div>
       <div class="ring-mid">
-        <strong>96.8%</strong>
-        <small data-i18n="hero.card.precision">detector precision</small>
+        <strong>96.8<span class="u">%</span> <span class="slash">/</span> 17.7<span class="u">%</span></strong>
+        <small data-i18n="hero.card.precision">detector precision / recall · 744 labelled examples</small>
       </div>
       <ul class="mini-stats">
         <li><b>744</b><span data-i18n="hero.card.s1">labelled attacks replayed</span></li>
@@ -541,7 +541,7 @@
         </li>
         <li>
           <h4 data-i18n="proof.2.t">Numbers you can check yourself</h4>
-          <p data-i18n="proof.2.d">The detector quoted at 96.8% is the same engine running in the lab below. Paste any prompt and read the verdict, the rules that fired and their weights.</p>
+          <p data-i18n="proof.2.d">The detector is quoted as 96.8% precision and 17.7% recall, not precision alone — it rarely cries wolf and it misses most real attacks. The same engine runs in the lab below; paste anything and read the rules that fired.</p>
         </li>
         <li>
           <h4 data-i18n="proof.3.t">Research that publishes what failed</h4>
@@ -580,17 +580,93 @@
   <header class="lbl" data-anim="fade"><span class="idx">01</span><span data-i18n="nav.projects">Selected work</span></header>
 
   <div class="bento">
-    <a class="t c7 link" href="https://github.com/jaisurya93945/sentinelcore" target="_blank" rel="noopener noreferrer" data-anim="rise" data-d="0">
-      <div class="t-k"><span data-i18n="proj.p1.tag">AI Threat Gateway</span><span class="meta">v0.3.0</span></div>
-      <h3>SentinelCore</h3>
-      <p data-i18n="proj.p1.d">A model-agnostic security layer between AI applications and their models, tools and data. Inspects prompts, documents, tool calls and model output; enforces allow / warn / sanitise / approve / block.</p>
-      <ul class="t-m">
-        <li><b>96.8%</b><span data-i18n="proj.m.precision">precision</span></li>
-        <li><b>744</b><span data-i18n="proj.m.cases">labelled cases</span></li>
-        <li><b>MCP</b><span data-i18n="proj.m.poison">poisoning checks</span></li>
-      </ul>
-      <span class="t-go"><span data-i18n="proj.source">Source</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-    </a>
+    <article class="t c12 feature" data-anim="rise">
+      <div class="feat-head">
+        <div>
+          <div class="t-k"><span data-i18n="proj.p1.tag">AI Threat Gateway</span>
+            <span class="meta">v0.4.0 · MIT</span></div>
+          <h3 class="feat-title">SentinelCore</h3>
+          <p class="feat-thesis" data-i18n="feat.thesis">A security layer between an AI application and the models, tools and data it touches — inspecting prompts, retrieved context, tool calls, MCP tool definitions and model output, then enforcing a policy on what happens next.</p>
+        </div>
+        <a class="btn btn-ghost feat-cta" href="https://github.com/jaisurya93945/sentinelcore" target="_blank" rel="noopener noreferrer">
+          <span data-i18n="proj.source">Source</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+
+      <div class="feat-grid">
+        <div class="feat-col">
+          <h4 data-i18n="feat.prob.t">The problem</h4>
+          <p data-i18n="feat.prob.d">An AI application exposes a model to untrusted user input, external documents, tools and other AI systems. That is a security boundary traditional AppSec never covered: the request is well-formed, the token is valid, the tool is permitted — and the content still decides what happens.</p>
+        </div>
+        <div class="feat-col">
+          <h4 data-i18n="feat.built.t">What it does</h4>
+          <p data-i18n="feat.built.d">Five detectors run over every origin — input, each retrieved document, and output. Their findings feed a deterministic risk score and a configurable policy engine, which returns one of five decisions. As a reverse proxy it is OpenAI-path compatible, so it scans the response as well as the request, streaming included.</p>
+        </div>
+      </div>
+
+      <figure class="pipe" aria-labelledby="pipeCap">
+        <figcaption id="pipeCap" class="pipe-cap" data-i18n="feat.pipe.cap">Request flow. Both the scan endpoint and the reverse proxy run the same registry, risk engine and policy engine.</figcaption>
+        <svg class="pipe-svg" viewBox="0 26 980 162" role="img"
+             aria-label="Pipeline: a request enters through the scan endpoint or the reverse proxy, passes a registry of five detectors, produces findings tagged by origin, which feed a risk engine and a policy engine that returns one of five decisions.">
+          <g class="pn">
+            <rect x="8"   y="78" width="150" height="56" rx="9"/>
+            <text x="83"  y="100">Request</text>
+            <text x="83"  y="118" class="sm">scan · proxy</text>
+          </g>
+          <g class="pn">
+            <rect x="204" y="52" width="176" height="108" rx="9"/>
+            <text x="292" y="76">Detector registry</text>
+            <text x="292" y="96"  class="sm">prompt_injection</text>
+            <text x="292" y="112" class="sm">obfuscation · pii</text>
+            <text x="292" y="128" class="sm">secrets · tool_arguments</text>
+            <text x="292" y="148" class="sm">5 detectors</text>
+          </g>
+          <g class="pn">
+            <rect x="426" y="78" width="150" height="56" rx="9"/>
+            <text x="501" y="100">Findings</text>
+            <text x="501" y="118" class="sm">input · context:i · output</text>
+          </g>
+          <g class="pn">
+            <rect x="622" y="34" width="150" height="50" rx="9"/>
+            <text x="697" y="64">Risk engine</text>
+          </g>
+          <g class="pn">
+            <rect x="622" y="126" width="150" height="50" rx="9"/>
+            <text x="697" y="156">Policy engine</text>
+          </g>
+          <g class="pn pn-out">
+            <rect x="820" y="52" width="152" height="108" rx="9"/>
+            <text x="896" y="76">Decision</text>
+            <text x="896" y="98"  class="sm">ALLOW · WARN</text>
+            <text x="896" y="115" class="sm">SANITIZE</text>
+            <text x="896" y="132" class="sm">HUMAN_APPROVAL</text>
+            <text x="896" y="149" class="sm">BLOCK</text>
+          </g>
+          <g class="pe">
+            <path d="M158 106H204"/>
+            <path d="M380 106H426"/>
+            <path d="M576 106H600 V59 H622"/>
+            <path d="M576 106H600 V151 H622"/>
+            <path d="M772 59H796 V106 H820"/>
+            <path d="M772 151H796 V106 H820"/>
+          </g>
+          <g class="pe pe-dim"><path d="M697 84V126"/></g>
+          <text class="pe-lab" x="712" y="110">risk_score</text>
+        </svg>
+      </figure>
+
+      <div class="feat-ev">
+        <h4 data-i18n="feat.ev.t">Evidence</h4>
+        <ul class="ev-rows">
+          <li><b>96.8%</b><span data-i18n="feat.ev.p">precision</span></li>
+          <li><b>17.7%</b><span data-i18n="feat.ev.r">recall</span></li>
+          <li><b>0.5%</b><span data-i18n="feat.ev.f">false-positive rate</span></li>
+          <li><b>744</b><span data-i18n="feat.ev.n">labelled examples</span></li>
+        </ul>
+        <p class="ev-note" data-i18n="feat.ev.note">345 malicious, 399 benign, from two MIT-licensed public sources. The recall is the honest signature of a rule-and-heuristic detector: it rarely cries wolf, and it misses most real-world attacks. The repository says so in those words, and an attack-replay lab tracks every version against the same set — v0.1 to v0.3, twenty attacks newly caught, zero regressions.</p>
+      </div>
+    </article>
     <a class="t c5 link" href="https://github.com/jaisurya93945/idensec" target="_blank" rel="noopener noreferrer" data-anim="rise" data-d="0">
       <div class="t-k"><span data-i18n="proj.p2.tag">Agent Provenance</span><span class="meta">v0.1</span></div>
       <h3>IdenSec</h3>
@@ -762,6 +838,7 @@
       <p data-i18n="res.sc.d">The detection engine is deterministic on purpose. Rules carry the authority and bounded ML evidence is fused underneath them, so every verdict can be traced to the rules that produced it rather than to a score nobody can explain. The engine in the lab above is the same one; its 17 rules and their weights are readable in the output.</p>
       <ul class="t-m">
         <li><b>96.8%</b><span data-i18n="proj.m.precision">precision</span></li>
+        <li><b>17.7%</b><span data-i18n="proj.m.recall">recall</span></li>
         <li><b>744</b><span data-i18n="proj.m.cases">labelled cases</span></li>
         <li><b>17</b><span data-i18n="res.sc.rules">deterministic rules</span></li>
       </ul>
@@ -1095,10 +1172,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=8" defer></script>
-<script src="assets/js/scanner.js?v=8" defer></script>
-<script src="assets/js/certificates.js?v=8" defer></script>
-<script src="assets/js/main.js?v=8" defer></script>
+<script src="assets/js/i18n.js?v=9" defer></script>
+<script src="assets/js/scanner.js?v=9" defer></script>
+<script src="assets/js/certificates.js?v=9" defer></script>
+<script src="assets/js/main.js?v=9" defer></script>
 <div class="cert-box" id="certBox" role="dialog" aria-modal="true"
      aria-labelledby="cbTitle" hidden>
   <div class="cb-panel">

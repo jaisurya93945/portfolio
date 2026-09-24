@@ -12,9 +12,8 @@ Positioning: AI Security · DevSecOps · MLOps · Cloud Security.
 ## The interactive centrepiece: a browser-side AI Threat Gateway
 
 The `#lab` section runs a miniature of the detection engine behind
-[SentinelCore](https://github.com/jaisurya93945/sentinelcore) and
-[AegisAI](https://github.com/jaisurya93945/aegis-ai). Paste any prompt, tool description or
-document chunk and it returns a transparent verdict.
+[SentinelCore](https://github.com/jaisurya93945/sentinelcore). Paste any prompt,
+tool description or document chunk and it returns a transparent verdict.
 
 - **17 deterministic rules** covering instruction override, system-prompt extraction,
   jailbreak/persona hijack, encoded payloads, decode-and-execute directives, invisible and

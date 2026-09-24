@@ -106,10 +106,10 @@
         bullets: {
           en: ['Model-agnostic security layer between AI applications and their models, tools and data sources; inspects prompts, documents, tool calls and model output.',
                'Detects prompt injection, obfuscation (zero-width, bidirectional text, homoglyphs, encoding), PII and secrets, and MCP tool-poisoning; enforces allow / warn / sanitise / approve / block policy.',
-               '96.8% detector precision across 744 labelled examples, with an attack-replay lab tracking improvements across versions; OpenAI-compatible reverse proxy with queryable audit trails.'],
+               '96.8% precision and 17.7% recall across 744 labelled examples, with an attack-replay lab tracking improvements across versions; OpenAI-compatible reverse proxy with queryable audit trails.'],
           de: ['Modellunabhängige Sicherheitsschicht zwischen KI-Anwendungen und ihren Modellen, Tools und Datenquellen; prüft Prompts, Dokumente, Tool-Aufrufe und Modellausgaben.',
                'Erkennt Prompt Injection, Verschleierung (Zero-Width, Bidi, Homoglyphen, Kodierung), PII und Secrets sowie MCP-Tool-Vergiftung; erzwingt Allow / Warn / Bereinigen / Freigabe / Block.',
-               '96,8 % Detektor-Präzision über 744 markierte Beispiele, mit Attack-Replay-Labor zur Versionsverfolgung; OpenAI-kompatibler Reverse Proxy mit abfragbaren Audit-Trails.']
+               '96,8 % Präzision und 17,7 % Recall über 744 markierte Beispiele, mit Attack-Replay-Labor zur Versionsverfolgung; OpenAI-kompatibler Reverse Proxy mit abfragbaren Audit-Trails.']
         } },
       { name: 'AegisAI', stack: 'Python, FastAPI, scikit-learn, joblib',
         bullets: {
