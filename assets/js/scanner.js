@@ -1,6 +1,6 @@
 /* =========================================================
    Mini AI Threat Gateway
-   A browser-side reduction of the SentinelCore / AegisAI
+   A browser-side reduction of the SentinelCore
    detection model: deterministic rules produce weighted
    evidence, evidence fuses into a bounded 0-100 risk score,
    and a policy layer maps the score to ALLOW / WARN / BLOCK.

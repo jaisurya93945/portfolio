@@ -42,8 +42,8 @@
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=10">
-<link rel="stylesheet" href="assets/css/style.css?v=10">
+<link rel="stylesheet" href="assets/css/fonts.css?v=11">
+<link rel="stylesheet" href="assets/css/style.css?v=11">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -832,17 +832,29 @@
       </details>
     </figure>
 
-    <article class="t c12 res-q2" data-anim="rise">
-      <div class="t-k"><span>SentinelCore</span><span class="meta" data-i18n="res.sc.tag">applied research</span></div>
-      <h3 data-i18n="res.sc.q">Can a gateway decide on a prompt without a model in the loop?</h3>
-      <p data-i18n="res.sc.d">The detection engine is deterministic on purpose. Rules carry the authority and bounded ML evidence is fused underneath them, so every verdict can be traced to the rules that produced it rather than to a score nobody can explain. The engine in the lab above is the same one; its 17 rules and their weights are readable in the output.</p>
-      <ul class="t-m">
-        <li><b>96.8%</b><span data-i18n="proj.m.precision">precision</span></li>
-        <li><b>17.7%</b><span data-i18n="proj.m.recall">recall</span></li>
-        <li><b>744</b><span data-i18n="proj.m.cases">labelled cases</span></li>
-        <li><b>17</b><span data-i18n="res.sc.rules">deterministic rules</span></li>
+    <article class="t c12 abl" data-anim="rise">
+      <div class="t-k"><span>SentinelCore</span><span class="meta" data-i18n="res.abl.tag">ablation study · 170 agent traces</span></div>
+      <h3 data-i18n="res.abl.q">Does knowing where a prompt came from make a gateway safer?</h3>
+      <p class="abl-claim" data-i18n="res.abl.claim">Given a ground-truth detector, provenance-aware policy adds 47 points of attack prevention at no cost to legitimate work. Given a real learned detector it adds 2.4 points, not statistically significant, and costs about 9 points of benign completion. Oracle evaluation overstates the mechanism by roughly 20× — and the misleading result is the one that is statistically solid.</p>
+
+      <ul class="ledger-rows abl-rows">
+        <li><span class="hid mono">H1</span><span class="hdesc" data-i18n="res.abl.h1">Detection recall, not policy, is the binding constraint</span><span class="hstat live">stands · APR 0.28 → 0.94</span></li>
+        <li><span class="hid mono">H2</span><span class="hdesc" data-i18n="res.abl.h2">Provenance-aware risk scoring raises attack prevention</span><span class="hstat dead">falsified · 0 of 37 decisions changed</span></li>
+        <li><span class="hid mono">H3</span><span class="hdesc" data-i18n="res.abl.h3">Applying provenance to the policy rule instead of the score fixes H2</span><span class="hstat dead">falsified · 0 of 37</span></li>
+        <li><span class="hid mono">H4</span><span class="hdesc" data-i18n="res.abl.h4">Provenance is free — measured under an oracle detector</span><span class="hstat warn" data-i18n="res.abl.sup">superseded, kept unedited</span></li>
+        <li><span class="hid mono">H5</span><span class="hdesc" data-i18n="res.abl.h5">Oracle evaluation systematically overstates anything layered on detection</span><span class="hstat live">stands · ≈20×</span></li>
       </ul>
-      <a class="t-go" href="https://github.com/jaisurya93945/sentinelcore" target="_blank" rel="noopener noreferrer"><span data-i18n="proj.source">Source</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+
+      <ul class="t-m abl-m">
+        <li><b>0.185 → 0.884</b><span data-i18n="res.abl.m1">recall, rules vs learned · 10 seeds</span></li>
+        <li><b>4.78×</b><span data-i18n="res.abl.m2">representative improvement</span></li>
+        <li><b>p ≤ 5.6×10⁻⁶</b><span data-i18n="res.abl.m3">McNemar, 10 of 10 seeds</span></li>
+        <li><b>149 / 170</b><span data-i18n="res.abl.m4">payloads written by someone else</span></li>
+      </ul>
+
+      <p class="abl-foot" data-i18n="res.abl.why">H2 and H3 failed for one reason: provenance re-weights findings that already exist. The four attacks surviving every configuration produced zero findings, and zero multiplied by any trust factor is still zero. The first run used 37 self-authored traces with ±18-point intervals, so the honest next step was five times more traces rather than another mechanism — the current benchmark takes its attack text from a held-out public split instead of writing it here.</p>
+
+      <a class="t-go" href="https://github.com/jaisurya93945/sentinelcore/tree/main/docs/research" target="_blank" rel="noopener noreferrer"><span data-i18n="res.abl.read">Read the evaluation</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
     </article>
 
     <div data-deep class="t c5 res-method" data-anim="rise">
@@ -1059,9 +1071,9 @@
   <header class="lbl" data-anim="fade"><span class="idx">06</span><span data-i18n="nav.certs">Credentials</span></header>
 
   <div class="bento">
-    <div class="t c5" data-anim="rise">
+    <div class="t c5" id="certListCard" data-anim="rise">
       <div class="cert-layout">
-    <div class="cert-grid" data-anim="rise">
+    <div class="cert-grid" id="certGrid" data-anim="rise">
       <div class="cert"><span class="cert-ic" aria-hidden="true">CEH</span><div><h4 data-i18n="cert.1">Certified Ethical Hacker</h4><p>EC-Council</p></div><span class="ok" aria-hidden="true">✓</span></div>
       <div class="cert"><span class="cert-ic" aria-hidden="true">LF</span><div><h4>DevSecOps</h4><p>Linux Foundation</p></div><span class="ok" aria-hidden="true">✓</span></div>
       <div class="cert"><span class="cert-ic" aria-hidden="true">LF</span><div><h4>Linux Essentials</h4><p>Linux Foundation</p></div><span class="ok" aria-hidden="true">✓</span></div>
@@ -1071,7 +1083,7 @@
     </div>
       </div>
     </div>
-    <div class="t c7" data-anim="rise" data-d="1">
+    <div class="t c7" id="certShotsCard" data-anim="rise" data-d="1">
       <div class="t-k"><span data-i18n="cert.shots">Certificates</span>
         <span class="meta" id="certCount" aria-live="polite"></span></div>
       <div class="cert-filters" id="certFilters" role="group" hidden
@@ -1172,10 +1184,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=10" defer></script>
-<script src="assets/js/scanner.js?v=10" defer></script>
-<script src="assets/js/certificates.js?v=10" defer></script>
-<script src="assets/js/main.js?v=10" defer></script>
+<script src="assets/js/i18n.js?v=11" defer></script>
+<script src="assets/js/scanner.js?v=11" defer></script>
+<script src="assets/js/certificates.js?v=11" defer></script>
+<script src="assets/js/main.js?v=11" defer></script>
 <div class="cert-box" id="certBox" role="dialog" aria-modal="true"
      aria-labelledby="cbTitle" hidden>
   <div class="cb-panel">

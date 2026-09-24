@@ -351,6 +351,20 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
 .hstat.live{color:var(--good)}
 .hstat.dead{color:var(--critical)}
 .hstat.warn{color:var(--warn)}
+
+/* ablation study — the ledger pattern, reused so the two research findings
+   read as one system rather than two one-offs */
+.abl-claim{max-width:var(--measure);margin-top:10px;font-size:1.02rem;line-height:1.55;
+  color:var(--ink)}
+.abl-claim strong{font-weight:600}
+.abl .abl-rows{margin:22px 0 0;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--s1);overflow:hidden}
+.abl .abl-m{margin-top:18px;gap:28px}
+.abl-foot{max-width:var(--measure);margin-top:18px;font-size:.86rem;color:var(--ink-3)}
+@media (max-width:720px){
+  .abl .abl-rows li{grid-template-columns:30px minmax(0,1fr);row-gap:8px}
+  .abl .abl-rows .hstat{grid-column:2;justify-self:start}
+}
 .ledger-foot{padding:14px clamp(16px,2vw,24px);border-top:1px solid var(--line);font-family:var(--mono);font-size:.68rem;color:var(--ink-3);line-height:1.75}
 
 /* ---------- focus ---------- */
@@ -667,6 +681,16 @@ a.t:hover .t-go{color:var(--accent)}
 .t > .lbl:first-child{margin-top:0;padding-top:0;border-top:0}
 .t .cert-layout{display:block}
 .t .cert-grid > .cert:first-child{border-top:0;padding-top:0}
+
+/* Full width, when there is no gallery beside it, the list would otherwise be
+   one tall thin column with dead space to the right. */
+#certListCard.c12 .cert-grid{grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:34px}
+#certListCard.c12 .cert-grid > .cert:nth-child(2){border-top:0;padding-top:0}
+@media (max-width:760px){
+  #certListCard.c12 .cert-grid{grid-template-columns:1fr}
+  #certListCard.c12 .cert-grid > .cert:nth-child(2){border-top:1px solid var(--line)}
+}
 .t .achieve{padding:18px 0 0;margin-top:18px;border:0;border-top:1px solid var(--line);
             border-radius:0;background:transparent}
 .t .achieve h3{font-size:.92rem}

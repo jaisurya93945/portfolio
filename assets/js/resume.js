@@ -39,8 +39,8 @@
     ],
 
     summary: {
-      en: 'DevOps and cybersecurity engineer bridging security operations, cloud infrastructure and applied AI. Certified Ethical Hacker with hands-on experience in SIEM monitoring, vulnerability assessment and incident response, now applying that foundation to DevSecOps and cloud infrastructure as a DevOps Engineer at Stackly. Founder of CipherAI, a production AI SaaS platform serving a live paying client, and author of SentinelCore and AegisAI — open-source AI threat gateways for prompt-injection defence.',
-      de: 'DevOps- und Cybersecurity-Engineer an der Schnittstelle von Security Operations, Cloud-Infrastruktur und angewandter KI. Certified Ethical Hacker mit praktischer Erfahrung in SIEM-Monitoring, Schwachstellenanalyse und Incident Response; dieses Fundament wende ich heute als DevOps Engineer bei Stackly auf DevSecOps und Cloud-Infrastruktur an. Gründer von CipherAI, einer produktiven KI-SaaS-Plattform mit zahlendem Kunden, sowie Autor von SentinelCore und AegisAI — quelloffenen KI-Bedrohungs-Gateways zur Abwehr von Prompt Injection.'
+      en: 'DevOps and cybersecurity engineer bridging security operations, cloud infrastructure and applied AI. Certified Ethical Hacker with hands-on experience in SIEM monitoring, vulnerability assessment and incident response, now applying that foundation to DevSecOps and cloud infrastructure as a DevOps Engineer at Stackly. Founder of CipherAI, a production AI SaaS platform serving a live paying client, and author of SentinelCore and IdenSec — open-source defences for prompt injection and agent tool-call provenance.',
+      de: 'DevOps- und Cybersecurity-Engineer an der Schnittstelle von Security Operations, Cloud-Infrastruktur und angewandter KI. Certified Ethical Hacker mit praktischer Erfahrung in SIEM-Monitoring, Schwachstellenanalyse und Incident Response; dieses Fundament wende ich heute als DevOps Engineer bei Stackly auf DevSecOps und Cloud-Infrastruktur an. Gründer von CipherAI, einer produktiven KI-SaaS-Plattform mit zahlendem Kunden, sowie Autor von SentinelCore und IdenSec — quelloffenen Abwehrmechanismen gegen Prompt Injection und für die Provenance von Agenten-Tool-Aufrufen.'
     },
     objective: {
       en: 'Targeting AI Security Engineer, DevSecOps, MLOps and Cloud Security roles.',
@@ -111,14 +111,14 @@
                'Erkennt Prompt Injection, Verschleierung (Zero-Width, Bidi, Homoglyphen, Kodierung), PII und Secrets sowie MCP-Tool-Vergiftung; erzwingt Allow / Warn / Bereinigen / Freigabe / Block.',
                '96,8 % Präzision und 17,7 % Recall über 744 markierte Beispiele, mit Attack-Replay-Labor zur Versionsverfolgung; OpenAI-kompatibler Reverse Proxy mit abfragbaren Audit-Trails.']
         } },
-      { name: 'AegisAI', stack: 'Python, FastAPI, scikit-learn, joblib',
+      { name: 'IdenSec', stack: 'Python, deterministic taint tracking',
         bullets: {
-          en: ['Layered detection architecture where deterministic rules retain authority over bounded ML evidence, producing transparent 0–100 risk scores with explainable findings.',
-               'Classifies nine threat intents and separates malicious intent from legitimate defensive security education; trained across roughly 399K labelled examples with leakage detection and cross-dataset evaluation.',
-               '112 passing tests with automated regression testing and dataset validation tooling.'],
-          de: ['Mehrschichtige Erkennungsarchitektur, in der deterministische Regeln Vorrang vor begrenzten ML-Belegen behalten; transparente Risikowerte von 0–100 mit erklärbaren Befunden.',
-               'Klassifiziert neun Bedrohungsabsichten und trennt böswillige Absicht von legitimer defensiver Security-Ausbildung; trainiert auf rund 399.000 markierten Beispielen mit Leckage-Erkennung und datensatzübergreifender Auswertung.',
-               '112 bestandene Tests mit automatisierten Regressionstests und Werkzeugen zur Datensatzvalidierung.']
+          en: ['Provenance enforcement for agent tool calls: the check asks not who is calling but what determined this argument, and denies values that came from untrusted content.',
+               'No model in the decision path, no network calls and no runtime dependencies, so a verdict is reproducible and reviewable rather than a score.',
+               '96.7% security ceiling measured against AgentDojo; the project reports a trade-off surface rather than a single headline score.'],
+          de: ['Provenance-Durchsetzung für Tool-Aufrufe von Agenten: Die Prüfung fragt nicht, wer aufruft, sondern was dieses Argument bestimmt hat, und verweigert Werte aus nicht vertrauenswürdigem Inhalt.',
+               'Kein Modell im Entscheidungspfad, keine Netzwerkaufrufe, keine Laufzeitabhängigkeiten — ein Urteil ist reproduzierbar und prüfbar statt ein Score.',
+               '96,7 % Sicherheitsobergrenze gemessen an AgentDojo; das Projekt berichtet eine Trade-off-Fläche statt einer einzelnen Kennzahl.']
         } },
       { name: 'NeuroGenesis', stack: 'Python, PyTorch, symbolic methods',
         bullets: {

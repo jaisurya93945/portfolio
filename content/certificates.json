@@ -2,6 +2,7 @@
   {
     "id": "ceh",
     "title": "Certified Ethical Hacker",
+    "mark": "CEH",
     "issuer": "EC-Council",
     "date": "",
     "image": "",
@@ -12,6 +13,7 @@
   {
     "id": "lf-devsecops",
     "title": "DevSecOps",
+    "mark": "LF",
     "issuer": "Linux Foundation",
     "date": "",
     "image": "",
@@ -22,6 +24,7 @@
   {
     "id": "lf-linux-essentials",
     "title": "Linux Essentials",
+    "mark": "LF",
     "issuer": "Linux Foundation",
     "date": "",
     "image": "",
@@ -32,6 +35,7 @@
   {
     "id": "gcp-foundations",
     "title": "Cloud Computing Foundations",
+    "mark": "GCP",
     "issuer": "Google Cloud",
     "date": "",
     "image": "",
@@ -42,6 +46,7 @@
   {
     "id": "python-ai",
     "title": "Python & AI Certifications",
+    "mark": "AI",
     "issuer": "Applied ML foundations",
     "date": "",
     "image": "",
@@ -52,6 +57,7 @@
   {
     "id": "comptia-sec-net",
     "title": "Security+ & Network+",
+    "mark": "S+",
     "issuer": "CompTIA",
     "date": "",
     "image": "",

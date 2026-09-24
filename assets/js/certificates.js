@@ -88,6 +88,35 @@
     return meta;
   }
 
+  /* --- credential list --------------------------------------------------- */
+
+  /* The list and the gallery describe the same six credentials. Rendering both
+     from certificates.json means the titles are edited in one place, and the
+     markup in index.html stays as the no-JS fallback rather than a second
+     copy that drifts. */
+  function renderList(list, grid) {
+    if (!grid || !list.length) return;
+    grid.textContent = '';
+    list.forEach(function (c) {
+      var row = el('div', 'cert' + (c.status === 'in-progress' ? ' prog' : ''));
+      var mark = el('span', 'cert-ic', c.mark || (c.title || '?').trim().charAt(0).toUpperCase());
+      mark.setAttribute('aria-hidden', 'true');
+      var body = el('div');
+      body.appendChild(el('h4', '', c.title || ''));
+      if (c.issuer) body.appendChild(el('p', '', c.issuer));
+      row.appendChild(mark);
+      row.appendChild(body);
+      if (c.status === 'in-progress') {
+        row.appendChild(el('span', 'wip', t('cert.wip', 'in progress')));
+      } else {
+        var ok = el('span', 'ok', '\u2713');
+        ok.setAttribute('aria-hidden', 'true');
+        row.appendChild(ok);
+      }
+      grid.appendChild(row);
+    });
+  }
+
   /* --- gallery ---------------------------------------------------------- */
 
   function build(list, host, countEl, filterHost, empty) {
@@ -302,9 +331,27 @@
     var countEl = document.getElementById('certCount');
     var filterHost = document.getElementById('certFilters');
     var empty = document.getElementById('certEmpty');
+    var grid = document.getElementById('certGrid');
+    var listCard = document.getElementById('certListCard');
+    var shotsCard = document.getElementById('certShotsCard');
 
     load().then(function (list) {
       if (!list.length) return;
+      renderList(list, grid);
+
+      /* A gallery of nothing but "image not uploaded yet" panels repeats the
+         list beside it and reads as broken. Until at least one scan exists the
+         section is the list alone, full width; the gallery returns with the
+         first upload. */
+      var haveImages = list.some(function (c) { return !!c.image; });
+      if (!haveImages) {
+        if (shotsCard) shotsCard.hidden = true;
+        if (listCard) { listCard.classList.remove('c5'); listCard.classList.add('c12'); }
+        return;
+      }
+      if (shotsCard) shotsCard.hidden = false;
+      if (listCard) { listCard.classList.remove('c12'); listCard.classList.add('c5'); }
+
       var gallery = build(list, host, countEl, filterHost, empty);
       var open = lightbox(list, gallery.visible);
       host.addEventListener('click', function (e) {

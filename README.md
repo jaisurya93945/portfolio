@@ -290,12 +290,34 @@ Two GitHub behaviours shape this and are worth knowing rather than rediscovering
 ### Commits already in this branch
 
 Commits that were pushed over git cannot be signed retroactively by anyone but you — a signature has
-to be made with your key, over that exact commit. They stay unverified. Everything published through
-either route above is verified from here on.
+to be made with your key, over that exact commit. They stay unverified.
 
-`RESUME_PAT` is configured, so the workflow route already produces commits authored by you and
-carrying the badge — for example `chore: rebuild resume content from uploaded .docx`, whose
-committer reads `GitHub <noreply@github.com>` with `VERIFIED: true`.
+`RESUME_PAT` is configured, so the workflow route does produce commits authored by you and carrying
+the badge — for example `chore: rebuild resume content from uploaded .docx`, whose committer reads
+`GitHub <noreply@github.com>` with `VERIFIED: true`.
+
+### Why site commits are not verified, and what it would take
+
+Two rules this repository follows pull against each other, so it is worth stating the trade rather
+than rediscovering it:
+
+1. **Only `main` exists.** No feature branches; `prune-branches.yml` enforces it.
+2. **Verified badges** require GitHub to build the commit, through the GraphQL
+   `createCommitOnBranch` mutation. There is no other route without holding a signing key.
+
+The mutation runs inside Actions, and Actions can only commit content that is already in the
+repository. Getting site changes there in the first place means a plain `git push` — which is the
+unverified commit. `seed-main.yml` resolves this by publishing *from a source branch* onto `main`,
+which is precisely the branch rule (1) forbids. Running it with `source: main` would only add a
+commit with an empty diff on top of content already published, so it is not done.
+
+The result: résumé and certificate content published by the workflows is verified; site code pushed
+from a development session is authored correctly but unverified. To change that, relax rule (1) and
+let a working branch exist — `seed-main.yml` is already written for exactly that flow.
+
+Note also that GraphQL is unreachable from some sandboxed development environments (the API answers
+`403` with an explanation), so `commit-verified.py` is an Actions-only tool there even when a token
+with `contents:write` is present.
 
 ## Contact
 
