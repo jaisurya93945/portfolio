@@ -32,12 +32,12 @@
   --bg:#fbf8f5; --s1:#fff; --s2:#f4f0ea;
   --line:rgba(26,18,48,.12); --line-2:rgba(26,18,48,.24);
   --ink:#171029; --ink-2:#554c70; --ink-3:#706885;
-  --accent:#bc2b16; --accent-2:#5d7c0a; --accent-3:#097b9d; --violet:#6a45f5;
+  --accent:#bc2b16; --accent-2:#58760a; --accent-3:#097596; --violet:#6a45f5;
   --accent-dim:rgba(224,52,26,.10);
   /* the light theme's deeper coral is the other way round:
      white 6.01:1, near-black 3.49:1. */
   --on-accent:#fff;
-  --good:#4e7a08; --warn:#845b00; --serious:#c2610f; --critical:#d03b3b;
+  --good:#4d7808; --warn:#845b00; --serious:#aa550d; --critical:#cb3131;
   --dot:rgba(26,18,48,.10);
   --wash-1:rgba(106,69,245,.13); --wash-2:rgba(224,52,26,.10);
   --grain-o:.016;

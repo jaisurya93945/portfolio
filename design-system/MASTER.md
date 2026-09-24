@@ -24,23 +24,35 @@ overrides follow that.
 Base is deep indigo rather than neutral near-black, so the dark has a
 temperature of its own.
 
-| Token | Dark | Contrast vs bg | Light | Contrast vs bg |
+Contrast below is measured against the **worst surface the token actually
+lands on** — `--bg`, `--s1` and `--s2` — not against `--bg` alone. An earlier
+revision of this table measured `--bg` only, and every token in it passed
+while `--ink-3` was really scoring 4.07:1 on the cards it mostly sits on. A
+palette is only as good as its worst pairing.
+
+| Token | Dark | Worst surface | Light | Worst surface |
 | --- | --- | --- | --- | --- |
 | `--bg` | `#100c1f` | — | `#fbf8f5` | — |
-| `--ink` | `#f4f1ff` | 17.24:1 | `#171029` | 17.37:1 |
-| `--ink-2` | `#a9a2c7` | 7.93:1 | `#554c70` | 7.48:1 |
-| `--ink-3` | `#7e789b` | 4.59:1 | `#766e8c` | 4.51:1 |
-| `--accent` (coral) | `#ff5f45` | 6.37:1 | `#d83219` | 4.52:1 |
-| `--accent-2` (lime) | `#c6f84e` | 15.48:1 | `#5d7c0a` | 4.58:1 |
-| `--accent-3` (cyan) | `#57e0ff` | 12.35:1 | `#097b9d` | 4.57:1 |
-| `--violet` | `#8b6cff` | 5.20:1 | `#6a45f5` | 5.25:1 |
+| `--ink` | `#f4f1ff` | 15.23:1 | `#171029` | 16.19:1 |
+| `--ink-2` | `#a9a2c7` | 7.00:1 | `#554c70` | 6.97:1 |
+| `--ink-3` | `#8781a2` | 4.59:1 | `#706885` | 4.62:1 |
+| `--accent` (coral) | `#ff5f45` | 5.63:1 | `#bc2b16` | 5.29:1 |
+| `--accent-2` (lime) | `#c6f84e` | 13.67:1 | `#58760a` | 4.61:1 |
+| `--accent-3` (cyan) | `#57e0ff` | 10.90:1 | `#097596` | 4.63:1 |
+| `--violet` | `#8b6cff` | 4.59:1 | `#6a45f5` | 4.89:1 |
+| `--good` | `#c6f84e` | 13.67:1 | `#4d7808` | 4.62:1 |
+| `--warn` | `#ffd23f` | 11.74:1 | `#845b00` | 5.32:1 |
+| `--serious` | `#ff9a3d` | 8.29:1 | `#aa550d` | 4.61:1 |
+| `--critical` | `#ff5f45` | 5.63:1 | `#cb3131` | 4.60:1 |
 
-Every one clears WCAG AA 4.5:1 for normal text.
+Every one clears WCAG AA 4.5:1 for normal text on every surface, so no
+token is a trap for a component written later.
 
 `--on-accent` is the ink used on an accent fill and **inverts between
 themes**: white on the dark theme's coral is only 3.01:1, while near-black
 is 6.40:1. The light theme's deeper coral is the other way round — white
-4.78:1, near-black 4.03:1. So dark uses `#1a0a06`, light uses `#fff`.
+6.01:1, near-black 3.21:1. So dark uses `#1a0a06`, light uses `#fff`. Every
+accent fill on the page reads this token; none hard-codes `#fff`.
 
 ## Type
 
@@ -70,7 +82,15 @@ IP reaches a third-party CDN.
 
 - Focus ring on every operable control: 2px `--accent-3`, 3px offset.
   Three controls had explicitly cleared their outline and were given one
-  back. Verified across all 45 tabbable controls in both themes.
+  back. Verified by real Tab traversal in both themes — `element.focus()`
+  does not set `:focus-visible` in Chromium, so a script that focuses
+  programmatically reports a missing ring on every control and tells you
+  nothing.
+- No rule animates `outline`. Twelve controls carried a bare
+  `transition:<time>`, which is `transition-property:all`, so the ring grew
+  in from 0 over 180–220ms instead of appearing — and `font-weight`
+  interpolated to fractional values on the active tab. Every transition
+  now names the properties it animates.
 - Every control is at least 24×24px (WCAG 2.2 Target Size). Three inline
   links were 16–19px and were padded.
 - Adjacent targets keep an 8px gap.
