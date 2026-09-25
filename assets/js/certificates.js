@@ -97,24 +97,59 @@
   function renderList(list, grid) {
     if (!grid || !list.length) return;
     grid.textContent = '';
-    list.forEach(function (c) {
-      var row = el('div', 'cert' + (c.status === 'in-progress' ? ' prog' : ''));
-      var mark = el('span', 'cert-ic', c.mark || (c.title || '?').trim().charAt(0).toUpperCase());
-      mark.setAttribute('aria-hidden', 'true');
-      var body = el('div');
+    list.forEach(function (c, i) {
+      var card = el('article', 't c4 cert-card' + (c.status === 'in-progress' ? ' prog' : ''));
+      card.setAttribute('data-anim', 'rise');
+      if (i % 3) card.setAttribute('data-d', String(i % 3));
+
+      /* The plate carries the scan when there is one and the issuer monogram
+         when there is not, so the card is the same shape either way and the
+         section never reads as a row of empty slots waiting for uploads. */
+      var plate = el('span', 'cert-plate');
+      if (c.image) {
+        var img = el('img');
+        img.src = c.image; img.loading = 'lazy'; img.decoding = 'async';
+        img.alt = c.title ? c.title + (c.issuer ? ' — ' + c.issuer : '') : t('cert.alt', 'Certificate');
+        img.addEventListener('error', function () {
+          plate.textContent = ''; plate.appendChild(el('b', '', mark(c)));
+          card.classList.remove('has-shot');
+        });
+        plate.appendChild(img);
+        card.classList.add('has-shot');
+        card.setAttribute('data-index', String(list.indexOf(c)));
+      } else {
+        plate.setAttribute('aria-hidden', 'true');
+        plate.appendChild(el('b', '', mark(c)));
+      }
+      card.appendChild(plate);
+
+      var body = el('div', 'cert-body');
       body.appendChild(el('h4', '', c.title || ''));
       if (c.issuer) body.appendChild(el('p', '', c.issuer));
-      row.appendChild(mark);
-      row.appendChild(body);
-      if (c.status === 'in-progress') {
-        row.appendChild(el('span', 'wip', t('cert.wip', 'in progress')));
-      } else {
-        var ok = el('span', 'ok', '\u2713');
-        ok.setAttribute('aria-hidden', 'true');
-        row.appendChild(ok);
+      card.appendChild(body);
+
+      var foot = el('div', 'cert-foot');
+      /* No date is printed unless one is recorded: an invented year on a
+         credential is a false claim, the same as an invented ID. */
+      if (c.date) foot.appendChild(el('span', 'cy mono', c.date));
+      foot.appendChild(el('span', 'cs ' + (c.status === 'in-progress' ? 'wip' : 'ok'),
+        c.status === 'in-progress' ? t('cert.wip', 'in progress') : t('cert.earned', 'earned')));
+      card.appendChild(foot);
+
+      if (c.verificationUrl) {
+        var v = el('a', 'cert-verify', t('cert.verify', 'Verify credential'));
+        v.href = c.verificationUrl; v.target = '_blank'; v.rel = 'noopener noreferrer';
+        card.appendChild(v);
       }
-      grid.appendChild(row);
+      grid.appendChild(card);
     });
+    /* These cards did not exist when the reveal observer took its snapshot. */
+    if (window.Reveal) window.Reveal.register(grid);
+    else grid.querySelectorAll('[data-anim]').forEach(function (n) { n.classList.add('in'); });
+  }
+
+  function mark(c) {
+    return c.mark || (c.title || '?').trim().charAt(0).toUpperCase();
   }
 
   /* --- gallery ---------------------------------------------------------- */
@@ -326,39 +361,36 @@
   /* --- wire up ---------------------------------------------------------- */
 
   function init() {
-    var host = document.getElementById('certShots');
-    if (!host) return;
-    var countEl = document.getElementById('certCount');
-    var filterHost = document.getElementById('certFilters');
-    var empty = document.getElementById('certEmpty');
     var grid = document.getElementById('certGrid');
-    var listCard = document.getElementById('certListCard');
-    var shotsCard = document.getElementById('certShotsCard');
+    if (!grid) return;
+    var note = document.getElementById('certEmpty');
 
     load().then(function (list) {
       if (!list.length) return;
       renderList(list, grid);
 
-      /* A gallery of nothing but "image not uploaded yet" panels repeats the
-         list beside it and reads as broken. Until at least one scan exists the
-         section is the list alone, full width; the gallery returns with the
-         first upload. */
-      var haveImages = list.some(function (c) { return !!c.image; });
-      if (!haveImages) {
-        if (shotsCard) shotsCard.hidden = true;
-        if (listCard) { listCard.classList.remove('c5'); listCard.classList.add('c12'); }
-        return;
-      }
-      if (shotsCard) shotsCard.hidden = false;
-      if (listCard) { listCard.classList.remove('c12'); listCard.classList.add('c5'); }
+      var shots = list.filter(function (c) { return !!c.image; });
+      if (note) note.hidden = shots.length > 0;
+      if (!shots.length) return;
 
-      var gallery = build(list, host, countEl, filterHost, empty);
-      var open = lightbox(list, gallery.visible);
-      host.addEventListener('click', function (e) {
-        var a = e.target.closest('.cert-shot');
-        if (!a) return;
+      var open = lightbox(list, function () { return shots; });
+      grid.addEventListener('click', function (e) {
+        var card = e.target.closest('.cert-card.has-shot');
+        if (!card) return;
         e.preventDefault();
-        open(Number(a.getAttribute('data-index')), a);
+        open(Number(card.getAttribute('data-index')), card);
+      });
+      grid.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var card = e.target.closest('.cert-card.has-shot');
+        if (!card) return;
+        e.preventDefault();
+        open(Number(card.getAttribute('data-index')), card);
+      });
+      grid.querySelectorAll('.cert-card.has-shot').forEach(function (c) {
+        c.tabIndex = 0;
+        c.setAttribute('role', 'button');
+        c.setAttribute('aria-label', t('cert.view', 'View certificate'));
       });
     });
   }

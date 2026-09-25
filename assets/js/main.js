@@ -52,7 +52,20 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }) : null;
 
   var watched = $$('[data-anim], [data-split], .hero-card, .stat, .achieve, .bars');
+  function register(root) {
+    var found = (root || document).querySelectorAll('[data-anim], [data-split], .stat, .achieve, .bars');
+    Array.prototype.forEach.call(found, function (el) {
+      if (el.classList.contains('in') || watched.indexOf(el) !== -1) return;
+      watched.push(el);
+      io ? io.observe(el) : activate(el);
+    });
+  }
   watched.forEach(function (el) { io ? io.observe(el) : activate(el); });
+
+  /* Anything rendered after this point - the credential cards, for one - is
+     never seen by the observer above, which snapshots its targets once. It
+     would sit at opacity 0 forever. Scripts that inject content call this. */
+  window.Reveal = { register: register, activate: activate };
 
   /* Safety net: if the observer never fires - a stale layout, a bfcache
      restore, a browser that throttles it - nothing may stay invisible.
@@ -73,6 +86,31 @@
       if (r.top < window.innerHeight && r.bottom > 0) activate(el);
     });
   });
+
+  /* ---------------------------------------------------------
+     4b. Pointer-tracked card highlight
+     The gradient follows the pointer, so a card lights where it is
+     actually being pointed at rather than uniformly. Pointer events only:
+     touch gets the plain hover state and no listener cost.
+     --------------------------------------------------------- */
+  (function spotlight() {
+    if (reduce || !window.matchMedia('(hover:hover)').matches) return;
+    var frame = 0, pending = null;
+    function paint() {
+      frame = 0;
+      if (!pending) return;
+      var el = pending.el, r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (pending.x - r.left) + 'px');
+      el.style.setProperty('--my', (pending.y - r.top) + 'px');
+      pending = null;
+    }
+    document.addEventListener('pointermove', function (e) {
+      var el = e.target.closest ? e.target.closest('.t.link, .cert-card.has-shot') : null;
+      if (!el) return;
+      pending = { el: el, x: e.clientX, y: e.clientY };
+      if (!frame) frame = requestAnimationFrame(paint);
+    }, { passive: true });
+  })();
 
   /* ---------------------------------------------------------
      5. Nav: sticky, progress, active link, burger
@@ -350,12 +388,13 @@
     function items() {
       var t = function (k, f) { return window.I18N ? (window.I18N.t(k) || f) : f; };
       return [
-        { t: t('nav.focus', 'Focus'),           h: '#focus',      k: 'section' },
+        { t: t('nav.projects', 'Projects'),     h: '#projects',   k: 'section' },
         { t: t('nav.lab', 'Live Lab'),          h: '#lab',        k: 'demo' },
-        { t: t('nav.skills', 'Skills'),         h: '#skills',     k: 'section' },
+        { t: t('nav.research', 'Research'),     h: '#research',   k: 'section' },
         { t: t('nav.experience', 'Experience'), h: '#experience', k: 'section' },
-        { t: t('nav.projects', 'Work'),         h: '#projects',   k: 'section' },
+        { t: t('nav.skills', 'Skills'),         h: '#skills',     k: 'section' },
         { t: t('nav.certs', 'Credentials'),     h: '#certs',      k: 'section' },
+        { t: t('nav.about', 'About'),           h: '#about',      k: 'section' },
         { t: t('nav.contact', 'Contact'),       h: '#contact',    k: 'section' },
         { t: 'SentinelCore', h: 'https://github.com/jaisurya93945/sentinelcore', k: 'project' },
         { t: 'IdenSec',      h: 'https://github.com/jaisurya93945/idensec',  k: 'project' },
