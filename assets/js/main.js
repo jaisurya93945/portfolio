@@ -341,28 +341,7 @@
   })();
 
   /* ---------------------------------------------------------
-     12. Typed role line — re-typed on language change
-     --------------------------------------------------------- */
-  (function typer() {
-    var el = $('#typed');
-    if (!el) return;
-    var roles = ['AI Security Engineer', 'AI Safety & Security Researcher',
-                 'DevSecOps Engineer', 'MLOps & Cloud Security', 'LLM Red Teamer'];
-    if (reduce) { el.textContent = roles[0]; return; }
-    var r = 0, c = 0, del = false;
-    (function tick() {
-      var word = roles[r];
-      c += del ? -1 : 1;
-      el.textContent = word.slice(0, c);
-      var wait = del ? 32 : 60;
-      if (!del && c === word.length) { del = true; wait = 1750; }
-      else if (del && c === 0) { del = false; r = (r + 1) % roles.length; wait = 250; }
-      setTimeout(tick, wait);
-    })();
-  })();
-
-  /* ---------------------------------------------------------
-     13. Command palette
+     12. Command palette
      --------------------------------------------------------- */
   (function palette() {
     var box = $('#palette'), input = $('#paletteInput'), list = $('#paletteList');
@@ -458,7 +437,7 @@
   })();
 
   /* ---------------------------------------------------------
-     14. Copy email, toast, year
+     13. Copy email, toast, year
      --------------------------------------------------------- */
   var toastEl = $('#toast'), toastT;
   function toast(msg) {
@@ -482,7 +461,7 @@
   });
 
   /* ---------------------------------------------------------
-     15. Chart hover layer (per-mark tooltip, SVG bar figure)
+     14. Chart hover layer (per-mark tooltip, SVG bar figure)
      --------------------------------------------------------- */
   (function () {
     var figs = document.querySelectorAll('svg.fig');
@@ -573,7 +552,7 @@
   })();
 
   /* ---------------------------------------------------------
-     16. Reading depth: quick scan vs the full page
+     15. Reading depth: quick scan vs the full page
      --------------------------------------------------------- */
   (function () {
     var btn = $('#depthToggle');
