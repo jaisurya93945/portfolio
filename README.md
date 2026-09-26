@@ -262,12 +262,10 @@ Name the file after the certificate's `id` and it attaches to that row and stays
 | File name | Attaches to |
 | --- | --- |
 | `ceh.jpeg` | Certified Ethical Hacker *(already uploaded as `1.jpeg`)* |
-| `lf-devsecops.jpeg` | DevSecOps |
-| `lf-linux-essentials.jpeg` | Linux Essentials |
-| `gcp-foundations.jpeg` | Google Cloud Foundations |
-| `python-ai.jpeg` | Python for AI |
-| `fortinet-nse1.jpeg` | Fortinet NSE 1 |
-| `comptia-sec-net.jpeg` | CompTIA Security+ / Network+ |
+| `fortinet-nse1.jpeg` | Fortinet NSE 1 Certified in Cybersecurity |
+
+Those are the only two `id`s in the list today. Add a certificate and its `id` becomes a valid
+file name the same day — the name in this table is always whatever `id` you gave the block.
 
 Plain numbers work too — `2.jpeg` attaches to the second certificate in the file — but they are
 tied to the order of the list, so a reordered list needs renamed files. Names do not.

@@ -66,12 +66,10 @@ Name the file after the credential's `id` in
 | Credential id           | File to drop here        |
 | ----------------------- | ------------------------ |
 | `ceh`                   | `ceh.png`                |
-| `lf-devsecops`          | `lf-devsecops.png`       |
-| `lf-linux-essentials`   | `lf-linux-essentials.png`|
-| `gcp-foundations`       | `gcp-foundations.png`    |
-| `python-ai`             | `python-ai.png`          |
 | `fortinet-nse1`         | `fortinet-nse1.png`      |
-| `comptia-sec-net`       | `comptia-sec-net.png`    |
+
+Those two are the whole list in `certificates.json` today; any `id` you add later works the
+same way.
 
 The badge replaces the monogram in that credential's row. Nothing else
 changes, and a credential with no badge still reads correctly — the monogram

@@ -241,16 +241,23 @@
 
   var burger = $('#burger'), mobile = $('#mobileMenu');
   if (burger && mobile) {
+    function setMenu(open, refocus) {
+      burger.setAttribute('aria-expanded', String(open));
+      mobile.hidden = !open;
+      if (!open && refocus) burger.focus();
+    }
     burger.addEventListener('click', function () {
-      var open = burger.getAttribute('aria-expanded') === 'true';
-      burger.setAttribute('aria-expanded', String(!open));
-      mobile.hidden = open;
+      setMenu(burger.getAttribute('aria-expanded') !== 'true', false);
     });
     $$('a', mobile).forEach(function (a) {
-      a.addEventListener('click', function () {
-        burger.setAttribute('aria-expanded', 'false');
-        mobile.hidden = true;
-      });
+      a.addEventListener('click', function () { setMenu(false, false); });
+    });
+    /* The drawer covers the page, so it has to be dismissable from the
+       keyboard the way the lightbox and the palette are. Focus goes back to
+       the button that opened it, or it lands nowhere. */
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || mobile.hidden) return;
+      setMenu(false, true);
     });
   }
 
