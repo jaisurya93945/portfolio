@@ -51,6 +51,9 @@ HEADINGS = {
 }
 
 
+LINKEDIN = 'linkedin.com/in/badathala-jaisurya'
+
+
 def paragraphs(docx_path):
     with zipfile.ZipFile(docx_path) as z:
         xml = z.read('word/document.xml').decode('utf-8')
@@ -206,14 +209,16 @@ def parse_contact(lines):
     def find(pat):
         m = re.search(pat, blob, re.I)
         return m.group(0).strip() if m else ''
+    # The raw contact line is published verbatim, so normalising only the
+    # parsed field would still ship the stale vanity URL in the payload.
+    lines = [re.sub(r'linkedin\.com/in/[\w-]+', LINKEDIN, ln, flags=re.I) for ln in lines]
     return {
         'raw': lines,
         'email': find(r'[\w.+-]+@[\w-]+\.[a-z]{2,}'),
         'phone': find(r'\+?\d[\d\s()-]{7,}\d'),
         # The uploaded .docx still carries an older vanity URL; the site
         # publishes the current one regardless of what the document says.
-        'linkedin': 'linkedin.com/in/badathala-jaisurya'
-                    if find(r'linkedin\.com/in/[\w-]+') else '',
+        'linkedin': LINKEDIN if find(r'linkedin\.com/in/[\w-]+') else '',
         'github': find(r'github\.com/[\w-]+'),
         'site': find(r'[\w.-]+\.github\.io[\w/-]*'),
         'location': (lines[0].split('|')[0].strip() if lines else ''),

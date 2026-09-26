@@ -108,17 +108,26 @@
   function titleFromFile(file) {
     var stem = String(file).replace(/\.[^.]+$/, '').replace(/^(credly|thm|htb)-/, '');
     var small = /^(of|the|and|in|for|to|a|an|on|with|vs)$/;
-    /* names that are initialisms, so a filename does not turn OWASP into
-       Owasp or CTF into Ctf */
+    /* Initialisms, so a filename does not turn OWASP into Owasp. */
     var caps = /^(owasp|ctf|thm|htb|nse|aws|gcp|api|sql|xss|xxe|ssrf|osint|siem|soc|iam|ai|ml|ceh|lf)$/;
+    /* Course codes: two to four letters then digits — lfc108, lfel1006. */
+    var code = /^[a-z]{2,4}\d{2,6}$/;
+    /* Compounds a naive capitalise gets wrong. */
+    var exact = { devsecops: 'DevSecOps', openssf: 'OpenSSF', kubernetes: 'Kubernetes',
+                  javascript: 'JavaScript', github: 'GitHub', gitlab: 'GitLab',
+                  postgresql: 'PostgreSQL', nodejs: 'Node.js', tryhackme: 'TryHackMe',
+                  hackthebox: 'Hack The Box' };
     return stem.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
       .split(' ')
       .map(function (w, i) {
-        if (caps.test(w)) return w.toUpperCase();          /* "OWASP 10" */
+        if (exact[w]) return exact[w];                    /* "DevSecOps" */
+        if (caps.test(w) || code.test(w)) return w.toUpperCase();   /* "OWASP 10", "LFC108" */
         if (i && small.test(w)) return w;                 /* "Advent of Cyber" */
         return w.charAt(0).toUpperCase() + w.slice(1);
       })
-      .join(' ');
+      .join(' ')
+      /* a slug flattens "1.0" to "1-0", which then reads as two words */
+      .replace(/\b(\d+) (\d+)\b/g, '$1.$2');
   }
 
   function issuerFromFile(file) {

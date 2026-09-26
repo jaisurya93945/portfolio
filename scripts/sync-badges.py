@@ -39,6 +39,13 @@ THM_BADGES = [
     ('mr-robot',     'Mr Robot'),
 ]
 
+# Hack The Box achievement badges, by the id in their share link
+# (labs.hackthebox.com/achievement/badge/<user>/<id>). A title is only set
+# here when it is known; otherwise the page is asked for its own.
+HTB_BADGES = [
+    ('214', ''),
+]
+
 # Badge ids pasted from the Credly embed snippets. Discovery below may find
 # more; these are the floor, so a discovery failure still resolves these two.
 CREDLY_SEED = [
@@ -443,6 +450,48 @@ def sync_thm_badges():
     return out
 
 
+def og(html, prop):
+    m = (re.search(r'<meta[^>]+property=["\']og:%s["\'][^>]+content=["\']([^"\']+)' % prop, html) or
+         re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:%s["\']' % prop, html))
+    return m.group(1) if m else ''
+
+
+def sync_htb_badges():
+    """Named achievement badges. The share URL may serve the artwork itself;
+    if it serves a page instead, its social preview carries both the image
+    and the badge's own name, which is better than inventing one."""
+    out = []
+    for bid, known in HTB_BADGES:
+        tried, path, title = [], '', known
+        for url in ('https://labs.hackthebox.com/achievement/badge/%s/%s' % (HTB_USER_ID, bid),
+                    'https://www.hackthebox.com/achievement/badge/%s/%s' % (HTB_USER_ID, bid)):
+            tried.append(url)
+            path = save_image(url, 'htb-badge-' + bid)
+            if path:
+                break
+            html = try_get(url)
+            if not html:
+                continue
+            img = og(html, 'image')
+            if img:
+                tried.append(img)
+                path = save_image(img, 'htb-badge-' + bid)
+            if not title:
+                title = (og(html, 'title') or '').split('|')[0].strip()
+            if path:
+                break
+        if not path:
+            log(False, 'hackthebox badge %s' % bid, why(tried))
+            continue
+        out.append({'id': 'htb-badge-' + bid, 'title': title or 'Hack The Box achievement',
+                    'issuer': 'Hack The Box', 'description': '', 'issuedOn': '',
+                    'image': path,
+                    'url': 'https://labs.hackthebox.com/achievement/badge/%s/%s'
+                           % (HTB_USER_ID, bid)})
+        log(True, 'hackthebox badge %s' % bid, (title or 'untitled') + ' — ' + path)
+    return out
+
+
 def write_live_badges(paths):
     """Record only the badge files that exist, so the page never requests one
     that a provider has not given us yet."""
@@ -493,6 +542,7 @@ def main():
     print('badge sync')
     guard(sync_credly, 'credly', [])
     guard(lambda: merge_feed(sync_thm_badges()), 'tryhackme badges')
+    guard(lambda: merge_feed(sync_htb_badges()), 'hackthebox badges')
     thm = guard(sync_thm, 'tryhackme')
     htb = guard(sync_htb, 'hackthebox')
     guard(lambda: write_live_badges({'tryhackme': thm, 'hackthebox': htb}),
