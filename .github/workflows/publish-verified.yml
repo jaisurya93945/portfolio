@@ -95,3 +95,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RESUME_PAT || secrets.GITHUB_TOKEN }}
         run: python3 scripts/report-signature.py
+
+      # A commit made with GITHUB_TOKEN does not start other workflows -
+      # GitHub's loop prevention. Without this the daily sync would commit
+      # new badges and the site would never pick them up. Asking Pages to
+      # deploy explicitly is safe either way: with RESUME_PAT the push also
+      # triggers it, and pages.yml cancels the older of two runs.
+      - name: Ask Pages to deploy the new commit
+        if: env.PUBLISHED_SHA != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/pages.yml/dispatches" \
+            -d "{\"ref\":\"${GITHUB_REF_NAME}\"}" \
+            && echo "requested a Pages deploy for ${PUBLISHED_SHA}"
