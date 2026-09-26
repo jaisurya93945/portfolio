@@ -120,6 +120,13 @@ jobs:
           npx playwright install --with-deps chromium
           node scripts/render-resume.mjs
 
+      # The PDF renderer installs Playwright into node_modules, and the
+      # artifact is the whole working tree — so every deploy was publishing
+      # Playwright's source to the live site and burying the build log in a
+      # thousand-line file listing. None of it is part of the site.
+      - name: Drop build-only files from the deploy
+        run: rm -rf node_modules package.json package-lock.json resume-source .github
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
