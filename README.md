@@ -212,6 +212,75 @@ view keeps German headings and an English body — normal for tech roles in Germ
 labels it so nothing is misleading. If a document cannot be parsed the deploy fails loudly and the
 site that is already published stays up.
 
+## Adding a certificate or a badge
+
+Two different things, two different places. Nothing here needs a computer — every step is a
+file upload on github.com.
+
+### A badge — nothing to do
+
+Badges look after themselves. On every deploy, and again every morning, the site fetches them
+from the issuer:
+
+| Where you earn it | What arrives |
+| --- | --- |
+| **Credly** (Linux Foundation, Fortinet, Cisco, CompTIA, AWS…) | artwork, title, issuer, issue date |
+| **TryHackMe** | your badges, plus the live level / rank / points / rooms strip |
+| **Hack The Box** | the live badge for account `1830127` |
+
+Earn a badge today and it is on the site by tomorrow morning. If you want it sooner, open
+**Actions → Publish verified commit → Run workflow**.
+
+### A certificate — one file, optionally one entry
+
+**Step 1 — upload the scan.** Go to [`assets/img/certs/`](assets/img/certs/) on github.com and
+press **Add file → Upload files**. Name it by number: `2.jpeg`, `3.jpeg`, `4.png`… (`1.jpeg` is
+the CEH one already there). PDF works too.
+
+That is genuinely all that is required. An uploaded file with no entry still appears — it is
+matched to the certificate list by position, so `2.jpeg` attaches to the second certificate.
+
+**Step 2 — only if you want to add a *new* certificate,** not just a scan of one already listed:
+edit [`content/certificates.json`](content/certificates.json) on github.com (pencil icon) and
+copy one of the blocks:
+
+```json
+{
+  "id": "aws-saa",
+  "title": "AWS Certified Solutions Architect – Associate",
+  "mark": "AWS",
+  "issuer": "Amazon Web Services",
+  "platform": "Credly",
+  "date": "2026-03-14",
+  "credentialId": "ABC123",
+  "verificationUrl": "https://www.credly.com/users/jaisurya1602",
+  "category": "Cloud",
+  "image": "",
+  "credlyBadgeId": ""
+}
+```
+
+Only `id`, `title` and `issuer` are required. Everything else can stay `""` and simply will not
+print — an empty `date` shows no date rather than a blank dash.
+
+| Field | What it does |
+| --- | --- |
+| `mark` | the two or three letters shown when there is no artwork yet |
+| `platform` | the small chip on the right — becomes a link when `verificationUrl` is set |
+| `date` / `expires` | printed under the title as "14 Mar 2026 · renews …" |
+| `credentialId` | printed too, and copyable from the enlarged view |
+| `status` | set to `"in-progress"` for something you are still studying for |
+| `category` | one of Cybersecurity, Cloud, DevOps, AI/ML, Networking, Programming, Other |
+
+**Title it exactly as the issuer does.** If the certificate also has a Credly badge, matching the
+title is what pairs the two — the artwork, issue date and badge link then attach themselves.
+
+### Where each thing shows up
+
+* **Certifications (06)** — the list, with the scan as a thumbnail; click a row to see the full
+  certificate.
+* **Badges (07)** — the artwork wall and the CTF platform cards.
+
 ## Verified commits
 
 A **Verified** badge means GitHub checked a cryptographic signature made by a key belonging to the

@@ -44,9 +44,13 @@
   /* and back again: white scores 7.36:1 on the deeper indigo */
   --on-accent:#ffffff;
   --good:#246328; --warn:#725100; --serious:#8a4408; --critical:#a2231b;
-  --dot:rgba(12,12,13,.09);
-  --wash-1:rgba(59,64,209,.08); --wash-2:rgba(12,12,13,.035); --wash-3:rgba(12,12,13,.028);
-  --grain-o:.014;
+  /* Three textures stacked — dot grid, line grid, three washes — read as
+     depth on a dark page and as smudges on a light one, because low-contrast
+     texture hides in shadow and shows on paper. Light keeps one tinted wash
+     and halves the rest; the grey washes go entirely. */
+  --dot:rgba(12,12,13,.055);
+  --wash-1:rgba(59,64,209,.055); --wash-2:transparent; --wash-3:transparent;
+  --grain-o:.010;
   --tile:var(--s1); --tile-2:var(--s2)
 }
 
@@ -61,9 +65,13 @@
   /* and back again: white scores 7.36:1 on the deeper indigo */
   --on-accent:#ffffff;
   --good:#246328; --warn:#725100; --serious:#8a4408; --critical:#a2231b;
-  --dot:rgba(12,12,13,.09);
-  --wash-1:rgba(59,64,209,.08); --wash-2:rgba(12,12,13,.035); --wash-3:rgba(12,12,13,.028);
-  --grain-o:.014;
+  /* Three textures stacked — dot grid, line grid, three washes — read as
+     depth on a dark page and as smudges on a light one, because low-contrast
+     texture hides in shadow and shows on paper. Light keeps one tinted wash
+     and halves the rest; the grey washes go entirely. */
+  --dot:rgba(12,12,13,.055);
+  --wash-1:rgba(59,64,209,.055); --wash-2:transparent; --wash-3:transparent;
+  --grain-o:.010;
   --tile:var(--s1); --tile-2:var(--s2)
 }
 }
@@ -837,6 +845,20 @@ h2,h3{font-weight:600;letter-spacing:-.03em}
 .t{padding:clamp(20px,2vw,28px);border:1px solid var(--line);border-radius:var(--r);
    background:var(--s1);
    box-shadow:inset 0 1px 0 var(--edge), 0 1px 2px rgba(0,0,0,.04), 0 8px 24px -18px rgba(0,0,0,.35)}
+:root[data-theme="light"] .t,
+:root[data-theme="light"] .t.flush,
+:root[data-theme="light"] .lab-wrap,
+:root[data-theme="light"] .skills-shell,
+:root[data-theme="light"] .ledger{
+  box-shadow:0 1px 2px rgba(12,12,13,.05), 0 14px 30px -22px rgba(12,12,13,.32)}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .t,
+  :root:not([data-theme="dark"]) .t.flush,
+  :root:not([data-theme="dark"]) .lab-wrap,
+  :root:not([data-theme="dark"]) .skills-shell,
+  :root:not([data-theme="dark"]) .ledger{
+    box-shadow:0 1px 2px rgba(12,12,13,.05), 0 14px 30px -22px rgba(12,12,13,.32)}
+}
 .t:hover{border-color:var(--line-strong)}
 .t.fill{background:var(--s2)}
 /* the posture card is twice the height of a figure tile, so it spans both
@@ -1254,7 +1276,7 @@ html.fx .socials a,html.fx .to-top{
     linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0/78px 78px,
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0/78px 78px}
 :root{--grid-line:rgba(255,255,255,.030)}
-:root[data-theme="light"]{--grid-line:rgba(12,12,13,.040)}
+:root[data-theme="light"]{--grid-line:rgba(12,12,13,.020)}
 
 /* A light that follows the cursor. A gradient painted at a moving position
    repaints the viewport every frame; this is a fixed-size layer that is
@@ -1270,17 +1292,28 @@ html.fx .cursor-glow{opacity:1}
 /* --- credentials: dense rows. The mark is small, so a missing badge costs
    the layout nothing; six empty image plates were the problem before. --- */
 .crows{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0}
-.crow{display:grid;grid-template-columns:52px minmax(0,1fr) auto auto;align-items:center;
-  gap:14px;padding:13px 0;border-top:1px solid var(--line);position:relative}
+/* A certificate is a landscape document, so the slot it sits in is one too:
+   a square crop of a certificate is a crop of its blank middle. */
+.crow{display:grid;grid-template-columns:96px minmax(0,1fr) auto auto;align-items:center;
+  gap:16px;padding:13px 0;border-top:1px solid var(--line);position:relative}
 .crow:first-child{border-top:0}
-.cmark{display:grid;place-items:center;width:52px;height:52px;border-radius:8px;
-  background:var(--accent-dim);color:var(--accent);overflow:hidden;
-  font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.02em}
+/* Most rows have no artwork yet, so a filled accent plate on each of them
+   reads as eleven coloured blocks rather than as a list of credentials.
+   The empty state is a quiet neutral tile; the accent is spent on the row
+   that actually has something to show. */
+.cmark{display:grid;place-items:center;width:96px;height:66px;border-radius:7px;
+  background:var(--s2);border:1px solid var(--line);color:var(--ink-3);overflow:hidden;
+  font-family:var(--mono);font-size:.8rem;font-weight:600;letter-spacing:.06em}
+.crow:hover .cmark{border-color:var(--line-2);color:var(--ink-2)}
 .cmark.has-badge{background:transparent}
 .cmark img{width:100%;height:100%;object-fit:contain}
 .cmain{display:grid;min-width:0}
 .cmain b{font-size:.94rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .cissuer{font-size:.78rem;color:var(--ink-3);margin-top:2px}
+/* issued / number / expiry, in the mono face so the id reads as an id */
+.cfacts{display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;margin-top:6px;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.02em;color:var(--ink-3)}
+.cfacts .sep{font-style:normal;opacity:.5}
 /* the chip is also a 24px tap target when it is a verification link, and the
    plain-label version matches it so the two kinds sit on the same baseline */
 .cplat{display:inline-flex;align-items:center;min-height:26px;
@@ -1349,6 +1382,8 @@ a.cplat.is-link:hover{background:var(--accent-dim)}
   gap:var(--tgap,14px);grid-column:1/-1}
 .ctf{gap:0}
 .ctf-top{display:flex;align-items:center;gap:13px;margin-bottom:14px}
+.ctf-top .cmark{width:52px;height:52px;font-size:.64rem;
+  background:var(--accent-dim);border-color:transparent;color:var(--accent)}
 .ctf-top > b{font-size:1.02rem;font-weight:600;letter-spacing:-.01em;transition:color .2s}
 .ctf > p{margin:12px 0 0;font-size:.85rem;color:var(--ink-3);line-height:1.55}
 .ctf-live{display:block;width:249px;max-width:100%;height:auto;margin-top:16px;
@@ -1400,7 +1435,8 @@ a.ctf:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-ra
   /* on a phone the status belongs on the title line, where it is scanned,
      and the platform chip tucks under it — two stacked chips made every row
      a third taller for nothing */
-  .crow{grid-template-columns:46px minmax(0,1fr) auto;row-gap:7px}
+  .crow{grid-template-columns:72px minmax(0,1fr) auto;row-gap:7px}
+  .crow .cmark{width:72px;height:50px}
   .crow .cmark{grid-row:1/span 2}
   .crow .cmain{grid-column:2;grid-row:1}
   .crow .cs{grid-column:3;grid-row:1;justify-self:end;align-self:start}

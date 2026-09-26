@@ -279,6 +279,94 @@ def sync_htb():
     return ''
 
 
+def thm_badges():
+    """TryHackMe's badges, from whichever public shape is still serving them.
+
+    They have moved this more than once, so try the documented API forms and
+    then the profile page's embedded state, and report which answered.
+    """
+    tried, rows = [], []
+    for url in ('https://tryhackme.com/api/v2/badges/get?username=' + THM_USER,
+                'https://tryhackme.com/api/badges/get/' + THM_USER,
+                'https://tryhackme.com/api/v2/public-profile?username=' + THM_USER,
+                'https://tryhackme.com/p/' + THM_USER):
+        tried.append(url)
+        raw = try_get(url)
+        if not raw:
+            continue
+        blobs = []
+        try:
+            blobs = [json.loads(raw)]
+        except ValueError:
+            # a page rather than an API: pull the state React was hydrated with
+            for m in re.finditer(r'<script[^>]+id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+                                 raw, re.S):
+                try:
+                    blobs.append(json.loads(m.group(1)))
+                except ValueError:
+                    pass
+        for b in blobs:
+            rows += harvest_badges(b)
+        if rows:
+            break
+    if not rows:
+        log(False, 'tryhackme: badges', why(tried))
+    return rows, tried
+
+
+def harvest_badges(obj, out=None, depth=0):
+    """Walk an arbitrary JSON body for things that look like a badge.
+
+    The shape of these responses is not stable, so match on the fields a
+    badge must have — a name and a picture — instead of a fixed path.
+    """
+    if out is None:
+        out = []
+    if depth > 8:
+        return out
+    if isinstance(obj, list):
+        for v in obj:
+            harvest_badges(v, out, depth + 1)
+        return out
+    if not isinstance(obj, dict):
+        return out
+
+    name = obj.get('name') or obj.get('title') or obj.get('badgeName')
+    img = (obj.get('imageLink') or obj.get('image') or obj.get('icon')
+           or obj.get('badgeImage') or obj.get('imageUrl'))
+    if isinstance(img, dict):
+        img = img.get('url') or img.get('src')
+    if isinstance(name, str) and isinstance(img, str) and name.strip() and img.strip():
+        url = img if img.startswith('http') else 'https://assets.tryhackme.com' + \
+              ('' if img.startswith('/') else '/') + img
+        out.append({'title': name.strip(),
+                    'description': (obj.get('description') or '')[:300],
+                    'imageUrl': url})
+    for v in obj.values():
+        harvest_badges(v, out, depth + 1)
+    return out
+
+
+def sync_thm_badges():
+    rows, _ = thm_badges()
+    if not rows:
+        return []
+    seen, out = set(), []
+    for b in rows:
+        key = slug(b['title'])
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        path = save_image(b['imageUrl'], 'thm-' + key)
+        if not path:
+            continue
+        out.append({'id': 'thm-' + key, 'title': b['title'], 'issuer': 'TryHackMe',
+                    'description': b['description'], 'issuedOn': '', 'image': path,
+                    'url': 'https://tryhackme.com/p/' + THM_USER + '?tab=badges'})
+        log(True, 'tryhackme badge: ' + b['title'], path)
+    return out
+
+
 def write_live_badges(paths):
     """Record only the badge files that exist, so the page never requests one
     that a provider has not given us yet."""
@@ -309,9 +397,26 @@ def guard(fn, label, default=''):
         return default
 
 
+def merge_feed(extra):
+    """Fold badges from a second issuer into the same feed the wall reads,
+    so the page has one list to render rather than one per platform."""
+    if not extra:
+        return
+    f = CONTENT / 'credly.json'
+    try:
+        feed = json.loads(f.read_text())
+    except Exception:                                        # noqa: BLE001
+        feed = {'profileUrl': 'https://www.credly.com/users/' + CREDLY_USER, 'badges': []}
+    have = {b.get('id') for b in feed.get('badges', [])}
+    feed['badges'] = feed.get('badges', []) + [b for b in extra if b['id'] not in have]
+    f.write_text(json.dumps(feed, indent=2, ensure_ascii=False) + '\n')
+    log(True, 'feed: %d badge(s) total' % len(feed['badges']))
+
+
 def main():
     print('badge sync')
     guard(sync_credly, 'credly', [])
+    guard(lambda: merge_feed(sync_thm_badges()), 'tryhackme badges')
     thm = guard(sync_thm, 'tryhackme')
     htb = guard(sync_htb, 'hackthebox')
     guard(lambda: write_live_badges({'tryhackme': thm, 'hackthebox': htb}),

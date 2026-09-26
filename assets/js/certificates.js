@@ -135,6 +135,10 @@
       grid.appendChild(li);
     });
     wrap.hidden = false;
+    var count = document.getElementById('badgeCount');
+    if (count) count.textContent = String(grid.children.length);
+    var note = document.getElementById('badgeEmpty');
+    if (note) note.hidden = true;
   }
 
   function merge(meta, uploads) {
@@ -215,6 +219,22 @@
       var main = el('span', 'cmain');
       main.appendChild(el('b', '', c.title || ''));
       if (c.issuer) main.appendChild(el('span', 'cissuer', c.issuer));
+
+      /* Issued, numbered, expiring: the three facts that separate a
+         credential from a claim. Each appears only when it is known —
+         an empty date is left out rather than printed as a dash. */
+      var facts = [];
+      if (c.date) facts.push(when(c.date));
+      if (c.credentialId) facts.push(c.credentialId);
+      if (c.expires) facts.push(t('cert.renews', 'renews') + ' ' + when(c.expires));
+      if (facts.length) {
+        var meta = el('span', 'cfacts');
+        facts.forEach(function (f, i) {
+          if (i) meta.appendChild(el('i', 'sep', '\u00b7'));
+          meta.appendChild(el('span', '', f));
+        });
+        main.appendChild(meta);
+      }
       li.appendChild(main);
 
       /* A verifiable platform becomes a link; an unverifiable one stays a
@@ -262,6 +282,16 @@
   function verifyUrl(c) {
     if (c.credlyBadgeId) return 'https://www.credly.com/badges/' + c.credlyBadgeId + '/public_url';
     return c.verificationUrl || '';
+  }
+
+  function when(iso) {
+    if (!iso) return '';
+    var d = new Date(iso + (iso.length === 10 ? 'T00:00:00Z' : ''));
+    if (isNaN(d.getTime())) return iso;
+    try {
+      return d.toLocaleDateString(document.documentElement.lang || 'en',
+        { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+    } catch (e) { return iso; }
   }
 
   function mark(c) {

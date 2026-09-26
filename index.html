@@ -44,8 +44,8 @@
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=19">
-<link rel="stylesheet" href="assets/css/style.css?v=19">
+<link rel="stylesheet" href="assets/css/fonts.css?v=20">
+<link rel="stylesheet" href="assets/css/style.css?v=20">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -462,9 +462,10 @@
     <li></li>
     <li><a href="#experience"><i>04</i><span data-i18n="nav.experience">Experience</span></a></li>
     <li><a href="#skills"><i>05</i><span data-i18n="nav.skills">Skills</span></a></li>
-    <li><a href="#certs"><i>06</i><span data-i18n="nav.certs">Credentials</span></a></li>
-    <li><a href="#about"><i>07</i><span data-i18n="nav.about">About</span></a></li>
-    <li><a href="#contact"><i>08</i><span data-i18n="nav.contact">Contact</span></a></li>
+    <li><a href="#certs"><i>06</i><span data-i18n="nav.certifications">Certifications</span></a></li>
+    <li><a href="#badges"><i>07</i><span data-i18n="nav.badges">Badges</span></a></li>
+    <li><a href="#about"><i>08</i><span data-i18n="nav.about">About</span></a></li>
+    <li><a href="#contact"><i>09</i><span data-i18n="nav.contact">Contact</span></a></li>
   </ol>
 </nav>
 
@@ -1123,30 +1124,14 @@
 </section>
 
 <section class="section" id="certs">
-  <header class="lbl" data-anim="fade"><span class="idx">06</span><span data-i18n="nav.certs">Credentials</span></header>
+  <header class="lbl" data-anim="fade"><span class="idx">06</span><span data-i18n="nav.certifications">Certifications</span></header>
 
-  <!-- Band A — the artwork itself. Badges are issued in their own shapes
-       (hexagon, shield, disc), so they sit on the page unplated and
-       uncropped. The band renders only when artwork exists. -->
-  <div class="bwall-wrap" id="badgeWall" hidden data-anim="fade">
-    <div class="bwall-head">
-      <span class="t-k"><span data-i18n="cert.badges">Badges</span></span>
-      <a class="cert-wall" href="https://www.credly.com/users/jaisurya1602" target="_blank" rel="noopener noreferrer me">
-        <span data-i18n="cert.wall">All badges on Credly</span>
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
-    </div>
-    <ul class="bwall" id="badgeGrid"></ul>
-  </div>
-
-  <!-- Band B — the ledger. Every row carries a thumbnail: badge artwork,
-       else the certificate scan, else the monogram. -->
   <div class="t c12 cert-panel" data-anim="rise">
-    <div class="t-k"><span data-i18n="cert.k">Certifications &amp; badges</span><span class="meta" id="certCount" aria-live="polite"></span></div>
+    <div class="t-k"><span data-i18n="cert.k">Certifications</span><span class="meta" id="certCount" aria-live="polite"></span></div>
     <ul class="crows" id="certGrid">
       <li class="crow">
         <span class="cmark" aria-hidden="true">CEH</span>
-        <span class="cmain"><b data-i18n="cert.1">Certified Ethical Hacker</b><span class="cissuer">EC-Council</span></span>
+        <span class="cmain"><b data-i18n="cert.1">Certified Ethical Hacker</b><span class="cissuer">EC-Council</span><span class="cfacts"><span>19 Apr 2025</span><i class="sep">·</i><span>ECC6479058231</span><i class="sep">·</i><span><span data-i18n="cert.renews">renews</span> 1 May 2026</span></span></span>
         <span class="cplat">EC-Council</span><span class="cs ok"><i aria-hidden="true">✓</i><span data-i18n="cert.earned">earned</span></span>
       </li>
       <li class="crow">
@@ -1202,9 +1187,26 @@
     </ul>
     <p class="cert-note" id="certEmpty" data-i18n="cert.empty">Badge artwork and certificate scans appear here once uploaded.</p>
   </div>
+</section>
 
-  <!-- Band C — the platforms, with the figures their own badge endpoints
-       publish. Rebuilt daily, so the level and the counts are current. -->
+<section class="section" id="badges">
+  <header class="lbl" data-anim="fade"><span class="idx">07</span><span data-i18n="nav.badges">Badges</span></header>
+
+  <!-- Badges are issued in their own shapes — hexagon, shield, disc — so
+       they sit unplated and uncropped. The band renders only when artwork
+       exists, which is what the sync brings back. -->
+  <div class="bwall-wrap" id="badgeWall" hidden data-anim="fade">
+    <div class="bwall-head">
+      <span class="t-k"><span data-i18n="badge.k">Earned badges</span><span class="meta" id="badgeCount"></span></span>
+      <a class="cert-wall" href="https://www.credly.com/users/jaisurya1602" target="_blank" rel="noopener noreferrer me">
+        <span data-i18n="cert.wall">All badges on Credly</span>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
+    <ul class="bwall" id="badgeGrid"></ul>
+  </div>
+  <p class="cert-note" id="badgeEmpty" data-i18n="badge.empty">Badge artwork is pulled from Credly and TryHackMe on every build.</p>
+
   <div class="bento plat-band">
     <div class="c12 sub-head" data-anim="fade"><span data-i18n="ctf.k">CTF &amp; labs</span></div>
     <div class="ctf-list" id="ctfList">
@@ -1238,7 +1240,7 @@
 </section>
 
 <section class="section" id="about">
-  <header class="lbl" data-anim="fade"><span class="idx">07</span><span data-i18n="nav.about">About</span></header>
+  <header class="lbl" data-anim="fade"><span class="idx">08</span><span data-i18n="nav.about">About</span></header>
 
   <div class="bento">
     <div class="t c7" data-anim="rise">
@@ -1261,7 +1263,7 @@
 </section>
 
 <section class="section contact" id="contact">
-  <header class="lbl" data-anim="fade"><span class="idx">08</span><span data-i18n="nav.contact">Contact</span></header>
+  <header class="lbl" data-anim="fade"><span class="idx">09</span><span data-i18n="nav.contact">Contact</span></header>
 
   <div class="bento">
     <div class="t c7 fill" data-anim="rise">
@@ -1325,10 +1327,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=19" defer></script>
-<script src="assets/js/scanner.js?v=19" defer></script>
-<script src="assets/js/certificates.js?v=19" defer></script>
-<script src="assets/js/main.js?v=19" defer></script>
+<script src="assets/js/i18n.js?v=20" defer></script>
+<script src="assets/js/scanner.js?v=20" defer></script>
+<script src="assets/js/certificates.js?v=20" defer></script>
+<script src="assets/js/main.js?v=20" defer></script>
 <div class="cert-box" id="certBox" role="dialog" aria-modal="true"
      aria-labelledby="cbTitle" hidden>
   <div class="cb-panel">
