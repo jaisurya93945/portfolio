@@ -254,6 +254,10 @@ def sync_credly():
         out.append(rec)
         log(True, 'credly: ' + (rec['title'] or bid), rec['image'] or 'no artwork')
 
+    if len(seen) > len(out):
+        log(True, 'credly: %d of %d discovered ids were badges'
+            % (len(out), len(seen)),
+            'the rest are page ids the profile happens to carry')
     if out:
         CONTENT.mkdir(parents=True, exist_ok=True)
         (CONTENT / 'credly.json').write_text(
@@ -305,6 +309,12 @@ def thm_badges():
 
     They have moved this more than once, so try the documented API forms and
     then the profile page's embedded state, and report which answered.
+
+    In practice all four answer HTTP 429: TryHackMe throttles GitHub's shared
+    runner addresses. One short retry is kept in case that ever lifts, but
+    not more — a longer backoff added seventy seconds to every build and
+    never once succeeded. Badges saved by hand into assets/img/badges are
+    the route that works, and the wall renders them either way.
     """
     tried, rows = [], []
     for url in ('https://tryhackme.com/api/v2/badges/get?username=' + THM_USER,
@@ -312,7 +322,7 @@ def thm_badges():
                 'https://tryhackme.com/api/v2/public-profile?username=' + THM_USER,
                 'https://tryhackme.com/p/' + THM_USER):
         tried.append(url)
-        raw = try_get(url, retries=2, pause=5.0)
+        raw = try_get(url, retries=1, pause=3.0)
         if not raw:
             continue
         blobs = []

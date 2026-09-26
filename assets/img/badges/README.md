@@ -25,8 +25,9 @@ the account id ever changes; it overrides the built-in value.
 ### TryHackMe badges must be saved by hand
 
 TryHackMe answers the build with **HTTP 429** on every public endpoint —
-it rate-limits GitHub's shared runner addresses, and retrying with a
-backoff does not clear it. The live strip comes from their S3 host, which
+it rate-limits GitHub's shared runner addresses. A two-step backoff was
+tried and added seventy seconds to every build without ever succeeding, so
+only one short retry is kept. The live strip comes from their S3 host, which
 is not throttled, so the level, rank, points and room count still update
 themselves. The individual badges do not.
 
