@@ -88,6 +88,7 @@
       hit.credlyBadgeId = hit.credlyBadgeId || b.id;
       if (b.image && !hit.badge) hit.badge = b.image;
       if (b.issuedOn && !hit.date) hit.date = b.issuedOn;
+      if (b.issuer && !hit.issuer) hit.issuer = b.issuer;
       b.matched = true;
     });
     return meta;
