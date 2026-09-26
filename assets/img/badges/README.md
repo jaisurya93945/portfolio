@@ -22,6 +22,22 @@ the shareable profile URL. It is `1830127`, taken from
 — nothing to configure. Set the `HTB_USER_ID` repository variable only if
 the account id ever changes; it overrides the built-in value.
 
+### TryHackMe badges must be saved by hand
+
+TryHackMe answers the build with **HTTP 429** on every public endpoint —
+it rate-limits GitHub's shared runner addresses, and retrying with a
+backoff does not clear it. The live strip comes from their S3 host, which
+is not throttled, so the level, rank, points and room count still update
+themselves. The individual badges do not.
+
+Save them from
+[your badges tab](https://tryhackme.com/p/nikki1602?tab=badges) —
+right-click a badge, Save image — and drop them in this folder named
+`thm-<name>.png`. The file name becomes the title, so
+`thm-advent-of-cyber.png` reads as "Advent of Cyber", and the tile links
+back to your badges tab. Anything dropped here shows on the wall whether
+or not a provider answered, which is what makes it dependable.
+
 ## Adding artwork by hand
 
 Drop badge artwork here — the PNG or SVG a platform gives you (Credly,

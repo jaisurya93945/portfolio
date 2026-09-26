@@ -12,7 +12,7 @@ Actions log.
 No credentials, no tokens, no scraping behind a login — only the public
 endpoints these platforms publish for exactly this purpose.
 """
-import json, os, pathlib, re, sys, urllib.error, urllib.request
+import json, os, pathlib, time, re, sys, urllib.error, urllib.request
 
 ROOT     = pathlib.Path(__file__).resolve().parent.parent
 BADGES   = ROOT / 'assets' / 'img' / 'badges'
@@ -54,7 +54,21 @@ def get(url, binary=False):
 LAST_ERROR = {}
 
 
-def try_get(url, binary=False):
+def try_get(url, binary=False, retries=0, pause=4.0):
+    """429 means "later", not "no". TryHackMe throttles GitHub's shared
+    runner addresses, so a single attempt reports a miss for a service that
+    would have answered."""
+    for attempt in range(retries + 1):
+        out = _try_once(url, binary)
+        if out is not None:
+            return out
+        if 'HTTP 429' not in LAST_ERROR.get(url, '') or attempt == retries:
+            break
+        time.sleep(pause * (attempt + 1))
+    return None
+
+
+def _try_once(url, binary=False):
     """Never raises. The reason is kept, because a silent miss is a miss you
     cannot fix: 403 from a datacentre IP, 404 from a renamed endpoint and a
     timeout all look identical otherwise."""
@@ -213,7 +227,7 @@ def sync_credly():
     log(bool(found), 'credly: discover badges on the public profile',
         ('%d found' % len(set(found))) if found else why(tried))
 
-    seen, out = set(), []
+    seen, titles, out = set(), set(), []
     for bid in list(dict.fromkeys(found + CREDLY_SEED)):
         if bid in seen:
             continue
@@ -230,6 +244,13 @@ def sync_credly():
         stem = 'credly-' + (slug(rec['title']) or bid[:8])
         rec['image'] = save_image(rec['imageUrl'], stem) if rec['imageUrl'] else ''
         rec.pop('imageUrl', None)
+        key = slug(rec['title']) or bid
+        if key in titles:
+            log(False, 'credly: ' + bid,
+                'resolved to "%s", which another id already gave — skipped'
+                % rec['title'])
+            continue
+        titles.add(key)
         out.append(rec)
         log(True, 'credly: ' + (rec['title'] or bid), rec['image'] or 'no artwork')
 
@@ -291,7 +312,7 @@ def thm_badges():
                 'https://tryhackme.com/api/v2/public-profile?username=' + THM_USER,
                 'https://tryhackme.com/p/' + THM_USER):
         tried.append(url)
-        raw = try_get(url)
+        raw = try_get(url, retries=2, pause=5.0)
         if not raw:
             continue
         blobs = []

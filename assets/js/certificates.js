@@ -42,7 +42,8 @@
       var manifest = res[1] || {};
       var list = merge(res[0] || [], manifest.certs || []);
       list = attachBadges(list, manifest.badges || []);
-      return { list: attachCredly(list, res[2]), credly: res[2] };
+      return { list: attachCredly(list, res[2]), credly: res[2],
+               uploaded: manifest.badges || [] };
     });
   }
 
@@ -98,23 +99,69 @@
      Artwork at its own aspect ratio, never cropped to a square: the shape a
      badge was issued in is part of it. The band stays hidden until there is
      something real to put in it. */
-  function renderWall(feed, list, wrap, grid) {
+  /* The two live platform strips are not wall badges — they are the
+     figures shown on the CTF cards — so they are never tiled here. */
+  var LIVE_STRIP = /^(thm|htb)-live$/;
+
+  /* A filename is a usable title once the issuer prefix and the dashes are
+     gone: "thm-advent-of-cyber.png" reads as "Advent of Cyber". */
+  function titleFromFile(file) {
+    var stem = String(file).replace(/\.[^.]+$/, '').replace(/^(credly|thm|htb)-/, '');
+    var small = /^(of|the|and|in|for|to|a|an|on|with|vs)$/;
+    return stem.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
+      .split(' ')
+      .map(function (w, i) {
+        if (i && small.test(w)) return w;                 /* "Advent of Cyber" */
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      })
+      .join(' ');
+  }
+
+  function issuerFromFile(file) {
+    if (/^credly-/.test(file)) return 'Credly';
+    if (/^thm-/.test(file)) return 'TryHackMe';
+    if (/^htb-/.test(file)) return 'Hack The Box';
+    return '';
+  }
+
+  /* A hand-dropped badge still points somewhere useful: the wall it came
+     from. Without this the tile renders as a div and loses the card. */
+  function homeForFile(file) {
+    if (/^thm-/.test(file)) return 'https://tryhackme.com/p/nikki1602?tab=badges';
+    if (/^htb-/.test(file)) return 'https://profile.hackthebox.com/profile/01a0908b-02ca-7053-89e6-470823381aa3';
+    return 'https://www.credly.com/users/jaisurya1602';
+  }
+
+  function renderWall(feed, list, wrap, grid, uploaded) {
     if (!wrap || !grid) return;
-    var items = [];
+    var items = [], seen = {};
+    function add(img, title, issuer, url) {
+      if (!img || seen[img]) return;
+      seen[img] = 1;
+      items.push({ img: img, title: title, issuer: issuer, url: url });
+    }
     (feed && feed.badges ? feed.badges : []).forEach(function (b) {
-      if (b.image) items.push({ img: b.image, title: b.title, issuer: b.issuer, url: b.url });
+      add(b.image, b.title, b.issuer, b.url);
     });
-    list.forEach(function (c) {
-      if (!c.badge) return;
-      if (items.some(function (i) { return i.img === c.badge; })) return;
-      items.push({ img: c.badge, title: c.title, issuer: c.issuer, url: verifyUrl(c) });
+    list.forEach(function (c) { add(c.badge, c.title, c.issuer, verifyUrl(c)); });
+
+    /* Anything dropped into assets/img/badges by hand shows too. That is
+       what makes the wall dependable: TryHackMe throttles the build (HTTP
+       429 from a shared runner address), so a badge saved from the browser
+       is the reliable route, not the fallback. */
+    (uploaded || []).forEach(function (u) {
+      var stem = String(u.file).replace(/\.[^.]+$/, '');
+      if (LIVE_STRIP.test(stem)) return;
+      add('assets/img/badges/' + u.file, titleFromFile(u.file),
+          issuerFromFile(u.file), homeForFile(u.file));
     });
+
     if (!items.length) return;
 
     grid.textContent = '';
     items.forEach(function (it, i) {
       var li = el('li');
-      var a = el(it.url ? 'a' : 'div');
+      var a = el(it.url ? 'a' : 'div', 'btile');
       if (it.url) { a.href = it.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
       a.style.setProperty('--stagger', (i % 8) * 45 + 'ms');
       a.classList.add('cert-enter');
@@ -227,33 +274,27 @@
       if (c.date) facts.push(when(c.date));
       if (c.credentialId) facts.push(c.credentialId);
       if (c.expires) facts.push(t('cert.renews', 'renews') + ' ' + when(c.expires));
-      if (facts.length) {
-        var meta = el('span', 'cfacts');
-        facts.forEach(function (f, i) {
-          if (i) meta.appendChild(el('i', 'sep', '\u00b7'));
-          meta.appendChild(el('span', '', f));
-        });
-        main.appendChild(meta);
-      }
-      li.appendChild(main);
-
-      /* A verifiable platform becomes a link; an unverifiable one stays a
-         plain label. A "Verify" that verifies nothing is worse than none. */
+      /* The platform belongs on this line rather than in a column of its
+         own: it is another fact about the credential, and a column that
+         holds one short chip costs the row a third of its width. */
+      var meta = el('span', 'cfacts');
+      facts.forEach(function (f, i) {
+        if (i) meta.appendChild(el('i', 'sep', '\u00b7'));
+        meta.appendChild(el('span', '', f));
+      });
       if (c.platform) {
-        var pl, href = verifyUrl(c);
+        var href = verifyUrl(c), pl;
         if (href) {
           pl = el('a', 'cplat is-link', c.platform);
           pl.href = href; pl.target = '_blank'; pl.rel = 'noopener noreferrer';
-          pl.setAttribute('aria-label', t('cert.verify', 'Verify credential') + ' — ' + c.platform);
+          pl.setAttribute('aria-label', t('cert.verify', 'Verify credential') + ' \u2014 ' + c.platform);
         } else {
           pl = el('span', 'cplat', c.platform);
         }
-        li.appendChild(pl);
-      } else {
-        /* the slot is still filled, so the status chip stays in the last
-           column instead of sliding left on the rows without a platform */
-        li.appendChild(el('span', 'cplat-none'));
+        meta.appendChild(pl);
       }
+      if (meta.childNodes.length) main.appendChild(meta);
+      li.appendChild(main);
 
       /* status carries an icon as well as a colour */
       var done = c.status !== 'in-progress';
@@ -587,7 +628,8 @@
       renderList(list, grid);
       renderWall(res.credly, list,
                  document.getElementById('badgeWall'),
-                 document.getElementById('badgeGrid'));
+                 document.getElementById('badgeGrid'),
+                 res.uploaded);
 
       var shots = list.filter(function (c) { return !!c.image; });
       if (note) note.hidden = shots.length > 0;
