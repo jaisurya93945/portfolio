@@ -23,6 +23,10 @@ TIMEOUT  = 20
 CREDLY_USER = 'jaisurya1602'
 THM_USER    = 'nikki1602'
 HTB_PROFILE = '01a0908b-02ca-7053-89e6-470823381aa3'
+# The badge endpoint is keyed by the numeric account id, which the UUID
+# profile URL does not carry. Taken from app.hackthebox.com/users/1830127,
+# so it is not guessed. HTB_USER_ID overrides it if the account ever moves.
+HTB_USER_ID = '1830127'
 
 # Badge ids pasted from the Credly embed snippets. Discovery below may find
 # more; these are the floor, so a discovery failure still resolves these two.
@@ -254,19 +258,25 @@ def sync_thm():
 # can; otherwise say so rather than guessing an id.
 # --------------------------------------------------------------------------
 def sync_htb():
-    num = os.environ.get('HTB_USER_ID', '').strip()
+    """Hack The Box publishes a badge image per numeric account id. Several
+    hostnames have served it over the years; try each and say which answered
+    rather than assuming the current one is still the current one."""
+    num = os.environ.get('HTB_USER_ID', '').strip() or HTB_USER_ID
     if not num:
-        html = try_get('https://app.hackthebox.com/profile/' + HTB_PROFILE) or \
-               try_get('https://profile.hackthebox.com/profile/' + HTB_PROFILE) or ''
-        m = re.search(r'/badge/image/(\d+)', html) or re.search(r'"user_id"\s*:\s*(\d+)', html)
-        num = m.group(1) if m else ''
-    if not num:
-        log(False, 'hackthebox: resolve the numeric account id',
-            'profile is client-rendered; set the HTB_USER_ID repository variable')
+        log(False, 'hackthebox: numeric account id',
+            'unknown — set the HTB_USER_ID repository variable')
         return ''
-    p = save_image('https://www.hackthebox.com/badge/image/' + num, 'htb-live')
-    log(bool(p), 'hackthebox: live badge (id %s)' % num, p or 'badge endpoint unreachable')
-    return p
+    tried = []
+    for host in ('https://www.hackthebox.com', 'https://app.hackthebox.com',
+                 'https://www.hackthebox.eu'):
+        url = host + '/badge/image/' + num
+        tried.append(url)
+        p = save_image(url, 'htb-live')
+        if p:
+            log(True, 'hackthebox: live badge (id %s)' % num, p)
+            return p
+    log(False, 'hackthebox: live badge (id %s)' % num, why(tried))
+    return ''
 
 
 def write_live_badges(paths):

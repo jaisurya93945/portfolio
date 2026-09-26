@@ -16,12 +16,11 @@ with no edit. Every fetch is best-effort: a provider that is down leaves
 the committed file in place and the build still succeeds. The Actions log
 lists what answered.
 
-**Hack The Box needs one value.** The badge endpoint is keyed by the numeric
-account id, which the UUID profile URL does not contain and which the sync
-cannot read from a client-rendered page. Open your HTB profile, find the
-numeric id, and add it as a repository variable named `HTB_USER_ID`
-(Settings → Secrets and variables → Actions → Variables). The next build
-picks up the badge and the stats.
+**Hack The Box** is keyed by the numeric account id rather than the UUID in
+the shareable profile URL. It is `1830127`, taken from
+`app.hackthebox.com/users/1830127`, and it is in `scripts/sync-badges.py`
+— nothing to configure. Set the `HTB_USER_ID` repository variable only if
+the account id ever changes; it overrides the built-in value.
 
 ## Adding artwork by hand
 
