@@ -118,6 +118,35 @@ def credly_from_page(badge_id, tried):
             'url': 'https://www.credly.com/badges/' + badge_id + '/public_url'}
 
 
+def node(value, tried=None):
+    """Open Badges lets any nested object be either embedded or a URI that
+    points at it. Credly returns `badge` and `issuer` as URIs, so follow one
+    hop when we are handed a string."""
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str) and value.startswith('http'):
+        if tried is not None:
+            tried.append(value)
+        raw = try_get(value)
+        if raw:
+            try:
+                d = json.loads(raw)
+                if isinstance(d, dict):
+                    return d
+            except ValueError:
+                pass
+    return {}
+
+
+def image_of(value):
+    """`image` is a URL, or an object carrying one under id/url."""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        return value.get('id') or value.get('url') or ''
+    return ''
+
+
 def credly_assertion(badge_id, tried):
     for url in ('https://api.credly.com/v1/obi/v2/badge_assertions/' + badge_id,
                 'https://api.credly.com/v1/obi/v2/badge_assertions/' + badge_id + '.json',
@@ -130,18 +159,21 @@ def credly_assertion(badge_id, tried):
             d = json.loads(raw)
         except ValueError:
             continue
-        b = d.get('badge') or {}
-        img = b.get('image')
-        if isinstance(img, dict):
-            img = img.get('id') or img.get('url')
-        issuer = b.get('issuer') or {}
+        if not isinstance(d, dict):
+            continue
+        b = node(d.get('badge'), tried)
+        iss = node(b.get('issuer'), tried)
+        title = b.get('name') or ''
+        img = image_of(b.get('image')) or image_of(d.get('image'))
+        if not title and not img:
+            continue
         return {
             'id': badge_id,
-            'title': b.get('name') or '',
-            'issuer': issuer.get('name') if isinstance(issuer, dict) else (issuer or ''),
+            'title': title,
+            'issuer': iss.get('name') or '',
             'description': (b.get('description') or '')[:400],
             'issuedOn': (d.get('issuedOn') or '')[:10],
-            'imageUrl': img or '',
+            'imageUrl': img,
             'url': 'https://www.credly.com/badges/' + badge_id + '/public_url',
         }
     return credly_from_page(badge_id, tried)
@@ -183,7 +215,11 @@ def sync_credly():
             continue
         seen.add(bid)
         bt = []
-        rec = credly_assertion(bid, bt)
+        try:
+            rec = credly_assertion(bid, bt)
+        except Exception as e:                               # noqa: BLE001
+            log(False, 'credly: ' + bid, 'parse failed — ' + type(e).__name__ + ': ' + str(e)[:80])
+            continue
         if not rec:
             log(False, 'credly: ' + bid, why(bt))
             continue
@@ -254,12 +290,22 @@ def write_live_badges(paths):
         log(True, 'ctf.json: live badge paths updated')
 
 
+def guard(fn, label, default=''):
+    """One provider's surprise must not cost the others their sync."""
+    try:
+        return fn()
+    except Exception as e:                                   # noqa: BLE001
+        log(False, label, 'crashed — ' + type(e).__name__ + ': ' + str(e)[:100])
+        return default
+
+
 def main():
     print('badge sync')
-    sync_credly()
-    thm = sync_thm()
-    htb = sync_htb()
-    write_live_badges({'tryhackme': thm, 'hackthebox': htb})
+    guard(sync_credly, 'credly', [])
+    thm = guard(sync_thm, 'tryhackme')
+    htb = guard(sync_htb, 'hackthebox')
+    guard(lambda: write_live_badges({'tryhackme': thm, 'hackthebox': htb}),
+          'ctf.json: live badge paths')
     missed = [r for r in report if r[0] != 'ok  ']
     print('\n%d reached, %d missed — misses keep the committed files, they never fail the build'
           % (len(report) - len(missed), len(missed)))
