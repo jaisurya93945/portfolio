@@ -99,8 +99,12 @@
     grid.textContent = '';
     list.forEach(function (c, i) {
       var card = el('article', 't c4 cert-card' + (c.status === 'in-progress' ? ' prog' : ''));
-      card.setAttribute('data-anim', 'rise');
-      if (i % 3) card.setAttribute('data-d', String(i % 3));
+      /* Deliberately not data-anim: content rendered after the observer has
+         taken its snapshot has already been invisible once. It animates in
+         with a class the CSS treats as a one-shot, so a missed observer can
+         never leave a credential at opacity 0. */
+      card.style.setProperty('--stagger', (i % 3) * 60 + 'ms');
+      card.classList.add('cert-enter');
 
       /* The plate carries the scan when there is one and the issuer monogram
          when there is not, so the card is the same shape either way and the

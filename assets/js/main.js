@@ -93,23 +93,67 @@
      actually being pointed at rather than uniformly. Pointer events only:
      touch gets the plain hover state and no listener cost.
      --------------------------------------------------------- */
-  (function spotlight() {
+  (function pointerFx() {
     if (reduce || !window.matchMedia('(hover:hover)').matches) return;
-    var frame = 0, pending = null;
+
+    var CARD = '.t.link, .cert-card.has-shot, .t.feature';
+    var MAG  = '.btn, .icon-btn, .kbtn, .lang-btn, .socials a, .to-top';
+    var frame = 0, card = null, mag = null, cursor = null;
+    var glowEl = document.querySelector('.cursor-glow');
+
     function paint() {
       frame = 0;
-      if (!pending) return;
-      var el = pending.el, r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', (pending.x - r.left) + 'px');
-      el.style.setProperty('--my', (pending.y - r.top) + 'px');
-      pending = null;
+      if (card) {
+        var r = card.el.getBoundingClientRect();
+        var px = (card.x - r.left) / r.width, py = (card.y - r.top) / r.height;
+        card.el.style.setProperty('--mx', (px * 100) + '%');
+        card.el.style.setProperty('--my', (py * 100) + '%');
+        /* a small tilt, capped, so a wide card never looks like it is folding */
+        card.el.style.setProperty('--rx', (((0.5 - py) * 5).toFixed(2)) + 'deg');
+        card.el.style.setProperty('--ry', (((px - 0.5) * 5).toFixed(2)) + 'deg');
+        card = null;
+      }
+      if (cursor && glowEl) {
+        glowEl.style.transform = 'translate3d(' + cursor.x + 'px,' + cursor.y + 'px,0)';
+        cursor = null;
+      }
+      if (mag) {
+        var b = mag.el.getBoundingClientRect();
+        var dx = (mag.x - (b.left + b.width / 2)) * 0.22;
+        var dy = (mag.y - (b.top + b.height / 2)) * 0.30;
+        mag.el.style.setProperty('--tx', dx.toFixed(1) + 'px');
+        mag.el.style.setProperty('--ty', dy.toFixed(1) + 'px');
+        mag = null;
+      }
+
     }
+
+    function reset(el, props) {
+      props.forEach(function (n) { el.style.removeProperty(n); });
+    }
+
     document.addEventListener('pointermove', function (e) {
-      var el = e.target.closest ? e.target.closest('.t.link, .cert-card.has-shot') : null;
-      if (!el) return;
-      pending = { el: el, x: e.clientX, y: e.clientY };
+      if (!e.target.closest) return;
+      cursor = { x: e.clientX, y: e.clientY };
+      var c = e.target.closest(CARD);
+      if (c) card = { el: c, x: e.clientX, y: e.clientY };
+      var m = e.target.closest(MAG);
+      if (m) mag = { el: m, x: e.clientX, y: e.clientY };
       if (!frame) frame = requestAnimationFrame(paint);
     }, { passive: true });
+
+    /* Everything that moved must go back, or a card keeps a tilt it was never
+       given and a button drifts off its own hit area. */
+    document.addEventListener('pointerout', function (e) {
+      if (!e.target.closest) return;
+      cursor = { x: e.clientX, y: e.clientY };
+      var c = e.target.closest(CARD);
+      if (c && !c.contains(e.relatedTarget)) reset(c, ['--rx', '--ry', '--mx', '--my']);
+      var m = e.target.closest(MAG);
+      if (m && !m.contains(e.relatedTarget)) reset(m, ['--tx', '--ty']);
+    }, { passive: true });
+
+    document.documentElement.classList.add('fx');
   })();
 
   /* ---------------------------------------------------------

@@ -36,14 +36,16 @@
 <link rel="alternate" hreflang="ta" href="https://jaisurya93945.github.io/portfolio/?lang=ta">
 <link rel="alternate" hreflang="te" href="https://jaisurya93945.github.io/portfolio/?lang=te">
 
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.svg">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/img/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="assets/img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="mask-icon" href="assets/img/mark.svg" color="#3b40d1">
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=14">
-<link rel="stylesheet" href="assets/css/style.css?v=14">
+<link rel="stylesheet" href="assets/css/fonts.css?v=15">
+<link rel="stylesheet" href="assets/css/style.css?v=15">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -383,6 +385,7 @@
 
 
 <div class="scroll-progress" aria-hidden="true"><i id="progressBar"></i></div>
+<span class="cursor-glow" aria-hidden="true"></span>
 <div class="bg" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
 <div class="grain" aria-hidden="true"></div>
 
@@ -487,12 +490,18 @@
       </div>
 
       <figure class="hs-portrait">
-        <img src="assets/img/portrait.webp"
-             srcset="assets/img/portrait-sm.webp 560w, assets/img/portrait.webp 1100w"
-             sizes="(max-width:980px) 78vw, min(42vw, 560px)"
-             width="1100" height="1100"
-             alt="Badathala Jaisurya. The left half is a photograph; the right half is the same face drawn as line work."
-             fetchpriority="high" decoding="async">
+        <span class="hs-glow" aria-hidden="true"></span>
+        <picture>
+          <source srcset="assets/img/portrait-light-sm.webp 760w, assets/img/portrait-light.webp 1400w"
+                  sizes="(max-width:1140px) 86vw, min(46vw, 660px)"
+                  media="(prefers-color-scheme: light)">
+          <img id="portrait" src="assets/img/portrait-dark.webp"
+               srcset="assets/img/portrait-dark-sm.webp 760w, assets/img/portrait-dark.webp 1400w"
+               sizes="(max-width:1140px) 86vw, min(46vw, 660px)"
+               width="1041" height="1204"
+               alt="Badathala Jaisurya. The left half is a photograph; the right half is the same face drawn as line work."
+               fetchpriority="high" decoding="async">
+        </picture>
       </figure>
 
       <div class="hs-side hs-r">
@@ -1248,10 +1257,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=14" defer></script>
-<script src="assets/js/scanner.js?v=14" defer></script>
-<script src="assets/js/certificates.js?v=14" defer></script>
-<script src="assets/js/main.js?v=14" defer></script>
+<script src="assets/js/i18n.js?v=15" defer></script>
+<script src="assets/js/scanner.js?v=15" defer></script>
+<script src="assets/js/certificates.js?v=15" defer></script>
+<script src="assets/js/main.js?v=15" defer></script>
 <div class="cert-box" id="certBox" role="dialog" aria-modal="true"
      aria-labelledby="cbTitle" hidden>
   <div class="cb-panel">
