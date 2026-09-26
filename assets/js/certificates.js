@@ -132,7 +132,7 @@
     return 'https://www.credly.com/users/jaisurya1602';
   }
 
-  function renderWall(feed, list, wrap, grid, uploaded) {
+  function renderWall(feed, wrap, grid, uploaded) {
     if (!wrap || !grid) return;
     var items = [], seen = {};
     function add(img, title, issuer, url) {
@@ -143,7 +143,10 @@
     (feed && feed.badges ? feed.badges : []).forEach(function (b) {
       add(b.image, b.title, b.issuer, b.url);
     });
-    list.forEach(function (c) { add(c.badge, c.title, c.issuer, verifyUrl(c)); });
+    /* Certifications are deliberately not a source here. A badge and a
+       certification are different things and each has its own section; a
+       credential that happens to have badge artwork shows that artwork as
+       its own row thumbnail, not as a second tile on the wall. */
 
     /* Anything dropped into assets/img/badges by hand shows too. That is
        what makes the wall dependable: TryHackMe throttles the build (HTTP
@@ -626,7 +629,7 @@
       var list = res.list || [];
       if (!list.length) return;
       renderList(list, grid);
-      renderWall(res.credly, list,
+      renderWall(res.credly,
                  document.getElementById('badgeWall'),
                  document.getElementById('badgeGrid'),
                  res.uploaded);

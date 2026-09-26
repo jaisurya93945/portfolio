@@ -31,6 +31,11 @@ only one short retry is kept. The live strip comes from their S3 host, which
 is not throttled, so the level, rank, points and room count still update
 themselves. The individual badges do not.
 
+The four named in `scripts/sync-badges.py` — Hash Cracker, Terminaled,
+OWASP 10 and Mr Robot — are fetched by slug from the asset host, which is
+a different machine from the throttled one. If that misses too, the log
+says which URLs were tried and the manual route below still works.
+
 Save them from
 [your badges tab](https://tryhackme.com/p/nikki1602?tab=badges) —
 right-click a badge, Save image — and drop them in this folder named

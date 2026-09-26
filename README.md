@@ -214,8 +214,19 @@ site that is already published stays up.
 
 ## Adding a certificate or a badge
 
-Two different things, two different places. Nothing here needs a computer — every step is a
-file upload on github.com.
+Two different things, two different places, and they are kept apart on purpose.
+
+* A **badge** is artwork an issuer mints — Credly, TryHackMe, Hack The Box. It belongs in
+  **07 Badges** and arrives on its own.
+* A **certification** is something you sat and passed. It belongs in **06 Certifications** and
+  is listed by hand.
+
+Earning a Credly badge does **not** add a row to the certifications list. If one of them is
+also a certification you want listed — Fortinet NSE 1, for instance — add it yourself with the
+JSON block below. A credential that has badge artwork shows that artwork as its own row
+thumbnail; it does not appear twice.
+
+Nothing here needs a computer — every step is a file upload on github.com.
 
 ### A badge — nothing to do
 

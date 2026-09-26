@@ -28,6 +28,17 @@ HTB_PROFILE = '01a0908b-02ca-7053-89e6-470823381aa3'
 # so it is not guessed. HTB_USER_ID overrides it if the account ever moves.
 HTB_USER_ID = '1830127'
 
+# The badges to fetch, by the slug in their share link
+# (tryhackme.com/<user>/badges/<slug>). Discovery through TryHackMe's own
+# API is throttled to death from CI, so the list is explicit; the images
+# still come from them rather than being copied into the repository.
+THM_BADGES = [
+    ('hash-cracker', 'Hash Cracker'),
+    ('terminaled',   'Terminaled'),
+    ('owasp-10',     'OWASP 10'),
+    ('mr-robot',     'Mr Robot'),
+]
+
 # Badge ids pasted from the Credly embed snippets. Discovery below may find
 # more; these are the floor, so a discovery failure still resolves these two.
 CREDLY_SEED = [
@@ -378,23 +389,48 @@ def harvest_badges(obj, out=None, depth=0):
     return out
 
 
+def thm_badge_image(slug, tried):
+    """Find a badge's artwork.
+
+    The asset host is tried before tryhackme.com because the 429s come from
+    the application, not the CDN, and a share page is only worth parsing if
+    the direct paths miss.
+    """
+    for url in ('https://assets.tryhackme.com/img/badges/%s.svg' % slug,
+                'https://assets.tryhackme.com/img/badges/%s.png' % slug,
+                'https://assets.tryhackme.com/badges/%s.svg' % slug,
+                'https://tryhackme.com/img/badges/%s.svg' % slug):
+        tried.append(url)
+        path = save_image(url, 'thm-' + slug)
+        if path:
+            return path
+
+    # the share page is built for social preview, so it carries an og:image
+    page = 'https://tryhackme.com/%s/badges/%s' % (THM_USER, slug)
+    tried.append(page)
+    html = try_get(page, retries=1, pause=3.0)
+    if html:
+        m = (re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)', html) or
+             re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', html))
+        if m:
+            tried.append(m.group(1))
+            return save_image(m.group(1), 'thm-' + slug)
+    return ''
+
+
 def sync_thm_badges():
-    rows, _ = thm_badges()
-    if not rows:
-        return []
-    seen, out = set(), []
-    for b in rows:
-        key = slug(b['title'])
-        if not key or key in seen:
-            continue
-        seen.add(key)
-        path = save_image(b['imageUrl'], 'thm-' + key)
+    """The named badges, each linking back to its own share page."""
+    out = []
+    for slug, title in THM_BADGES:
+        tried = []
+        path = thm_badge_image(slug, tried)
         if not path:
+            log(False, 'tryhackme badge: ' + title, why(tried))
             continue
-        out.append({'id': 'thm-' + key, 'title': b['title'], 'issuer': 'TryHackMe',
-                    'description': b['description'], 'issuedOn': '', 'image': path,
-                    'url': 'https://tryhackme.com/p/' + THM_USER + '?tab=badges'})
-        log(True, 'tryhackme badge: ' + b['title'], path)
+        out.append({'id': 'thm-' + slug, 'title': title, 'issuer': 'TryHackMe',
+                    'description': '', 'issuedOn': '', 'image': path,
+                    'url': 'https://tryhackme.com/%s/badges/%s' % (THM_USER, slug)})
+        log(True, 'tryhackme badge: ' + title, path)
     return out
 
 
