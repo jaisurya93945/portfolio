@@ -44,8 +44,8 @@
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=21">
-<link rel="stylesheet" href="assets/css/style.css?v=21">
+<link rel="stylesheet" href="assets/css/fonts.css?v=22">
+<link rel="stylesheet" href="assets/css/style.css?v=22">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -491,7 +491,12 @@
       <figure class="hs-portrait">
         <span class="hs-glow" aria-hidden="true"></span>
         <picture>
-          <source srcset="assets/img/portrait-light-sm.webp 760w, assets/img/portrait-light.webp 1400w"
+          <!-- media can only ask the operating system, and the page follows the
+               theme toggle, so the two disagree the moment anyone uses it.
+               Without JS this is still the right default; syncPortrait() in
+               main.js overrides the query once a theme is actually chosen. -->
+          <source id="portraitLight"
+                  srcset="assets/img/portrait-light-sm.webp 760w, assets/img/portrait-light.webp 1400w"
                   sizes="(max-width:1140px) 80vw, min(39vw, 560px)"
                   media="(prefers-color-scheme: light)">
           <img id="portrait" src="assets/img/portrait-dark.webp"
@@ -1327,10 +1332,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=21" defer></script>
-<script src="assets/js/scanner.js?v=21" defer></script>
-<script src="assets/js/certificates.js?v=21" defer></script>
-<script src="assets/js/main.js?v=21" defer></script>
+<script src="assets/js/i18n.js?v=22" defer></script>
+<script src="assets/js/scanner.js?v=22" defer></script>
+<script src="assets/js/certificates.js?v=22" defer></script>
+<script src="assets/js/main.js?v=22" defer></script>
 <div class="cert-box" id="certBox" role="dialog" aria-modal="true"
      aria-labelledby="cbTitle" hidden>
   <div class="cb-panel">

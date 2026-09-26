@@ -20,13 +20,32 @@
   }
   window.__pageTransition = transition;
 
+  /* The hero portrait is two different images, not one image recoloured:
+     on dark the drawn half is white ink on a retoned ground, on light the
+     ground is cut away and the ink is dark. <picture> can only choose
+     between them with a media query, and a media query can only ask the
+     operating system — so a reader whose OS is dark and who switches the
+     page to light got the dark portrait on a paper page, and the reverse.
+     Overriding the source's media once a theme is chosen fixes both, and
+     leaves the OS query as the no-JS default. */
+  function syncPortrait(theme) {
+    var src = document.getElementById('portraitLight');
+    if (!src) return;
+    /* Only override once a theme is actually known. Anything else leaves
+       the operating-system query in place, which is the right default. */
+    if (theme !== 'light' && theme !== 'dark') return;
+    src.media = theme === 'light' ? 'all' : 'not all';
+  }
+
   (function theme() {
+    syncPortrait(document.documentElement.getAttribute('data-theme'));
     var btn = $('#themeToggle');
     if (!btn) return;
     btn.addEventListener('click', function () {
       transition(function () {
         var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', next);
+        syncPortrait(next);
         try { localStorage.setItem('theme', next); } catch (e) {}
         var m = document.querySelector('meta[name="theme-color"]');
         if (m) m.setAttribute('content', next === 'light' ? '#f4f2ed' : '#08080a');
