@@ -20,8 +20,9 @@
     "date": "",
     "image": "",
     "credentialId": "",
-    "verificationUrl": "",
-    "category": "DevOps"
+    "verificationUrl": "https://www.credly.com/users/jaisurya1602",
+    "category": "DevOps",
+    "credlyBadgeId": ""
   },
   {
     "id": "lf-linux-essentials",
@@ -32,8 +33,9 @@
     "date": "",
     "image": "",
     "credentialId": "",
-    "verificationUrl": "",
-    "category": "Networking"
+    "verificationUrl": "https://www.credly.com/users/jaisurya1602",
+    "category": "Networking",
+    "credlyBadgeId": ""
   },
   {
     "id": "gcp-foundations",
@@ -70,6 +72,7 @@
     "credentialId": "",
     "verificationUrl": "",
     "category": "Cybersecurity",
-    "status": "in-progress"
+    "status": "in-progress",
+    "credlyBadgeId": ""
   }
 ]

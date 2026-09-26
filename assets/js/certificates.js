@@ -142,15 +142,19 @@
       /* A verifiable platform becomes a link; an unverifiable one stays a
          plain label. A "Verify" that verifies nothing is worse than none. */
       if (c.platform) {
-        var pl;
-        if (c.verificationUrl) {
+        var pl, href = verifyUrl(c);
+        if (href) {
           pl = el('a', 'cplat is-link', c.platform);
-          pl.href = c.verificationUrl; pl.target = '_blank'; pl.rel = 'noopener noreferrer';
+          pl.href = href; pl.target = '_blank'; pl.rel = 'noopener noreferrer';
           pl.setAttribute('aria-label', t('cert.verify', 'Verify credential') + ' — ' + c.platform);
         } else {
           pl = el('span', 'cplat', c.platform);
         }
         li.appendChild(pl);
+      } else {
+        /* the slot is still filled, so the status chip stays in the last
+           column instead of sliding left on the rows without a platform */
+        li.appendChild(el('span', 'cplat-none'));
       }
 
       /* status carries an icon as well as a colour */
@@ -173,8 +177,68 @@
     });
   }
 
+  /* A Credly badge id points at that one badge; without it the link falls back
+     to the badge wall, which still verifies the credential. A verificationUrl
+     that verifies nothing is never invented here - an empty field means the
+     platform renders as a plain label. */
+  function verifyUrl(c) {
+    if (c.credlyBadgeId) return 'https://www.credly.com/badges/' + c.credlyBadgeId + '/public_url';
+    return c.verificationUrl || '';
+  }
+
   function mark(c) {
     return c.mark || (c.title || '?').trim().charAt(0).toUpperCase();
+  }
+
+  /* --- CTF platforms ---------------------------------------------------
+     Same contract as the credentials list: content/ctf.json is the one place
+     the handles, figures and profile links are edited, and the markup in
+     index.html is the no-JS fallback rather than a second copy. A platform
+     without a profileUrl renders as a plain card - never a dead link. */
+  function renderCtf(list, host) {
+    if (!host || !list.length) return;
+    host.textContent = '';
+    list.forEach(function (c, i) {
+      var link = !!c.profileUrl;
+      var card = el(link ? 'a' : 'article', 'ctf' + (link ? ' is-link' : ''));
+      if (link) {
+        card.href = c.profileUrl;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer me';
+        card.setAttribute('aria-label', (c.platform || '') + ' — ' +
+          t('ctf.profile', 'view profile'));
+      }
+      card.style.setProperty('--stagger', i * 60 + 'ms');
+      card.classList.add('cert-enter');
+
+      var m = el('span', 'cmark', c.mark || (c.platform || '?').charAt(0));
+      m.setAttribute('aria-hidden', 'true');
+      card.appendChild(m);
+
+      var body = el('div', 'ctf-body');
+      var name = el('b', '', c.platform || '');
+      if (c.handle) name.appendChild(el('span', 'ctf-handle', '@' + c.handle));
+      body.appendChild(name);
+
+      if (c.stats && c.stats.length) {
+        var ul = el('ul', 'ctf-stats');
+        c.stats.forEach(function (st) {
+          var li = el('li');
+          li.appendChild(el('b', '', st.value));
+          li.appendChild(el('span', '', st.key ? t(st.key, st.label) : st.label));
+          ul.appendChild(li);
+        });
+        body.appendChild(ul);
+      }
+      if (c.focus) body.appendChild(el('p', '', c.focusKey ? t(c.focusKey, c.focus) : c.focus));
+      if (link) {
+        var go = el('span', 'ctf-go', t('ctf.profile', 'view profile'));
+        go.setAttribute('aria-hidden', 'true');
+        body.appendChild(go);
+      }
+      card.appendChild(body);
+      host.appendChild(card);
+    });
   }
 
   /* --- gallery ---------------------------------------------------------- */
@@ -188,7 +252,7 @@
 
     function tile(c, index) {
       var a = el('a', 'cert-shot');
-      a.href = c.image || (c.verificationUrl || '#');
+      a.href = c.image || verifyUrl(c) || '#';
       a.setAttribute('data-index', index);
 
       if (c.image) {
@@ -328,9 +392,10 @@
         row.appendChild(copy);
         extra.appendChild(row);
       }
-      if (c.verificationUrl) {
+      var vhref = verifyUrl(c);
+      if (vhref) {
         var v = el('a', 'btn btn-ghost', t('cert.verify', 'Verify credential'));
-        v.href = c.verificationUrl; v.target = '_blank'; v.rel = 'noopener noreferrer';
+        v.href = vhref; v.target = '_blank'; v.rel = 'noopener noreferrer';
         extra.appendChild(v);
       }
 
@@ -386,6 +451,14 @@
   /* --- wire up ---------------------------------------------------------- */
 
   function init() {
+    var ctfHost = document.getElementById('ctfList');
+    if (ctfHost) {
+      fetch('content/ctf.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .catch(function () { return []; })
+        .then(function (list) { renderCtf(list || [], ctfHost); });
+    }
+
     var grid = document.getElementById('certGrid');
     if (!grid) return;
     var note = document.getElementById('certEmpty');

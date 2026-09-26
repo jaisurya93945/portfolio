@@ -3,19 +3,31 @@
     "id": "tryhackme",
     "platform": "TryHackMe",
     "mark": "THM",
-    "profileUrl": "",
+    "handle": "nikki1602",
+    "profileUrl": "https://tryhackme.com/p/nikki1602",
     "stats": [
-      { "value": "Top 3%", "label": "global ranking" },
-      { "value": "100+", "label": "challenges solved" }
+      {
+        "value": "Top 3%",
+        "label": "global ranking",
+        "key": "ctf.rank"
+      },
+      {
+        "value": "100+",
+        "label": "challenges solved",
+        "key": "ctf.solved"
+      }
     ],
-    "focus": "Offensive paths, detection engineering, blue-team labs"
+    "focus": "Offensive paths, detection engineering, blue-team labs",
+    "focusKey": "ctf.thm.f"
   },
   {
     "id": "hackthebox",
     "platform": "Hack The Box",
     "mark": "HTB",
-    "profileUrl": "",
+    "handle": "",
+    "profileUrl": "https://profile.hackthebox.com/profile/01a0908b-02ca-7053-89e6-470823381aa3",
     "stats": [],
-    "focus": "Machines and challenges across web, pwn and forensics"
+    "focus": "Machines and challenges across web, pwn and forensics",
+    "focusKey": "ctf.htb.f"
   }
 ]

@@ -193,6 +193,33 @@
     scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   });
 
+  /* The nav is one flex row that does not wrap, so a link row wider than the
+     bar runs under its own edge. The fit is measured rather than guessed:
+     the same eight labels are ~180px wider in Portuguese than in English,
+     and no media query can know which is loaded. */
+  var navBrand = $('.brand'), navRow = $('.nav-links'), navActs = $('.nav-actions');
+  function navFit() {
+    if (!nav || !navBrand || !navRow || !navActs) return;
+    var root = document.documentElement;
+    root.classList.remove('nav-compact');
+    if (getComputedStyle(navRow).display === 'none') return;   // already collapsed by the query
+    var cs = getComputedStyle(nav);
+    var have = nav.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var need = navBrand.offsetWidth + navRow.scrollWidth + navActs.offsetWidth
+             + 2 * (parseFloat(cs.columnGap) || 0);
+    if (need > have) root.classList.add('nav-compact');
+  }
+  var navQueued = false;
+  function navFitSoon() {
+    if (navQueued) return;
+    navQueued = true;
+    requestAnimationFrame(function () { navQueued = false; navFit(); });
+  }
+  addEventListener('resize', navFitSoon, { passive: true });
+  document.addEventListener('i18n:change', navFitSoon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(navFitSoon);
+  navFit();
+
   var burger = $('#burger'), mobile = $('#mobileMenu');
   if (burger && mobile) {
     burger.addEventListener('click', function () {
@@ -232,21 +259,6 @@
       panel.classList.toggle('active', on);
     });
   }
-
-  /* ---------------------------------------------------------
-     9. Project filters
-     --------------------------------------------------------- */
-  $$('.filter').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      $$('.filter').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var f = btn.getAttribute('data-filter');
-      $$('.pcard').forEach(function (card) {
-        var show = f === 'all' || (card.getAttribute('data-cat') || '').indexOf(f) !== -1;
-        card.classList.toggle('hide', !show);
-      });
-    });
-  });
 
   /* ---------------------------------------------------------
      10. Live threat scanner

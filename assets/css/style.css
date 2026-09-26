@@ -281,39 +281,11 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
 .sec-sub{margin-top:14px;color:var(--ink-2);max-width:var(--measure);font-size:.97rem}
 
 /* ---------- work ---------- */
-.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
-.filter{padding:5px 12px;border:1px solid var(--line);border-radius:999px;font-size:.78rem;color:var(--ink-2);background:var(--s1);transition:color .18s,background-color .18s,border-color .18s}
-.filter:hover{border-color:var(--line-2);color:var(--ink)}
-.filter.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:500}
-.proj-list{display:grid;gap:10px}
-.pcard{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(14px,2.4vw,30px);align-items:start;padding:clamp(18px,2.2vw,26px);border:1px solid var(--line);border-radius:var(--r);background:var(--s1);transition:border-color .22s,background .22s}
-/* Wide screens: the measure caps the prose at a readable width, so the
-   metrics move into a spec column on the right instead of leaving a void. */
-@media (min-width:900px){
-  .pcard{grid-template-columns:auto minmax(0,1fr) auto auto;align-items:start}
-  .pcard>.pnum{grid-column:1}
-  .pcard>.pbody{grid-column:2}
-  .pcard>.pmetrics{grid-column:3;flex-direction:column;align-items:flex-start;gap:11px;margin:2px 0 0;padding:0 0 0 20px;border-top:0;border-left:1px solid var(--line);min-width:132px}
-  .pcard>.pmetrics li{min-width:0}
-  .pcard>.pmetrics b{font-size:.92rem}
-  .pcard>.plink{grid-column:4;justify-self:end;margin-top:0}
-}
-.pcard:hover{border-color:var(--line-2);background:var(--s2)}
-.pcard::before,.pcard::after,.pcard-glow{display:none}
-.pnum{font-family:var(--mono);font-size:.68rem;color:var(--ink-3);padding-top:4px}
-.pcard-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px;font-family:var(--mono);font-size:.66rem}
+/* the research card's label + link (the only survivors of the old
+   project-row markup; the project tiles are .t.link now) */
 .ptag{color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
-.pstat{color:var(--ink-3);padding-left:10px;border-left:1px solid var(--line)}
-.pcard h3{font-size:clamp(1.05rem,1.9vw,1.3rem)}
-.pbody>p{margin-top:8px;color:var(--ink-2);font-size:.9rem;max-width:var(--measure)}
-.pmetrics{display:flex;flex-wrap:wrap;gap:22px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);list-style:none}
-.pmetrics b{display:block;font-family:var(--mono);font-size:1rem;font-weight:600;color:var(--ink)}
-.pmetrics span{font-size:.72rem;color:var(--ink-3)}
-.pstack{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-.pstack li{font-family:var(--mono);font-size:.65rem;color:var(--ink-3);padding:2px 7px;border:1px solid var(--line);border-radius:4px}
-.plink{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:7px 13px;border:1px solid var(--line-2);border-radius:var(--r);font-size:.8rem;color:var(--ink-2);transition:color .2s,background-color .2s,border-color .2s;margin-top:2px}
+.plink{grid-column:4;justify-self:end;margin-top:0}
 .plink:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-.pcard.hide{display:none}
 
 /* ---------- live lab ---------- */
 .lab-wrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--s1)}
@@ -555,23 +527,30 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
 @media (max-width:1020px){
   .cert-layout{grid-template-columns:1fr}
 }
-@media (max-width:880px){
+/* The link row is as wide as whatever language is loaded. 1020px clears
+   English; navFit() in main.js measures the rest and adds .nav-compact,
+   because Portuguese and Telugu need nearly 200px more. */
+html.nav-compact .nav-links{display:none}
+html.nav-compact .burger{display:flex}
+html.nav-compact .kbtn{display:none}
+@media (max-width:1020px){
   .nav-links{display:none}
   .burger{display:flex}
   .kbtn{display:none}
+}
+@media (max-width:880px){
   .lab-io{grid-template-columns:1fr}
   .lab-panel{border-right:0;border-bottom:1px solid var(--line)}
-  .pcard{grid-template-columns:auto minmax(0,1fr)}
-  /* .pmetrics is a direct grid child, so place it explicitly - left to
-     auto-flow it lands in the auto-sized number column and blows the
-     track out past the viewport. */
-  .pcard>.pmetrics{grid-column:2;min-width:0;gap:18px}
-  .plink{grid-column:2;justify-self:start;margin-top:14px}
   .caps{grid-template-columns:1fr}
 }
 @media (max-width:560px){
   .ledger-rows li{grid-template-columns:32px minmax(0,1fr);row-gap:6px}
   .ledger-rows .hstat{grid-column:2;justify-self:start}
+  /* the longest verdicts ("falsified - 0 of 37 decisions changed") are wider
+     than a phone, so the pill wraps rather than running under the border.
+     The dot holds the first line instead of centring on the block. */
+  .hstat{white-space:normal;align-items:flex-start}
+  .hstat::before{flex:0 0 5px;margin-top:.44em}
   .res-meta{grid-template-columns:1fr 1fr}
 }
 @media (prefers-reduced-motion:reduce){
@@ -896,8 +875,8 @@ a.t.link:hover h3{color:var(--accent)}
 /* the hero */
 .intro .display{font-size:clamp(2.6rem,9vw,8rem)}
 .intro .role{color:var(--accent)}
-.btn-primary{background:var(--accent);color:#1a0a06;border:0}
-.btn-primary:hover{background:var(--accent);color:var(--on-accent);filter:brightness(1.1)}
+.btn-primary{background:var(--accent);color:var(--on-accent);border:0}
+.btn-primary:hover{filter:brightness(1.08)}
 .proof .proof-list li::before{color:var(--accent)}
 .proof h4{font-family:var(--display);font-size:1rem}
 
@@ -970,11 +949,11 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,
 .cta{gap:12px}
 
 /* The skip link has to be readable the moment it is focused. */
-.skip-link:focus{background:var(--accent);color:#1a0a06;outline:2px solid var(--ink)}
+.skip-link:focus{background:var(--accent);color:var(--on-accent);outline:2px solid var(--ink)}
 
 /* Every accent-filled control takes the per-theme on-accent ink. */
 .btn-primary{background:var(--accent);color:var(--on-accent);border:0}
-.btn-primary:hover{background:var(--accent);color:var(--on-accent);filter:brightness(1.1)}
+.btn-primary:hover{filter:brightness(1.08)}
 .depth-btn .df,html[data-depth="quick"] .depth-btn .dq{color:var(--on-accent)}
 .skip-link,.skip-link:focus{background:var(--accent);color:var(--on-accent)}
 
@@ -1091,7 +1070,10 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,
    than described — five detectors, a risk engine feeding a policy engine,
    five decisions.
    ========================================================================== */
-.feature{padding:clamp(24px,3vw,40px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+/* the featured card is a panel like the rest: .t draws its hairline on all
+   four sides, so it needs inline padding too - without it the copy sat
+   flush against the border. */
+.feature{padding:clamp(26px,3vw,40px) clamp(22px,2.6vw,40px)}
 .feat-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:20px}
 .feature .feat-title{font-family:var(--display);font-size:clamp(2rem,5vw,3.4rem);font-weight:700;
             letter-spacing:-.04em;line-height:1;margin:10px 0 0}
@@ -1145,7 +1127,6 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,
 .ring-mid .u{font-size:.6em}
 
 /* --- project cards: enough substance to judge the work from the card --- */
-.pcard{gap:0}
 .p-pts{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:7px}
 .p-pts li{position:relative;padding-left:16px;font-size:.82rem;line-height:1.5;color:var(--ink-2)}
 .p-pts li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:1px;
@@ -1156,9 +1137,11 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,
   margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .pcard .t-m span{display:block;line-height:1.35}
 .pcard .t-s{margin-top:14px}
-/* the cards are equal height; the link belongs at the foot of each, not
-   floating wherever the copy happened to end */
-.pcard .t-go{margin-top:auto;padding-top:16px}
+/* the cards are equal height, so the foot of each - figures, stack, link -
+   is pushed down as one block. That lines the three figure rows up with each
+   other instead of letting a card with one extra line of copy drift. */
+.pcard .p-pts{margin-bottom:auto;padding-bottom:16px}
+.pcard .t-go{margin-top:0;padding-top:16px}
 .sub-head{margin:clamp(12px,1.6vw,22px) 0 0;font-family:var(--mono);font-size:.66rem;
   letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
 .scard h4{margin-top:8px;font-size:1rem;letter-spacing:-.01em}
@@ -1258,8 +1241,6 @@ html.fx .socials a,html.fx .to-top{
   html.fx .t.link,html.fx .cert-card.has-shot,html.fx .btn,html.fx .icon-btn,
   html.fx .kbtn,html.fx .lang-btn,html.fx .socials a,html.fx .to-top,
   .hs-portrait{transform:none!important;transition:none}
-}
-  .hs-portrait{transition:none}
   .hs-portrait:hover{transform:none}
 }
 
@@ -1300,10 +1281,14 @@ html.fx .cursor-glow{opacity:1}
 .cmain{display:grid;min-width:0}
 .cmain b{font-size:.94rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .cissuer{font-size:.78rem;color:var(--ink-3);margin-top:2px}
-.cplat{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-3);
-  border:1px solid var(--line);border-radius:100px;padding:3px 9px;white-space:nowrap}
+/* the chip is also a 24px tap target when it is a verification link, and the
+   plain-label version matches it so the two kinds sit on the same baseline */
+.cplat{display:inline-flex;align-items:center;min-height:26px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-3);
+  border:1px solid var(--line);border-radius:100px;padding:3px 11px;white-space:nowrap}
 a.cplat.is-link{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
 a.cplat.is-link:hover{background:var(--accent-dim)}
+.cplat-none{display:block}
 /* status reads by icon and word, not by colour alone */
 .cs{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.6rem;
   letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
@@ -1317,7 +1302,9 @@ a.cplat.is-link:hover{background:var(--accent-dim)}
 .cert-note{margin-top:16px;font-family:var(--mono);font-size:.66rem;color:var(--ink-3)}
 
 /* --- CTF & labs --- */
-.ctf-list{display:grid;gap:0;margin-top:6px}
+/* the two platforms sit centred in their panel rather than stacked at the
+   top with the leftover height pooling underneath */
+.ctf-list{display:grid;gap:0;margin-top:6px;flex:1;align-content:center}
 .ctf{display:grid;grid-template-columns:38px minmax(0,1fr);gap:14px;align-items:start;
   padding:15px 0;border-top:1px solid var(--line)}
 .ctf:first-child{border-top:0}
@@ -1327,6 +1314,27 @@ a.cplat.is-link:hover{background:var(--accent-dim)}
 .ctf-stats b{display:block;font-family:var(--mono);font-size:1.05rem;font-weight:600;
   letter-spacing:-.02em;color:var(--ink)}
 .ctf-stats span{font-size:.68rem;color:var(--ink-3)}
+/* a platform with a profile is the whole card, so the hit area is the row
+   rather than a small link at the end of it */
+a.ctf{color:inherit;transition:background .2s}
+a.ctf:hover{background:var(--s2)}
+a.ctf:hover .ctf-body > b{color:var(--accent)}
+.ctf-body > b{transition:color .2s}
+.ctf-handle{margin-left:8px;font-family:var(--mono);font-size:.68rem;font-weight:400;
+  letter-spacing:.02em;color:var(--ink-3)}
+.ctf-go{display:inline-flex;align-items:center;gap:5px;margin-top:10px;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);transition:color .2s}
+.ctf-go::after{content:"\2197"}
+a.ctf:hover .ctf-go{color:var(--accent)}
+a.ctf:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r)}
+
+/* the badge wall the Credly rows verify against */
+.cert-wall{display:inline-flex;align-self:flex-start;align-items:center;gap:7px;margin-top:14px;
+  padding:7px 13px;border:1px solid var(--line-2);border-radius:var(--r);
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-2);transition:color .2s,border-color .2s,background-color .2s}
+.cert-wall:hover{color:var(--accent);border-color:var(--accent);background:var(--s2)}
 
 @keyframes certIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .cert-enter{animation:certIn .45s var(--ease) both;animation-delay:var(--stagger,0ms)}

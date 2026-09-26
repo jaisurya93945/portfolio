@@ -31,6 +31,28 @@ Square artwork works best; anything is contained, never cropped.
 chip into a link. **Leave it empty until you have the real URL** — an
 unverifiable "Verify" link is worse than none.
 
+### Credly
+
+Two fields, and the more specific one wins:
+
+| Field             | Links to                                            |
+| ----------------- | --------------------------------------------------- |
+| `credlyBadgeId`   | that one badge: `credly.com/badges/<id>/public_url` |
+| `verificationUrl` | anything else — currently the badge wall            |
+
+The Credly rows point at the badge wall
+(`https://www.credly.com/users/jaisurya1602`) because the two badge ids
+below have not been matched to a credential yet:
+
+```
+69cc1a14-97d0-407e-9664-b39e54dd8c92
+d05f7344-d3c4-4660-9d21-d1155eca1cb1
+```
+
+Open each one at `https://www.credly.com/badges/<id>/public_url`, see which
+credential it is, and paste the id into that entry's `credlyBadgeId`. The
+chip then links straight to the badge instead of the wall.
+
 ## CTF profiles
 
 [`content/ctf.json`](../../../content/ctf.json) holds the TryHackMe and Hack
