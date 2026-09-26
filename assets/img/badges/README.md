@@ -24,25 +24,34 @@ the account id ever changes; it overrides the built-in value.
 
 ### TryHackMe badges must be saved by hand
 
-TryHackMe answers the build with **HTTP 429** on every public endpoint —
-it rate-limits GitHub's shared runner addresses. A two-step backoff was
-tried and added seventy seconds to every build without ever succeeding, so
-only one short retry is kept. The live strip comes from their S3 host, which
-is not throttled, so the level, rank, points and room count still update
-themselves. The individual badges do not.
+Every TryHackMe host refuses the build. Measured against CI, not assumed:
 
-The four named in `scripts/sync-badges.py` — Hash Cracker, Terminaled,
-OWASP 10 and Mr Robot — are fetched by slug from the asset host, which is
-a different machine from the throttled one. If that misses too, the log
-says which URLs were tried and the manual route below still works.
+| Host | Answer |
+| ---- | ------ |
+| `tryhackme.com` (API and share pages) | HTTP 429 |
+| `assets.tryhackme.com` (artwork) | unreachable |
+| `tryhackme-badges.s3.amazonaws.com` | 403 for badge keys |
 
-Save them from
-[your badges tab](https://tryhackme.com/p/nikki1602?tab=badges) —
-right-click a badge, Save image — and drop them in this folder named
-`thm-<name>.png`. The file name becomes the title, so
-`thm-advent-of-cyber.png` reads as "Advent of Cyber", and the tile links
-back to your badges tab. Anything dropped here shows on the wall whether
-or not a provider answered, which is what makes it dependable.
+The one exception is the profile strip at
+`tryhackme-badges.s3.amazonaws.com/nikki1602.png`, which is why the level,
+rank, points and room count still update themselves. The individual badges
+do not, and no amount of retrying changes that.
+
+**Save them instead — about two minutes.** On
+[your badges tab](https://tryhackme.com/p/nikki1602?tab=badges), right-click
+each badge and Save image. Then **Add file → Upload files** into this
+folder, named `thm-` plus the slug from the badge's own share link:
+
+| Badge | File to upload | Shows as |
+| ----- | -------------- | -------- |
+| Hash Cracker | `thm-hash-cracker.png` | Hash Cracker |
+| Terminaled | `thm-terminaled.png` | Terminaled |
+| OWASP 10 | `thm-owasp-10.png` | OWASP 10 |
+| Mr Robot | `thm-mr-robot.png` | Mr Robot |
+
+The file name becomes the title, the tile is labelled TryHackMe and links
+back to your badges tab. Anything dropped here shows on the wall whether or
+not a provider answered — that is what makes this route the dependable one.
 
 ## Adding artwork by hand
 

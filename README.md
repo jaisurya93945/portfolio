@@ -242,13 +242,15 @@ from the issuer:
 Earn a badge today and it is on the site by tomorrow morning. If you want it sooner, open
 **Actions → Publish verified commit → Run workflow**.
 
-**One exception.** TryHackMe returns HTTP 429 to the build — it throttles
-GitHub's shared runner addresses — so its individual badges have to be saved
-by hand. Right-click each badge on
+**One exception.** Every TryHackMe host refuses the build — the application
+with HTTP 429 and the asset host outright — so their individual badges have to
+be saved by hand. Right-click each badge on
 [your badges tab](https://tryhackme.com/p/nikki1602?tab=badges), save it, and
-upload it to `assets/img/badges/` named `thm-<name>.png`. The file name becomes
-the title. Anything dropped in that folder appears on the wall regardless of
-what the providers answered.
+upload it to `assets/img/badges/` named `thm-<slug>.png`, taking the slug from
+the badge's own share link: `thm-hash-cracker.png`, `thm-terminaled.png`,
+`thm-owasp-10.png`, `thm-mr-robot.png`. The file name becomes the title.
+Anything dropped in that folder appears on the wall regardless of what the
+providers answered. Only the level/rank/points strip updates itself.
 
 ### A certificate — one file, optionally one entry
 

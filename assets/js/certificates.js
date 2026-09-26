@@ -108,9 +108,13 @@
   function titleFromFile(file) {
     var stem = String(file).replace(/\.[^.]+$/, '').replace(/^(credly|thm|htb)-/, '');
     var small = /^(of|the|and|in|for|to|a|an|on|with|vs)$/;
+    /* names that are initialisms, so a filename does not turn OWASP into
+       Owasp or CTF into Ctf */
+    var caps = /^(owasp|ctf|thm|htb|nse|aws|gcp|api|sql|xss|xxe|ssrf|osint|siem|soc|iam|ai|ml|ceh|lf)$/;
     return stem.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
       .split(' ')
       .map(function (w, i) {
+        if (caps.test(w)) return w.toUpperCase();          /* "OWASP 10" */
         if (i && small.test(w)) return w;                 /* "Advent of Cyber" */
         return w.charAt(0).toUpperCase() + w.slice(1);
       })

@@ -405,10 +405,12 @@ def thm_badge_image(slug, tried):
         if path:
             return path
 
-    # the share page is built for social preview, so it carries an og:image
+    # The share page carries an og:image, but tryhackme.com answers CI with
+    # 429 and retrying it cost sixteen seconds a build for nothing. It is
+    # only worth a single quick attempt.
     page = 'https://tryhackme.com/%s/badges/%s' % (THM_USER, slug)
     tried.append(page)
-    html = try_get(page, retries=1, pause=3.0)
+    html = try_get(page)
     if html:
         m = (re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)', html) or
              re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', html))
@@ -419,7 +421,14 @@ def thm_badge_image(slug, tried):
 
 
 def sync_thm_badges():
-    """The named badges, each linking back to its own share page."""
+    """The named badges, each linking back to its own share page.
+
+    Measured against CI: every TryHackMe host refuses the runner — the
+    application with 429 and the asset host outright — so this has never
+    produced a file. It is kept because it costs little and would start
+    working the day they stop refusing; the badges that actually appear on
+    the wall are the ones saved by hand into assets/img/badges.
+    """
     out = []
     for slug, title in THM_BADGES:
         tried = []
