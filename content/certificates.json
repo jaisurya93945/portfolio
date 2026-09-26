@@ -13,56 +13,6 @@
     "expires": "2026-05-01"
   },
   {
-    "id": "lf-devsecops",
-    "title": "DevSecOps",
-    "mark": "LF",
-    "issuer": "Linux Foundation",
-    "platform": "Credly",
-    "date": "",
-    "image": "",
-    "credentialId": "",
-    "verificationUrl": "https://www.credly.com/users/jaisurya1602",
-    "category": "DevOps",
-    "credlyBadgeId": ""
-  },
-  {
-    "id": "lf-linux-essentials",
-    "title": "Linux Essentials",
-    "mark": "LF",
-    "issuer": "Linux Foundation",
-    "platform": "Credly",
-    "date": "",
-    "image": "",
-    "credentialId": "",
-    "verificationUrl": "https://www.credly.com/users/jaisurya1602",
-    "category": "Networking",
-    "credlyBadgeId": ""
-  },
-  {
-    "id": "gcp-foundations",
-    "title": "Cloud Computing Foundations",
-    "mark": "GCP",
-    "issuer": "Google Cloud",
-    "platform": "Google Cloud",
-    "date": "",
-    "image": "",
-    "credentialId": "",
-    "verificationUrl": "",
-    "category": "Cloud"
-  },
-  {
-    "id": "python-ai",
-    "title": "Python & AI Certifications",
-    "mark": "AI",
-    "issuer": "Applied ML foundations",
-    "platform": "",
-    "date": "",
-    "image": "",
-    "credentialId": "",
-    "verificationUrl": "",
-    "category": "AI/ML"
-  },
-  {
     "id": "fortinet-nse1",
     "title": "Fortinet NSE 1 Certified in Cybersecurity",
     "mark": "FTN",
@@ -73,20 +23,6 @@
     "credentialId": "",
     "verificationUrl": "https://www.credly.com/users/jaisurya1602",
     "category": "Cybersecurity",
-    "credlyBadgeId": ""
-  },
-  {
-    "id": "comptia-sec-net",
-    "title": "Security+ & Network+",
-    "mark": "S+",
-    "issuer": "CompTIA",
-    "platform": "Credly",
-    "date": "",
-    "image": "",
-    "credentialId": "",
-    "verificationUrl": "",
-    "category": "Cybersecurity",
-    "status": "in-progress",
     "credlyBadgeId": ""
   }
 ]

@@ -149,6 +149,10 @@
     return 'https://www.credly.com/users/jaisurya1602';
   }
 
+  function absUrl(rel) {
+    try { return new URL(rel, document.baseURI).href; } catch (e) { return rel; }
+  }
+
   function renderWall(feed, wrap, grid, uploaded) {
     if (!wrap || !grid) return;
     var items = [], seen = {};
@@ -186,6 +190,16 @@
       a.style.setProperty('--stagger', (i % 8) * 45 + 'ms');
       a.classList.add('cert-enter');
 
+      /* The artwork sits unplated, so the gleam has to follow the badge's own
+         silhouette rather than a rectangle around it. The same file is handed
+         to CSS as a mask through --art; a hexagon then shines as a hexagon. */
+      var art = el('span', 'bart');
+      /* A relative url in a custom property is resolved against the stylesheet
+         that reads it, not the document, so "assets/img/..." would be fetched
+         under assets/css/. Resolving against document.baseURI keeps it right
+         and keeps the repository subpath intact. */
+      art.style.setProperty('--art', 'url("' + absUrl(it.img) + '")');
+
       var im = el('img');
       im.src = it.img; im.loading = 'lazy'; im.decoding = 'async';
       im.alt = it.title ? (it.title + (it.issuer ? ' — ' + it.issuer : '')) : '';
@@ -195,7 +209,11 @@
         li.remove();
         if (!grid.children.length) wrap.hidden = true;
       });
-      a.appendChild(im);
+      art.appendChild(im);
+      var shine = el('i', 'bshine');
+      shine.setAttribute('aria-hidden', 'true');
+      art.appendChild(shine);
+      a.appendChild(art);
       if (it.title) a.appendChild(el('b', '', it.title));
       if (it.issuer) a.appendChild(el('span', '', it.issuer));
       li.appendChild(a);
