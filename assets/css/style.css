@@ -1311,8 +1311,11 @@ a.cplat.is-link:hover{background:var(--accent-dim)}
   gap:12px;margin-bottom:14px}
 .bwall{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
   gap:clamp(12px,1.4vw,18px);margin:0;padding:0;list-style:none}
-.bwall li{min-width:0}
-.bwall a{display:grid;justify-items:center;gap:10px;padding:16px 12px 14px;
+/* titles run to three or four lines, so the tiles take a common height
+   and pack their content to the top rather than ending ragged */
+.bwall li{min-width:0;display:grid}
+.bwall a{display:grid;align-content:start;justify-items:center;gap:10px;
+  height:100%;padding:18px 12px 16px;
   border:1px solid var(--line);border-radius:var(--r);background:var(--s1);
   text-align:center;transition:border-color .2s,background .2s,transform .2s var(--ease)}
 .bwall a:hover{border-color:var(--accent);background:var(--s2);transform:translateY(-2px)}
