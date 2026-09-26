@@ -255,11 +255,25 @@ providers answered. Only the level/rank/points strip updates itself.
 ### A certificate — one file, optionally one entry
 
 **Step 1 — upload the scan.** Go to [`assets/img/certs/`](assets/img/certs/) on github.com and
-press **Add file → Upload files**. Name it by number: `2.jpeg`, `3.jpeg`, `4.png`… (`1.jpeg` is
-the CEH one already there). PDF works too.
+press **Add file → Upload files**. PDF works as well as JPEG or PNG.
 
-That is genuinely all that is required. An uploaded file with no entry still appears — it is
-matched to the certificate list by position, so `2.jpeg` attaches to the second certificate.
+Name the file after the certificate's `id` and it attaches to that row and stays there:
+
+| File name | Attaches to |
+| --- | --- |
+| `ceh.jpeg` | Certified Ethical Hacker *(already uploaded as `1.jpeg`)* |
+| `lf-devsecops.jpeg` | DevSecOps |
+| `lf-linux-essentials.jpeg` | Linux Essentials |
+| `gcp-foundations.jpeg` | Google Cloud Foundations |
+| `python-ai.jpeg` | Python for AI |
+| `fortinet-nse1.jpeg` | Fortinet NSE 1 |
+| `comptia-sec-net.jpeg` | CompTIA Security+ / Network+ |
+
+Plain numbers work too — `2.jpeg` attaches to the second certificate in the file — but they are
+tied to the order of the list, so a reordered list needs renamed files. Names do not.
+
+That is genuinely all that is required. A file matching nothing at all is still shown, as a card
+of its own titled from the file name.
 
 **Step 2 — only if you want to add a *new* certificate,** not just a scan of one already listed:
 edit [`content/certificates.json`](content/certificates.json) on github.com (pencil icon) and
@@ -295,6 +309,56 @@ print — an empty `date` shows no date rather than a blank dash.
 
 **Title it exactly as the issuer does.** If the certificate also has a Credly badge, matching the
 title is what pairs the two — the artwork, issue date and badge link then attach themselves.
+
+### Changing something already there
+
+**A certificate's wording, date or ID** — edit its block in
+[`content/certificates.json`](content/certificates.json) with the pencil icon and change the field.
+Leave `id` alone: it is what pairs the row with its scan and its badge.
+
+**A certificate's scan** — upload a new file over the old one with the same name. Same folder,
+**Add file → Upload files**, same `3.jpeg`; GitHub replaces it. Uploading `3.png` beside an
+existing `3.jpeg` leaves two files fighting for the same slot, so reuse the extension or delete
+the old file first.
+
+**The order the certificates appear in** — the list prints in the order of the JSON file, so move
+a block up or down to move the row. A numbered scan is matched **by position**, so a block that
+moves leaves its number behind. The way out of that bookkeeping is to stop numbering: a scan named
+after the certificate's `id` — `ceh.jpeg`, `fortinet-nse1.png` — is matched by name and stays with
+its row no matter where the block sits. Name every scan that way and order never costs you a
+rename.
+
+**A badge's title** — the file name *is* the title for a hand-uploaded badge, so rename the file
+(open it, pencil icon, change the name at the top). `thm-mr-robot.png` prints as "Mr Robot".
+Badges fetched from Credly take their title from Credly and ignore any local edit; fix it there
+and it follows on the next deploy.
+
+### Removing something
+
+**A certificate row** — delete its block from `content/certificates.json`, including the comma
+that joined it to the next one. The file has to stay valid JSON: seven blocks separated by commas
+inside one `[ … ]`, no trailing comma after the last. If the site's certifications section comes
+back empty after an edit, that comma is almost always why.
+
+**A certificate's scan but not the row** — delete the image file
+(open it in [`assets/img/certs/`](assets/img/certs/) → **⋯ → Delete file**). The row stays and
+falls back to its letter mark. If the scans are numbered, deleting `2.jpeg` leaves the old
+`3.jpeg` lining up against the wrong certificate, so renumber what follows — or rename them to
+their `id` once and never think about it again. A scan with no matching row is not discarded
+either: it becomes a card of its own, titled from its file name.
+
+**A badge** — delete the file from [`assets/img/badges/`](assets/img/badges/) the same way. A
+hand-uploaded badge stays gone. A **Credly** badge does not: the next deploy fetches it again,
+because the wall is a mirror of your Credly profile. To drop one for good, hide it on Credly
+itself.
+
+**The English row in `index.html` as well, for a full removal.** `index.html` carries a plain copy
+of the seven certification rows so the section still reads with JavaScript switched off — that copy
+is also what the translations key off. Deleting a block from `content/certificates.json` is enough
+for every ordinary visitor, but the no-JS copy keeps showing the old row until you delete its
+matching `<li class="crow">…</li>` from `index.html` too. Measured, not assumed: emptying
+`certificates.json` entirely does **not** empty the section — the inline seven come back, because a
+failed or empty fetch is treated as "fall back to the markup" rather than "show nothing".
 
 ### Where each thing shows up
 

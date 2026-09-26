@@ -20,6 +20,7 @@
   "about.p3": "Sono arrivato qui dalle operazioni di sicurezza, non dalla ricerca: alert SIEM, valutazione delle vulnerabilità, risposta agli incidenti, poi DevSecOps e cloud. Quell'ordine conta. Mi interessa meno se un attacco è nuovo che se ciò che ho messo in produzione tiene un martedì pomeriggio, quando nessuno lo sta guardando.",
   "about.p4": "Quello che voglio adesso è un lavoro in cui la sicurezza dei sistemi di IA sia il prodotto e non un'aggiunta dell'ultimo momento prima del lancio: costruire difese, attaccarle onestamente e pubblicare ciò che non ha tenuto.",
   "badge.empty": "I badge vengono presi da Credly e TryHackMe a ogni build.",
+  "badge.htb": "Riconoscimento Hack The Box",
   "badge.k": "Badge ottenuti",
   "cert.1": "Certified Ethical Hacker",
   "cert.4": "Fondamenti di cloud computing",

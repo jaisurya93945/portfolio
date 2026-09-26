@@ -54,6 +54,34 @@ An image dropped here that matches **no** entry — a name that is neither an
 name (`CEH - EC-Council.png` → that caption). Useful for a quick upload, but
 an entry gives you the issuer, date and verification link.
 
+## Removing or changing one
+
+**Change the wording, date or credential id** — edit the entry in
+`content/certificates.json`. Leave `id` alone; it is what ties the entry to
+its image and its badge.
+
+**Replace the image** — upload a new file over the old one under the same
+name. Uploading `3.png` next to an existing `3.jpeg` leaves two files claiming
+the same slot, so reuse the extension or delete the old file first.
+
+**Delete the image, keep the row** — **⋯ → Delete file**. The row stays and
+shows its monogram again.
+
+**Delete the row** — remove its block from `content/certificates.json`,
+including the comma that joined it to the next one. The file must stay valid
+JSON: blocks comma-separated inside one `[ … ]`, no trailing comma after the
+last.
+
+For a *complete* removal, delete the matching `<li class="crow">…</li>` from
+`index.html` too. That markup is the copy shown when JavaScript is off, and
+it is what the translation files key off, so it outlives a JSON-only delete.
+Emptying the JSON list altogether does not blank the section — an empty or
+failed fetch falls back to that markup by design.
+
+**Reorder** — move blocks up or down. Numbered images are tied to position and
+will need renaming; images named after an `id` are not, which is the reason to
+prefer that naming.
+
 ## Formats
 
 `.png`, `.jpg`, `.jpeg`, `.webp`, `.avif`, `.svg`, `.gif` render as images.

@@ -107,6 +107,10 @@
      gone: "thm-advent-of-cyber.png" reads as "Advent of Cyber". */
   function titleFromFile(file) {
     var stem = String(file).replace(/\.[^.]+$/, '').replace(/^(credly|thm|htb)-/, '');
+    /* htb-badge-214 is an achievement id, not a name. The sync supplies the
+       real name through the feed; if it could not reach the page, "Badge 214"
+       is worse than saying plainly what the tile is. */
+    if (/^badge-\d+$/.test(stem)) return t('badge.htb', 'Hack The Box achievement');
     var small = /^(of|the|and|in|for|to|a|an|on|with|vs)$/;
     /* Initialisms, so a filename does not turn OWASP into Owasp. */
     var caps = /^(owasp|ctf|thm|htb|nse|aws|gcp|api|sql|xss|xxe|ssrf|osint|siem|soc|iam|ai|ml|ceh|lf)$/;
@@ -647,6 +651,10 @@
                  document.getElementById('badgeGrid'),
                  res.uploaded);
 
+      /* The note starts hidden in the markup: with no JS, or if this fetch
+         fails, the inline rows are what is on screen, and "scans appear here
+         once uploaded" printed under seven of them reads as a contradiction.
+         It is revealed only once we know there is genuinely nothing to show. */
       var shots = list.filter(function (c) { return !!c.image; });
       if (note) note.hidden = shots.length > 0;
       if (!shots.length) return;

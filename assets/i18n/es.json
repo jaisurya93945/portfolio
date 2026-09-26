@@ -20,6 +20,7 @@
   "about.p3": "Llegué a esto desde las operaciones de seguridad, no desde la investigación: alertas de SIEM, evaluación de vulnerabilidades, respuesta a incidentes, después DevSecOps y cloud. Ese orden importa. Me interesa menos si un ataque es novedoso que si lo que puse en producción aguantará un martes por la tarde cuando nadie lo esté mirando.",
   "about.p4": "Lo que quiero a continuación es un trabajo donde la seguridad de los sistemas de IA sea el producto y no un añadido de última hora antes del lanzamiento: construir defensas, hacerles red teaming con honestidad y publicar lo que no aguantó.",
   "badge.empty": "Las insignias se obtienen de Credly y TryHackMe en cada compilación.",
+  "badge.htb": "Logro de Hack The Box",
   "badge.k": "Insignias obtenidas",
   "cert.1": "Certified Ethical Hacker",
   "cert.4": "Fundamentos de cloud computing",

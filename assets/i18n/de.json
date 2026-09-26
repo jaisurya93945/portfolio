@@ -20,6 +20,7 @@
   "about.p3": "Ich komme aus dem Security-Betrieb, nicht aus der Forschung: SIEM-Alarme, Schwachstellenanalyse, Incident Response, dann DevSecOps und Cloud. Diese Reihenfolge ist wichtig. Mich interessiert weniger, ob ein Angriff neu ist, als ob das, was ich ausgeliefert habe, an einem Dienstagnachmittag hält, wenn niemand hinsieht.",
   "about.p4": "Als Nächstes suche ich Arbeit, in der die Sicherheit von KI-Systemen das Produkt ist und kein Nachgedanke, der vor dem Launch noch angeschraubt wird — Verteidigungen bauen, sie ehrlich im Red Teaming prüfen und veröffentlichen, was nicht gehalten hat.",
   "badge.empty": "Abzeichen werden bei jedem Build von Credly und TryHackMe geholt.",
+  "badge.htb": "Hack The Box – Auszeichnung",
   "badge.k": "Erworbene Abzeichen",
   "cert.1": "Certified Ethical Hacker",
   "cert.4": "Grundlagen des Cloud Computing",

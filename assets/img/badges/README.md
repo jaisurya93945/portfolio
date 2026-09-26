@@ -70,6 +70,7 @@ Name the file after the credential's `id` in
 | `lf-linux-essentials`   | `lf-linux-essentials.png`|
 | `gcp-foundations`       | `gcp-foundations.png`    |
 | `python-ai`             | `python-ai.png`          |
+| `fortinet-nse1`         | `fortinet-nse1.png`      |
 | `comptia-sec-net`       | `comptia-sec-net.png`    |
 
 The badge replaces the monogram in that credential's row. Nothing else
@@ -78,6 +79,21 @@ stays.
 
 Square artwork works best; anything is contained, never cropped.
 `.png`, `.svg`, `.webp`, `.jpg` and `.avif` are all fine.
+
+## Removing or renaming one
+
+**Rename** — open the file here, press the pencil, and change the name at the
+top of the page. For a hand-uploaded badge the file name *is* the title, so
+`thm-mr-robot.png` prints as "Mr Robot". A badge fetched from Credly takes its
+title from Credly and ignores a local rename.
+
+**Remove** — open the file and use **⋯ → Delete file**. A badge you uploaded by
+hand stays gone. A **Credly** badge comes straight back on the next deploy,
+because this folder is a mirror of the public Credly profile; hide it on Credly
+itself to drop it for good.
+
+Deleting a badge named after a credential (`ceh.png`) does not touch that
+credential — its row falls back to the monogram.
 
 ## Verification links
 

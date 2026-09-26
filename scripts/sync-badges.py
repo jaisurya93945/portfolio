@@ -457,28 +457,33 @@ def og(html, prop):
 
 
 def sync_htb_badges():
-    """Named achievement badges. The share URL may serve the artwork itself;
-    if it serves a page instead, its social preview carries both the image
-    and the badge's own name, which is better than inventing one."""
+    """Named achievement badges. One host serves the artwork straight from the
+    achievement URL and another serves a page whose social preview carries the
+    badge's own name, so the artwork is not a reason to stop looking for the
+    name: an id is not a title, and inventing one is not an option."""
     out = []
     for bid, known in HTB_BADGES:
         tried, path, title = [], '', known
         for url in ('https://labs.hackthebox.com/achievement/badge/%s/%s' % (HTB_USER_ID, bid),
                     'https://www.hackthebox.com/achievement/badge/%s/%s' % (HTB_USER_ID, bid)):
             tried.append(url)
-            path = save_image(url, 'htb-badge-' + bid)
-            if path:
-                break
+            if not path:
+                path = save_image(url, 'htb-badge-' + bid)
+                if path:
+                    # that URL is an image endpoint, so it carries no name;
+                    # the next host is a page and may.
+                    continue
             html = try_get(url)
             if not html:
                 continue
-            img = og(html, 'image')
-            if img:
-                tried.append(img)
-                path = save_image(img, 'htb-badge-' + bid)
             if not title:
                 title = (og(html, 'title') or '').split('|')[0].strip()
-            if path:
+            if not path:
+                img = og(html, 'image')
+                if img:
+                    tried.append(img)
+                    path = save_image(img, 'htb-badge-' + bid)
+            if path and title:
                 break
         if not path:
             log(False, 'hackthebox badge %s' % bid, why(tried))
