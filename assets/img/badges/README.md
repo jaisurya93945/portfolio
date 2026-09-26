@@ -1,5 +1,30 @@
 # Badge images
 
+## These mostly fill themselves now
+
+`scripts/sync-badges.py` runs on every deploy and again on a daily schedule.
+It pulls, from the issuers' own public endpoints and with no credentials:
+
+| Source | What it fetches | Where it lands |
+| ------ | --------------- | -------------- |
+| Credly | every badge on the public profile — name, issuer, date, artwork | `content/credly.json` + `credly-*.png` here |
+| TryHackMe | the live badge, which carries the level, rank, points and rooms | `thm-live.png` here |
+| Hack The Box | the live badge, **once `HTB_USER_ID` is set** (see below) | `htb-live.png` here |
+
+So a badge earned on Credly tomorrow appears on the site within a day,
+with no edit. Every fetch is best-effort: a provider that is down leaves
+the committed file in place and the build still succeeds. The Actions log
+lists what answered.
+
+**Hack The Box needs one value.** The badge endpoint is keyed by the numeric
+account id, which the UUID profile URL does not contain and which the sync
+cannot read from a client-rendered page. Open your HTB profile, find the
+numeric id, and add it as a repository variable named `HTB_USER_ID`
+(Settings → Secrets and variables → Actions → Variables). The next build
+picks up the badge and the stats.
+
+## Adding artwork by hand
+
 Drop badge artwork here — the PNG or SVG a platform gives you (Credly,
 Google Cloud Skills Boost, Microsoft Learn, and so on).
 

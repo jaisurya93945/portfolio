@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # The credential badges and the platform stats are pulled from the issuers
+  # at build time, so a daily rebuild is what makes "it updates itself" true
+  # without anyone pushing. 06:12 UTC keeps it off the top of the hour.
+  schedule:
+    - cron: '12 6 * * *'
 
 permissions:
   contents: read
@@ -96,6 +101,15 @@ jobs:
         run: |
           python3 -m pip install --quiet mammoth
           sudo apt-get install -y --no-install-recommends libreoffice-writer >/dev/null 2>&1 ||             echo "LibreOffice unavailable; .docx will render through mammoth"
+
+      # Best-effort, never fatal: a provider that is down leaves the committed
+      # copy in place and the site serves that. The step log says which ones
+      # answered, so staleness is visible rather than silent.
+      - name: Sync badges and platform stats from their issuers
+        continue-on-error: true
+        env:
+          HTB_USER_ID: ${{ vars.HTB_USER_ID }}
+        run: python3 scripts/sync-badges.py
 
       - name: Collect hand-uploaded résumé and certificate images
         run: python3 scripts/collect-uploads.py

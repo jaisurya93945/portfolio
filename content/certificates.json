@@ -5,11 +5,12 @@
     "mark": "CEH",
     "issuer": "EC-Council",
     "platform": "EC-Council",
-    "date": "",
+    "date": "2025-04-19",
     "image": "",
-    "credentialId": "",
+    "credentialId": "ECC6479058231",
     "verificationUrl": "",
-    "category": "Cybersecurity"
+    "category": "Cybersecurity",
+    "expires": "2026-05-01"
   },
   {
     "id": "lf-devsecops",

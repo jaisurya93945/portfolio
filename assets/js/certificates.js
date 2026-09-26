@@ -35,11 +35,14 @@
       fetch('content/certificates.json', { cache: 'no-cache' })
         .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; }),
       fetch('assets/cv/uploads.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+      fetch('content/credly.json', { cache: 'no-cache' })
         .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
     ]).then(function (res) {
       var manifest = res[1] || {};
       var list = merge(res[0] || [], manifest.certs || []);
-      return attachBadges(list, manifest.badges || []);
+      list = attachBadges(list, manifest.badges || []);
+      return { list: attachCredly(list, res[2]), credly: res[2] };
     });
   }
 
@@ -63,6 +66,74 @@
       if (hit) c.badge = 'assets/img/badges/' + hit;
     });
     return meta;
+  }
+
+  /* scripts/sync-badges.py pulls the badge artwork and titles from Credly on
+     every build, so a badge earned tomorrow arrives without an edit here. A
+     synced badge is matched to a credential by its pinned id first, then by
+     title; an unmatched one still shows on the wall. */
+  function attachCredly(meta, feed) {
+    if (!feed || !feed.badges || !feed.badges.length) return meta;
+    feed.badges.forEach(function (b) {
+      var hit = null;
+      meta.forEach(function (c) {
+        if (hit) return;
+        if (c.credlyBadgeId && c.credlyBadgeId === b.id) hit = c;
+      });
+      if (!hit) meta.forEach(function (c) {
+        if (hit || !b.title) return;
+        if (slug(c.title) === slug(b.title)) hit = c;
+      });
+      if (!hit) return;
+      hit.credlyBadgeId = hit.credlyBadgeId || b.id;
+      if (b.image && !hit.badge) hit.badge = b.image;
+      if (b.issuedOn && !hit.date) hit.date = b.issuedOn;
+      b.matched = true;
+    });
+    return meta;
+  }
+
+  /* --- the badge wall ---------------------------------------------------
+     Artwork at its own aspect ratio, never cropped to a square: the shape a
+     badge was issued in is part of it. The band stays hidden until there is
+     something real to put in it. */
+  function renderWall(feed, list, wrap, grid) {
+    if (!wrap || !grid) return;
+    var items = [];
+    (feed && feed.badges ? feed.badges : []).forEach(function (b) {
+      if (b.image) items.push({ img: b.image, title: b.title, issuer: b.issuer, url: b.url });
+    });
+    list.forEach(function (c) {
+      if (!c.badge) return;
+      if (items.some(function (i) { return i.img === c.badge; })) return;
+      items.push({ img: c.badge, title: c.title, issuer: c.issuer, url: verifyUrl(c) });
+    });
+    if (!items.length) return;
+
+    grid.textContent = '';
+    items.forEach(function (it, i) {
+      var li = el('li');
+      var a = el(it.url ? 'a' : 'div');
+      if (it.url) { a.href = it.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+      a.style.setProperty('--stagger', (i % 8) * 45 + 'ms');
+      a.classList.add('cert-enter');
+
+      var im = el('img');
+      im.src = it.img; im.loading = 'lazy'; im.decoding = 'async';
+      im.alt = it.title ? (it.title + (it.issuer ? ' — ' + it.issuer : '')) : '';
+      /* artwork that 404s removes its own tile rather than leaving a
+         broken-image glyph on the page */
+      im.addEventListener('error', function () {
+        li.remove();
+        if (!grid.children.length) wrap.hidden = true;
+      });
+      a.appendChild(im);
+      if (it.title) a.appendChild(el('b', '', it.title));
+      if (it.issuer) a.appendChild(el('span', '', it.issuer));
+      li.appendChild(a);
+      grid.appendChild(li);
+    });
+    wrap.hidden = false;
   }
 
   function merge(meta, uploads) {
@@ -121,13 +192,19 @@
          upgrades to badge artwork when a file exists — so the layout never
          depends on an image that has not been uploaded. */
       var m = el('span', 'cmark');
-      if (c.badge) {
+      /* badge artwork first, then the certificate scan, then the monogram.
+         Each step degrades to the next, so a row always has something in it
+         and never a broken image. */
+      var thumb = c.badge || (c.image && !/pdf$/i.test(c.type || c.image) ? c.image : '');
+      if (thumb) {
         var bi = el('img');
-        bi.src = c.badge; bi.loading = 'lazy'; bi.decoding = 'async'; bi.alt = '';
+        bi.src = thumb; bi.loading = 'lazy'; bi.decoding = 'async'; bi.alt = '';
         bi.addEventListener('error', function () {
-          m.textContent = mark(c); m.classList.remove('has-badge');
+          m.textContent = mark(c);
+          m.classList.remove('has-badge', 'has-shot-img');
         });
-        m.appendChild(bi); m.classList.add('has-badge');
+        m.appendChild(bi);
+        m.classList.add(c.badge ? 'has-badge' : 'has-shot-img');
       } else {
         m.textContent = mark(c);
       }
@@ -200,25 +277,25 @@
     host.textContent = '';
     list.forEach(function (c, i) {
       var link = !!c.profileUrl;
-      var card = el(link ? 'a' : 'article', 'ctf' + (link ? ' is-link' : ''));
+      var card = el(link ? 'a' : 'article', 't c6 ctf' + (link ? ' is-link' : ''));
       if (link) {
         card.href = c.profileUrl;
         card.target = '_blank';
         card.rel = 'noopener noreferrer me';
-        card.setAttribute('aria-label', (c.platform || '') + ' — ' +
+        card.setAttribute('aria-label', (c.platform || '') + ' \u2014 ' +
           t('ctf.profile', 'view profile'));
       }
       card.style.setProperty('--stagger', i * 60 + 'ms');
       card.classList.add('cert-enter');
 
+      var top = el('div', 'ctf-top');
       var m = el('span', 'cmark', c.mark || (c.platform || '?').charAt(0));
       m.setAttribute('aria-hidden', 'true');
-      card.appendChild(m);
-
-      var body = el('div', 'ctf-body');
+      top.appendChild(m);
       var name = el('b', '', c.platform || '');
       if (c.handle) name.appendChild(el('span', 'ctf-handle', '@' + c.handle));
-      body.appendChild(name);
+      top.appendChild(name);
+      card.appendChild(top);
 
       if (c.stats && c.stats.length) {
         var ul = el('ul', 'ctf-stats');
@@ -228,15 +305,25 @@
           li.appendChild(el('span', '', st.key ? t(st.key, st.label) : st.label));
           ul.appendChild(li);
         });
-        body.appendChild(ul);
+        card.appendChild(ul);
       }
-      if (c.focus) body.appendChild(el('p', '', c.focusKey ? t(c.focusKey, c.focus) : c.focus));
+      if (c.focus) card.appendChild(el('p', '', c.focusKey ? t(c.focusKey, c.focus) : c.focus));
+
+      /* the platform's own badge, rebuilt by scripts/sync-badges.py. If the
+         sync has never reached that provider the file is not there, and the
+         card drops it rather than showing a broken image. */
+      if (c.liveBadge) {
+        var im = el('img', 'ctf-live');
+        im.src = c.liveBadge; im.loading = 'lazy'; im.decoding = 'async';
+        im.alt = c.liveBadgeAlt || ((c.platform || '') + ' badge');
+        im.addEventListener('error', function () { im.remove(); });
+        card.appendChild(im);
+      }
       if (link) {
         var go = el('span', 'ctf-go', t('ctf.profile', 'view profile'));
         go.setAttribute('aria-hidden', 'true');
-        body.appendChild(go);
+        card.appendChild(go);
       }
-      card.appendChild(body);
       host.appendChild(card);
     });
   }
@@ -463,9 +550,13 @@
     if (!grid) return;
     var note = document.getElementById('certEmpty');
 
-    load().then(function (list) {
+    load().then(function (res) {
+      var list = res.list || [];
       if (!list.length) return;
       renderList(list, grid);
+      renderWall(res.credly, list,
+                 document.getElementById('badgeWall'),
+                 document.getElementById('badgeGrid'));
 
       var shots = list.filter(function (c) { return !!c.image; });
       if (note) note.hidden = shots.length > 0;
@@ -473,19 +564,19 @@
 
       var open = lightbox(list, function () { return shots; });
       grid.addEventListener('click', function (e) {
-        var card = e.target.closest('.cert-card.has-shot');
+        var card = e.target.closest('.crow.has-shot');
         if (!card) return;
         e.preventDefault();
         open(Number(card.getAttribute('data-index')), card);
       });
       grid.addEventListener('keydown', function (e) {
         if (e.key !== 'Enter' && e.key !== ' ') return;
-        var card = e.target.closest('.cert-card.has-shot');
+        var card = e.target.closest('.crow.has-shot');
         if (!card) return;
         e.preventDefault();
         open(Number(card.getAttribute('data-index')), card);
       });
-      grid.querySelectorAll('.cert-card.has-shot').forEach(function (c) {
+      grid.querySelectorAll('.crow.has-shot').forEach(function (c) {
         c.tabIndex = 0;
         c.setAttribute('role', 'button');
         c.setAttribute('aria-label', t('cert.view', 'View certificate'));
