@@ -206,12 +206,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--resume-src', default='resume-source/original')
     ap.add_argument('--certs-src', default='assets/img/certs')
+    ap.add_argument('--badges-src', default='assets/img/badges')
     ap.add_argument('--outdir', default='assets/cv')
     ap.add_argument('--out', default='assets/cv/uploads.json')
     args = ap.parse_args()
 
     payload = {'resume': collect_resume(args.resume_src, args.outdir),
-               'certs': collect_certs(args.certs_src)}
+               'certs': collect_certs(args.certs_src),
+               'badges': collect_certs(args.badges_src)}
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=1)

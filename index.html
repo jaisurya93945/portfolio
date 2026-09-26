@@ -44,8 +44,8 @@
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/fonts.css?v=15">
-<link rel="stylesheet" href="assets/css/style.css?v=15">
+<link rel="stylesheet" href="assets/css/fonts.css?v=16">
+<link rel="stylesheet" href="assets/css/style.css?v=16">
 
 <script>
 /* Paint the correct theme + language before first frame — no flash. */
@@ -383,7 +383,6 @@
 
 <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
 
-
 <div class="scroll-progress" aria-hidden="true"><i id="progressBar"></i></div>
 <span class="cursor-glow" aria-hidden="true"></span>
 <div class="bg" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
@@ -455,7 +454,6 @@
   <a href="#contact" data-i18n="nav.contact">Contact</a>
 </div>
 
-
 <nav class="rail" id="rail" aria-label="Section index">
   <ol>
     <li><a href="#projects"><i>01</i><span data-i18n="nav.projects">Projects</span></a></li>
@@ -493,11 +491,11 @@
         <span class="hs-glow" aria-hidden="true"></span>
         <picture>
           <source srcset="assets/img/portrait-light-sm.webp 760w, assets/img/portrait-light.webp 1400w"
-                  sizes="(max-width:1140px) 86vw, min(46vw, 660px)"
+                  sizes="(max-width:1140px) 80vw, min(39vw, 560px)"
                   media="(prefers-color-scheme: light)">
           <img id="portrait" src="assets/img/portrait-dark.webp"
                srcset="assets/img/portrait-dark-sm.webp 760w, assets/img/portrait-dark.webp 1400w"
-               sizes="(max-width:1140px) 86vw, min(46vw, 660px)"
+               sizes="(max-width:1140px) 80vw, min(39vw, 560px)"
                width="1041" height="1204"
                alt="Badathala Jaisurya. The left half is a photograph; the right half is the same face drawn as line work."
                fetchpriority="high" decoding="async">
@@ -562,9 +560,6 @@
       </ul>
     </aside>
 
-    <div class="t c3 stat" data-anim="rise" data-d="1"><b>100+</b><span data-i18n="hero.stat1">CTF challenges solved</span></div>
-
-    <div class="t c3 stat" data-anim="rise" data-d="2"><b>Top 3%</b><span data-i18n="hero.stat2">global security ranking</span></div>
     <div class="t c3 stat" data-anim="rise" data-d="3"><b>50+</b><span data-i18n="hero.stat3">AI tools shipped in prod</span></div>
     <div class="t c3 stat" data-anim="rise" data-d="3"><b>4+</b><span data-i18n="hero.stat4">years in security &amp; cloud</span></div>
 
@@ -586,7 +581,6 @@
       </ol>
     </div>
 
-  
     <div class="t c3 gl" data-anim="rise">
       <div class="t-k"><span data-i18n="glance.roles">Open to</span></div>
       <p data-i18n="glance.rolesv">AI Security Engineer · AI Safety &amp; Security Researcher · DevSecOps · MLOps</p>
@@ -605,8 +599,6 @@
     </div>
   </div>
 </section>
-
-
 
 <section class="section" id="projects">
   <header class="lbl" data-anim="fade"><span class="idx">01</span><span data-i18n="nav.projects">Projects</span></header>
@@ -1133,40 +1125,63 @@
 <section class="section" id="certs">
   <header class="lbl" data-anim="fade"><span class="idx">06</span><span data-i18n="nav.certs">Credentials</span></header>
 
-  <div class="bento" id="certGrid">
-      <article class="t c4 cert-card" data-anim="rise">
-        <span class="cert-plate" aria-hidden="true"><b>CEH</b></span>
-        <div class="cert-body"><h4 data-i18n="cert.1">Certified Ethical Hacker</h4><p>EC-Council</p></div>
-        <div class="cert-foot"><span class="cy mono"></span><span class="cs ok" data-i18n="cert.earned">earned</span></div>
-      </article>
-      <article class="t c4 cert-card" data-anim="rise">
-        <span class="cert-plate" aria-hidden="true"><b>LF</b></span>
-        <div class="cert-body"><h4>DevSecOps</h4><p>Linux Foundation</p></div>
-        <div class="cert-foot"><span class="cy mono"></span><span class="cs ok" data-i18n="cert.earned">earned</span></div>
-      </article>
-      <article class="t c4 cert-card" data-anim="rise">
-        <span class="cert-plate" aria-hidden="true"><b>LF</b></span>
-        <div class="cert-body"><h4>Linux Essentials</h4><p>Linux Foundation</p></div>
-        <div class="cert-foot"><span class="cy mono"></span><span class="cs ok" data-i18n="cert.earned">earned</span></div>
-      </article>
-      <article class="t c4 cert-card" data-anim="rise">
-        <span class="cert-plate" aria-hidden="true"><b>GCP</b></span>
-        <div class="cert-body"><h4 data-i18n="cert.4">Cloud Computing Foundations</h4><p>Google Cloud</p></div>
-        <div class="cert-foot"><span class="cy mono"></span><span class="cs ok" data-i18n="cert.earned">earned</span></div>
-      </article>
-      <article class="t c4 cert-card" data-anim="rise">
-        <span class="cert-plate" aria-hidden="true"><b>AI</b></span>
-        <div class="cert-body"><h4 data-i18n="cert.5">Python &amp; AI Certifications</h4><p data-i18n="cert.5s">Applied ML foundations</p></div>
-        <div class="cert-foot"><span class="cy mono"></span><span class="cs ok" data-i18n="cert.earned">earned</span></div>
-      </article>
-      <article class="t c4 cert-card prog" data-anim="rise">
-        <span class="cert-plate" aria-hidden="true"><b>S+</b></span>
-        <div class="cert-body"><h4>Security+ &amp; Network+</h4><p>CompTIA</p></div>
-        <div class="cert-foot"><span class="cy mono"></span><span class="cs wip" data-i18n="cert.wip">in progress</span></div>
-      </article>
-  </div>
+  <div class="bento">
+    <div class="t c7" data-anim="rise">
+      <div class="t-k"><span data-i18n="cert.k">Certifications &amp; badges</span><span class="meta" id="certCount" aria-live="polite"></span></div>
+      <ul class="crows" id="certGrid">
+        <li class="crow">
+          <span class="cmark" aria-hidden="true">CEH</span>
+          <span class="cmain"><b data-i18n="cert.1">Certified Ethical Hacker</b><span class="cissuer">EC-Council</span></span>
+          <span class="cplat">EC-Council</span><span class="cs ok"><i aria-hidden="true">✓</i><span data-i18n="cert.earned">earned</span></span>
+        </li>
+        <li class="crow">
+          <span class="cmark" aria-hidden="true">LF</span>
+          <span class="cmain"><b>DevSecOps</b><span class="cissuer">Linux Foundation</span></span>
+          <span class="cplat">Credly</span><span class="cs ok"><i aria-hidden="true">✓</i><span data-i18n="cert.earned">earned</span></span>
+        </li>
+        <li class="crow">
+          <span class="cmark" aria-hidden="true">LF</span>
+          <span class="cmain"><b>Linux Essentials</b><span class="cissuer">Linux Foundation</span></span>
+          <span class="cplat">Credly</span><span class="cs ok"><i aria-hidden="true">✓</i><span data-i18n="cert.earned">earned</span></span>
+        </li>
+        <li class="crow">
+          <span class="cmark" aria-hidden="true">GCP</span>
+          <span class="cmain"><b data-i18n="cert.4">Cloud Computing Foundations</b><span class="cissuer">Google Cloud</span></span>
+          <span class="cplat">Google Cloud</span><span class="cs ok"><i aria-hidden="true">✓</i><span data-i18n="cert.earned">earned</span></span>
+        </li>
+        <li class="crow">
+          <span class="cmark" aria-hidden="true">AI</span>
+          <span class="cmain"><b data-i18n="cert.5">Python &amp; AI Certifications</b><span class="cissuer" data-i18n="cert.5s">Applied ML foundations</span></span>
+          <span class="cs ok"><i aria-hidden="true">✓</i><span data-i18n="cert.earned">earned</span></span>
+        </li>
+        <li class="crow prog">
+          <span class="cmark" aria-hidden="true">S+</span>
+          <span class="cmain"><b>Security+ &amp; Network+</b><span class="cissuer">CompTIA</span></span>
+          <span class="cplat">Credly</span><span class="cs wip"><i aria-hidden="true">◷</i><span data-i18n="cert.wip">in progress</span></span>
+        </li>
+      </ul>
+      <p class="cert-note" id="certEmpty" data-i18n="cert.empty">Badge artwork and certificate scans appear here once uploaded.</p>
+    </div>
 
-  <p class="cert-note" id="certEmpty" data-i18n="cert.empty">Certificate scans open in place once they are uploaded.</p>
+    <div class="t c5" data-anim="rise" data-d="1">
+      <div class="t-k"><span data-i18n="ctf.k">CTF &amp; labs</span></div>
+      <div class="ctf-list" id="ctfList">
+        <article class="ctf">
+          <span class="cmark" aria-hidden="true">THM</span>
+          <div class="ctf-body"><b>TryHackMe</b>
+            <ul class="ctf-stats"><li><b>Top 3%</b><span data-i18n="ctf.rank">global ranking</span></li><li><b>100+</b><span data-i18n="ctf.solved">challenges solved</span></li></ul>
+            <p data-i18n="ctf.thm.f">Offensive paths, detection engineering, blue-team labs</p>
+          </div>
+        </article>
+        <article class="ctf">
+          <span class="cmark" aria-hidden="true">HTB</span>
+          <div class="ctf-body"><b>Hack The Box</b>
+            <p data-i18n="ctf.htb.f">Machines and challenges across web, pwn and forensics</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="section" id="about">
@@ -1257,10 +1272,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/js/i18n.js?v=15" defer></script>
-<script src="assets/js/scanner.js?v=15" defer></script>
-<script src="assets/js/certificates.js?v=15" defer></script>
-<script src="assets/js/main.js?v=15" defer></script>
+<script src="assets/js/i18n.js?v=16" defer></script>
+<script src="assets/js/scanner.js?v=16" defer></script>
+<script src="assets/js/certificates.js?v=16" defer></script>
+<script src="assets/js/main.js?v=16" defer></script>
 <div class="cert-box" id="certBox" role="dialog" aria-modal="true"
      aria-labelledby="cbTitle" hidden>
   <div class="cb-panel">

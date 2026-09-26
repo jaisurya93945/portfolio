@@ -36,7 +36,11 @@
         .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; }),
       fetch('assets/cv/uploads.json', { cache: 'no-cache' })
         .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
-    ]).then(function (res) { return merge(res[0] || [], (res[1] && res[1].certs) || []); });
+    ]).then(function (res) {
+      var manifest = res[1] || {};
+      var list = merge(res[0] || [], manifest.certs || []);
+      return attachBadges(list, manifest.badges || []);
+    });
   }
 
   /* An uploaded file is matched to an entry by id or by a slug of its title,
@@ -48,6 +52,17 @@
   function attach(c, u) {
     c.image = 'assets/img/certs/' + u.file;
     c.type = u.type;
+  }
+
+  function attachBadges(meta, badges) {
+    if (!badges || !badges.length) return meta;
+    var byName = {};
+    badges.forEach(function (b) { byName[slug(stem(b.file))] = b.file; });
+    meta.forEach(function (c) {
+      var hit = byName[slug(c.id)] || byName[slug(c.title)];
+      if (hit) c.badge = 'assets/img/badges/' + hit;
+    });
+    return meta;
   }
 
   function merge(meta, uploads) {
@@ -98,58 +113,64 @@
     if (!grid || !list.length) return;
     grid.textContent = '';
     list.forEach(function (c, i) {
-      var card = el('article', 't c4 cert-card' + (c.status === 'in-progress' ? ' prog' : ''));
-      /* Deliberately not data-anim: content rendered after the observer has
-         taken its snapshot has already been invisible once. It animates in
-         with a class the CSS treats as a one-shot, so a missed observer can
-         never leave a credential at opacity 0. */
-      card.style.setProperty('--stagger', (i % 3) * 60 + 'ms');
-      card.classList.add('cert-enter');
+      var li = el('li', 'crow' + (c.status === 'in-progress' ? ' prog' : ''));
+      li.style.setProperty('--stagger', (i % 6) * 45 + 'ms');
+      li.classList.add('cert-enter');
 
-      /* The plate carries the scan when there is one and the issuer monogram
-         when there is not, so the card is the same shape either way and the
-         section never reads as a row of empty slots waiting for uploads. */
-      var plate = el('span', 'cert-plate');
-      if (c.image) {
-        var img = el('img');
-        img.src = c.image; img.loading = 'lazy'; img.decoding = 'async';
-        img.alt = c.title ? c.title + (c.issuer ? ' — ' + c.issuer : '') : t('cert.alt', 'Certificate');
-        img.addEventListener('error', function () {
-          plate.textContent = ''; plate.appendChild(el('b', '', mark(c)));
-          card.classList.remove('has-shot');
+      /* The mark slot is small on purpose. It holds a monogram by default and
+         upgrades to badge artwork when a file exists — so the layout never
+         depends on an image that has not been uploaded. */
+      var m = el('span', 'cmark');
+      if (c.badge) {
+        var bi = el('img');
+        bi.src = c.badge; bi.loading = 'lazy'; bi.decoding = 'async'; bi.alt = '';
+        bi.addEventListener('error', function () {
+          m.textContent = mark(c); m.classList.remove('has-badge');
         });
-        plate.appendChild(img);
-        card.classList.add('has-shot');
-        card.setAttribute('data-index', String(list.indexOf(c)));
+        m.appendChild(bi); m.classList.add('has-badge');
       } else {
-        plate.setAttribute('aria-hidden', 'true');
-        plate.appendChild(el('b', '', mark(c)));
+        m.textContent = mark(c);
       }
-      card.appendChild(plate);
+      m.setAttribute('aria-hidden', 'true');
+      li.appendChild(m);
 
-      var body = el('div', 'cert-body');
-      body.appendChild(el('h4', '', c.title || ''));
-      if (c.issuer) body.appendChild(el('p', '', c.issuer));
-      card.appendChild(body);
+      var main = el('span', 'cmain');
+      main.appendChild(el('b', '', c.title || ''));
+      if (c.issuer) main.appendChild(el('span', 'cissuer', c.issuer));
+      li.appendChild(main);
 
-      var foot = el('div', 'cert-foot');
-      /* No date is printed unless one is recorded: an invented year on a
-         credential is a false claim, the same as an invented ID. */
-      if (c.date) foot.appendChild(el('span', 'cy mono', c.date));
-      foot.appendChild(el('span', 'cs ' + (c.status === 'in-progress' ? 'wip' : 'ok'),
-        c.status === 'in-progress' ? t('cert.wip', 'in progress') : t('cert.earned', 'earned')));
-      card.appendChild(foot);
-
-      if (c.verificationUrl) {
-        var v = el('a', 'cert-verify', t('cert.verify', 'Verify credential'));
-        v.href = c.verificationUrl; v.target = '_blank'; v.rel = 'noopener noreferrer';
-        card.appendChild(v);
+      /* A verifiable platform becomes a link; an unverifiable one stays a
+         plain label. A "Verify" that verifies nothing is worse than none. */
+      if (c.platform) {
+        var pl;
+        if (c.verificationUrl) {
+          pl = el('a', 'cplat is-link', c.platform);
+          pl.href = c.verificationUrl; pl.target = '_blank'; pl.rel = 'noopener noreferrer';
+          pl.setAttribute('aria-label', t('cert.verify', 'Verify credential') + ' — ' + c.platform);
+        } else {
+          pl = el('span', 'cplat', c.platform);
+        }
+        li.appendChild(pl);
       }
-      grid.appendChild(card);
+
+      /* status carries an icon as well as a colour */
+      var done = c.status !== 'in-progress';
+      var st = el('span', 'cs ' + (done ? 'ok' : 'wip'));
+      var ic = el('i', '', done ? '\u2713' : '\u25F7');
+      ic.setAttribute('aria-hidden', 'true');
+      st.appendChild(ic);
+      st.appendChild(el('span', '', done ? t('cert.earned', 'earned') : t('cert.wip', 'in progress')));
+      li.appendChild(st);
+
+      if (c.image) {
+        li.classList.add('has-shot');
+        li.setAttribute('data-index', String(list.indexOf(c)));
+        li.tabIndex = 0;
+        li.setAttribute('role', 'button');
+        li.setAttribute('aria-label', t('cert.view', 'View certificate') + ' — ' + (c.title || ''));
+      }
+      grid.appendChild(li);
     });
-    /* These cards did not exist when the reveal observer took its snapshot. */
-    if (window.Reveal) window.Reveal.register(grid);
-    else grid.querySelectorAll('[data-anim]').forEach(function (n) { n.classList.add('in'); });
   }
 
   function mark(c) {

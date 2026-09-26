@@ -185,7 +185,7 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
 .hero-loc{margin:0;font-size:.68rem;letter-spacing:.06em;color:var(--ink-3)}
 
 .hero-split{display:grid;align-items:center;
-  grid-template-columns:minmax(0,1fr) minmax(300px,min(46vw,660px)) minmax(0,1fr);
+  grid-template-columns:minmax(0,1fr) minmax(280px,min(39vw,560px)) minmax(0,1fr);
   gap:clamp(16px,2.6vw,48px);margin-top:clamp(18px,2.4vw,34px)}
 
 .hero-name{margin:0 0 clamp(14px,1.6vw,22px);font-family:var(--display);font-weight:700;
@@ -225,7 +225,7 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
 
 @media (max-width:1140px){
   .hero-split{grid-template-columns:1fr;gap:26px;justify-items:center;text-align:center}
-  .hs-portrait{order:-1;width:min(88vw,520px);margin-bottom:0}
+  .hs-portrait{order:-1;width:min(80vw,450px);margin-bottom:0}
   .hs-r,.hs-l{text-align:center}
   .hs-sub{margin-inline:auto;max-width:40ch}
   .hs-tags{justify-content:center}
@@ -1172,7 +1172,6 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,
   .pcard,.scard{grid-column:span 12}
 }
 
-/* --- credentials: a card per credential; the scan is an upgrade, not a gap --- */
 /* the card carries no padding of its own so the plate can reach the edge;
    the body and foot bring their own */
 .cert-card{gap:0;position:relative;padding:0;overflow:hidden}
@@ -1265,12 +1264,6 @@ html.fx .socials a,html.fx .to-top{
 }
 
 
-/* Credential cards animate in from a visible resting state, so the animation
-   can only ever add motion — never remove the content. */
-@keyframes certIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.cert-enter{animation:certIn .5s var(--ease) both;animation-delay:var(--stagger,0ms)}
-@media (prefers-reduced-motion:reduce){.cert-enter{animation:none}}
-
 /* Depth, re-added only after the compositing problem above was fixed, and
    measured again with it in place. A fine grid that fades out top and bottom,
    painted once into the fixed background layer. */
@@ -1292,3 +1285,53 @@ html.fx .socials a,html.fx .to-top{
     color-mix(in srgb,var(--accent) 10%,transparent), transparent 70%)}
 html.fx .cursor-glow{opacity:1}
 @media (prefers-reduced-motion:reduce){.cursor-glow{display:none}}
+
+/* --- credentials: dense rows. The mark is small, so a missing badge costs
+   the layout nothing; six empty image plates were the problem before. --- */
+.crows{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0}
+.crow{display:grid;grid-template-columns:38px minmax(0,1fr) auto auto;align-items:center;
+  gap:14px;padding:13px 0;border-top:1px solid var(--line);position:relative}
+.crow:first-child{border-top:0}
+.cmark{display:grid;place-items:center;width:38px;height:38px;border-radius:7px;
+  background:var(--accent-dim);color:var(--accent);overflow:hidden;
+  font-family:var(--mono);font-size:.64rem;font-weight:600;letter-spacing:.02em}
+.cmark.has-badge{background:transparent}
+.cmark img{width:100%;height:100%;object-fit:contain}
+.cmain{display:grid;min-width:0}
+.cmain b{font-size:.94rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.cissuer{font-size:.78rem;color:var(--ink-3);margin-top:2px}
+.cplat{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-3);
+  border:1px solid var(--line);border-radius:100px;padding:3px 9px;white-space:nowrap}
+a.cplat.is-link{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+a.cplat.is-link:hover{background:var(--accent-dim)}
+/* status reads by icon and word, not by colour alone */
+.cs{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.cs i{font-style:normal;font-size:.72rem;line-height:1}
+.cs.ok{color:var(--good)}
+.cs.wip{color:var(--warn)}
+.crow.has-shot{cursor:pointer}
+.crow.has-shot::after{content:"";position:absolute;inset:-1px -10px;border-radius:8px;
+  background:var(--accent-dim);opacity:0;transition:opacity .2s;z-index:-1}
+.crow.has-shot:hover::after,.crow.has-shot:focus-visible::after{opacity:1}
+.cert-note{margin-top:16px;font-family:var(--mono);font-size:.66rem;color:var(--ink-3)}
+
+/* --- CTF & labs --- */
+.ctf-list{display:grid;gap:0;margin-top:6px}
+.ctf{display:grid;grid-template-columns:38px minmax(0,1fr);gap:14px;align-items:start;
+  padding:15px 0;border-top:1px solid var(--line)}
+.ctf:first-child{border-top:0}
+.ctf-body > b{display:block;font-size:.94rem;font-weight:600;letter-spacing:-.01em}
+.ctf-body > p{margin-top:6px;font-size:.8rem;color:var(--ink-3);line-height:1.5}
+.ctf-stats{display:flex;flex-wrap:wrap;gap:20px;margin:9px 0 0;padding:0;list-style:none}
+.ctf-stats b{display:block;font-family:var(--mono);font-size:1.05rem;font-weight:600;
+  letter-spacing:-.02em;color:var(--ink)}
+.ctf-stats span{font-size:.68rem;color:var(--ink-3)}
+
+@keyframes certIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cert-enter{animation:certIn .45s var(--ease) both;animation-delay:var(--stagger,0ms)}
+@media (prefers-reduced-motion:reduce){.cert-enter{animation:none}}
+@media (max-width:640px){
+  .crow{grid-template-columns:34px minmax(0,1fr);row-gap:8px}
+  .crow .cplat,.crow .cs{grid-column:2;justify-self:start}
+}

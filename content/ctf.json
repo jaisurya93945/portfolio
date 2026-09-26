@@ -1,0 +1,21 @@
+[
+  {
+    "id": "tryhackme",
+    "platform": "TryHackMe",
+    "mark": "THM",
+    "profileUrl": "",
+    "stats": [
+      { "value": "Top 3%", "label": "global ranking" },
+      { "value": "100+", "label": "challenges solved" }
+    ],
+    "focus": "Offensive paths, detection engineering, blue-team labs"
+  },
+  {
+    "id": "hackthebox",
+    "platform": "Hack The Box",
+    "mark": "HTB",
+    "profileUrl": "",
+    "stats": [],
+    "focus": "Machines and challenges across web, pwn and forensics"
+  }
+]
