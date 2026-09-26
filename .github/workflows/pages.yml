@@ -4,11 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # The credential badges and the platform stats are pulled from the issuers
-  # at build time, so a daily rebuild is what makes "it updates itself" true
-  # without anyone pushing. 06:12 UTC keeps it off the top of the hour.
-  schedule:
-    - cron: '12 6 * * *'
 
 permissions:
   contents: read

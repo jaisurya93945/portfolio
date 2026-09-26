@@ -221,6 +221,23 @@ expected rather than a misconfiguration.
 
 There are exactly two ways to get the badge, and **both work from a phone**.
 
+> **Never paste a private signing key anywhere — not into a chat, an issue, or a file in this
+> repository.** A private key is compromised the moment it leaves your machine and has to be
+> rotated. Only the **public** half is ever registered on GitHub, and neither route below needs
+> the private half to leave your device.
+
+Measured from this cloud session on 2026-09-26, so the limits are first-hand rather than assumed:
+
+| Route | Result |
+| --- | --- |
+| `git push` over HTTPS | `verified: false, reason: unsigned` |
+| MCP `create_or_update_file` | commit created, `verified: false, reason: unsigned` |
+| REST `PUT /contents/...` direct | `403 — write access to this GitHub API path is not permitted through this proxy` |
+| GraphQL `createCommitOnBranch` | `403 — GitHub GraphQL is not available from Claude Code sessions` |
+
+So an agent working from here cannot produce a Verified commit, and the honest fix is not to give
+it a key — it is to let GitHub or your own machine do the signing, as below.
+
 ### 1. Commit through github.com — zero setup
 
 Every commit made through the web interface — the file editor, **Add file → Upload files**, merging
@@ -256,6 +273,11 @@ To author as yourself — all in the browser, about two minutes:
 
 From then on, **Actions → Publish verified commit → Run workflow** produces commits authored by you
 with a Verified badge, from any device.
+
+That workflow also runs on a daily schedule (06:12 UTC) and commits whatever the badge sync brought
+back from Credly, TryHackMe and Hack The Box. So the credential artwork arrives in the repository
+under a Verified commit with your name on it, and the site keeps working even when a provider is
+down, because the files are committed rather than only built.
 
 **On a machine**, [`scripts/setup-signing.sh`](scripts/setup-signing.sh) does the setup in one run:
 creates an SSH key, points git at it, enables signing, prints the public key to register on GitHub
