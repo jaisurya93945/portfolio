@@ -47,11 +47,27 @@ def get(url, binary=False):
         return r.read() if binary else r.read().decode('utf-8', 'replace')
 
 
+LAST_ERROR = {}
+
+
 def try_get(url, binary=False):
+    """Never raises. The reason is kept, because a silent miss is a miss you
+    cannot fix: 403 from a datacentre IP, 404 from a renamed endpoint and a
+    timeout all look identical otherwise."""
     try:
         return get(url, binary)
+    except urllib.error.HTTPError as e:
+        LAST_ERROR[url] = 'HTTP %s' % e.code
+    except urllib.error.URLError as e:
+        LAST_ERROR[url] = 'no route (%s)' % (getattr(e, 'reason', e),)
     except Exception as e:                                   # noqa: BLE001
-        return None
+        LAST_ERROR[url] = type(e).__name__ + ': ' + str(e)[:90]
+    return None
+
+
+def why(urls):
+    return '; '.join(u.split('//')[-1].split('/')[0] + ' ' + LAST_ERROR.get(u, 'no data')
+                     for u in urls)
 
 
 def slug(s):
@@ -81,9 +97,32 @@ def save_image(url, stem):
 # Credly — the Open Badges assertion endpoint is public per badge, and the
 # profile feed lists every badge the account has earned.
 # --------------------------------------------------------------------------
-def credly_assertion(badge_id):
+def credly_from_page(badge_id, tried):
+    """The public badge page carries Open Graph tags, which is the most
+    stable public description of a badge: a title and the artwork."""
+    url = 'https://www.credly.com/badges/' + badge_id + '/public_url'
+    tried.append(url)
+    html = try_get(url)
+    if not html:
+        return None
+    def og(prop):
+        m = re.search(r'<meta[^>]+property=["\']og:%s["\'][^>]+content=["\']([^"\']+)' % prop, html) or \
+            re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:%s["\']' % prop, html)
+        return m.group(1) if m else ''
+    title = (og('title') or '').split(' was issued')[0].strip()
+    img = og('image')
+    if not title and not img:
+        return None
+    return {'id': badge_id, 'title': title, 'issuer': '', 'description': '',
+            'issuedOn': '', 'imageUrl': img,
+            'url': 'https://www.credly.com/badges/' + badge_id + '/public_url'}
+
+
+def credly_assertion(badge_id, tried):
     for url in ('https://api.credly.com/v1/obi/v2/badge_assertions/' + badge_id,
+                'https://api.credly.com/v1/obi/v2/badge_assertions/' + badge_id + '.json',
                 'https://www.credly.com/api/v1/obi/v2/badge_assertions/' + badge_id):
+        tried.append(url)
         raw = try_get(url)
         if not raw:
             continue
@@ -105,14 +144,17 @@ def credly_assertion(badge_id):
             'imageUrl': img or '',
             'url': 'https://www.credly.com/badges/' + badge_id + '/public_url',
         }
-    return None
+    return credly_from_page(badge_id, tried)
 
 
-def credly_discover():
+def credly_discover(tried):
     """Every badge on the public profile, so a new one appears on its own."""
     ids = []
     for url in ('https://www.credly.com/users/%s/badges.json' % CREDLY_USER,
-                'https://www.credly.com/users/%s/badges?sort=-state_updated_at' % CREDLY_USER):
+                'https://api.credly.com/v1/users/%s/badges' % CREDLY_USER,
+                'https://www.credly.com/users/%s/badges?sort=-state_updated_at' % CREDLY_USER,
+                'https://www.credly.com/users/%s' % CREDLY_USER):
+        tried.append(url)
         raw = try_get(url)
         if not raw:
             continue
@@ -130,18 +172,20 @@ def credly_discover():
 
 
 def sync_credly():
-    found = credly_discover()
+    tried = []
+    found = credly_discover(tried)
     log(bool(found), 'credly: discover badges on the public profile',
-        ('%d found' % len(set(found))) if found else 'feed unreachable, using the seeded ids')
+        ('%d found' % len(set(found))) if found else why(tried))
 
     seen, out = set(), []
     for bid in list(dict.fromkeys(found + CREDLY_SEED)):
         if bid in seen:
             continue
         seen.add(bid)
-        rec = credly_assertion(bid)
+        bt = []
+        rec = credly_assertion(bid, bt)
         if not rec:
-            log(False, 'credly: ' + bid, 'assertion endpoint unreachable')
+            log(False, 'credly: ' + bid, why(bt))
             continue
         stem = 'credly-' + (slug(rec['title']) or bid[:8])
         rec['image'] = save_image(rec['imageUrl'], stem) if rec['imageUrl'] else ''
@@ -162,8 +206,9 @@ def sync_credly():
 # level, rank, points and room count are always whatever they are today.
 # --------------------------------------------------------------------------
 def sync_thm():
-    p = save_image('https://tryhackme-badges.s3.amazonaws.com/%s.png' % THM_USER, 'thm-live')
-    log(bool(p), 'tryhackme: live badge', p or 'unreachable, keeping the committed copy')
+    u = 'https://tryhackme-badges.s3.amazonaws.com/%s.png' % THM_USER
+    p = save_image(u, 'thm-live')
+    log(bool(p), 'tryhackme: live badge', p or why([u]))
     return p
 
 
