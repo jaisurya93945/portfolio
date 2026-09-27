@@ -180,7 +180,7 @@
           issuerFromFile(u.file), homeForFile(u.file));
     });
 
-    if (!items.length) return;
+    if (!items.length) return null;
 
     grid.textContent = '';
     items.forEach(function (it, i) {
@@ -216,6 +216,10 @@
       a.appendChild(art);
       if (it.title) a.appendChild(el('b', '', it.title));
       if (it.issuer) a.appendChild(el('span', '', it.issuer));
+      /* The tile stays a real link — middle-click and ctrl-click still open
+         the issuer's page — but a plain click zooms it here instead, which is
+         what you want when the question is "what is this badge?". */
+      a.setAttribute('data-badge', String(i));
       li.appendChild(a);
       grid.appendChild(li);
     });
@@ -224,6 +228,7 @@
     if (count) count.textContent = String(grid.children.length);
     var note = document.getElementById('badgeEmpty');
     if (note) note.hidden = true;
+    return items;
   }
 
   function merge(meta, uploads) {
@@ -274,52 +279,70 @@
     if (!grid || !list.length) return;
     grid.textContent = '';
     list.forEach(function (c, i) {
-      var li = el('li', 'crow' + (c.status === 'in-progress' ? ' prog' : ''));
+      var li = el('li', 'ccard' + (c.status === 'in-progress' ? ' prog' : ''));
       li.style.setProperty('--stagger', (i % 6) * 45 + 'ms');
       li.classList.add('cert-enter');
 
-      /* The mark slot is small on purpose. It holds a monogram by default and
-         upgrades to badge artwork when a file exists — so the layout never
-         depends on an image that has not been uploaded. */
-      var m = el('span', 'cmark');
-      /* badge artwork first, then the certificate scan, then the monogram.
-         Each step degrades to the next, so a row always has something in it
-         and never a broken image. */
-      var thumb = c.badge || (c.image && !/pdf$/i.test(c.type || c.image) ? c.image : '');
-      if (thumb) {
-        var bi = el('img');
-        bi.src = thumb; bi.loading = 'lazy'; bi.decoding = 'async'; bi.alt = '';
-        bi.addEventListener('error', function () {
-          m.textContent = mark(c);
-          m.classList.remove('has-badge', 'has-shot-img');
+      /* The preview is the point of the card. A scan fills it, badge artwork
+         sits inside it, and a monogram is the floor — so a credential with
+         nothing uploaded still reads as a card rather than a hole. */
+      var shot = el('span', 'cc-shot');
+      var scan = c.image && !/pdf$/i.test(c.type || c.image) ? c.image : '';
+      var art  = scan || c.badge || '';
+      if (art) {
+        var im = el('img');
+        im.src = art; im.loading = 'lazy'; im.decoding = 'async'; im.alt = '';
+        im.addEventListener('error', function () {
+          shot.textContent = mark(c);
+          shot.className = 'cc-shot is-mark';
         });
-        m.appendChild(bi);
-        m.classList.add(c.badge ? 'has-badge' : 'has-shot-img');
+        shot.appendChild(im);
+        shot.classList.add(scan ? 'is-scan' : 'is-badge');
       } else {
-        m.textContent = mark(c);
+        shot.textContent = mark(c);
+        shot.classList.add('is-mark');
       }
-      m.setAttribute('aria-hidden', 'true');
-      li.appendChild(m);
+      /* the zoom cue tells you the card opens before you hover it */
+      var cue = el('span', 'cc-zoom');
+      cue.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" ' +
+        'stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+        '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>';
+      cue.setAttribute('aria-hidden', 'true');
+      shot.appendChild(cue);
+      li.appendChild(shot);
 
-      var main = el('span', 'cmain');
-      main.appendChild(el('b', '', c.title || ''));
-      if (c.issuer) main.appendChild(el('span', 'cissuer', c.issuer));
+      var body = el('span', 'cc-body');
+
+      /* The title stays text and the button is a bare overlay the size of the
+         card, so the hit area really is the card rather than a 20px line of
+         text with an invisible ::after over it. The verify chip rides above. */
+      body.appendChild(el('span', 'cc-title', c.title || t('cert.untitled', 'Certificate')));
+
+      var open = el('button', 'cc-open');
+      open.type = 'button';
+      open.setAttribute('data-index', String(list.indexOf(c)));
+      open.setAttribute('aria-label',
+        t('cert.view', 'View certificate') + ' \u2014 ' + (c.title || ''));
+      li.appendChild(open);
+
+      if (c.issuer) body.appendChild(el('span', 'cc-issuer', c.issuer));
 
       /* Issued, numbered, expiring: the three facts that separate a
-         credential from a claim. Each appears only when it is known —
-         an empty date is left out rather than printed as a dash. */
+         credential from a claim. Each appears only when it is known. */
       var facts = [];
       if (c.date) facts.push(when(c.date));
       if (c.credentialId) facts.push(c.credentialId);
       if (c.expires) facts.push(t('cert.renews', 'renews') + ' ' + when(c.expires));
-      /* The platform belongs on this line rather than in a column of its
-         own: it is another fact about the credential, and a column that
-         holds one short chip costs the row a third of its width. */
-      var meta = el('span', 'cfacts');
-      facts.forEach(function (f, i) {
-        if (i) meta.appendChild(el('i', 'sep', '\u00b7'));
-        meta.appendChild(el('span', '', f));
-      });
+      if (facts.length) {
+        var meta = el('span', 'cc-facts');
+        facts.forEach(function (f, n) {
+          if (n) meta.appendChild(el('i', 'sep', '\u00b7'));
+          meta.appendChild(el('span', '', f));
+        });
+        body.appendChild(meta);
+      }
+
+      var foot = el('span', 'cc-foot');
       if (c.platform) {
         var href = verifyUrl(c), pl;
         if (href) {
@@ -329,27 +352,18 @@
         } else {
           pl = el('span', 'cplat', c.platform);
         }
-        meta.appendChild(pl);
+        foot.appendChild(pl);
       }
-      if (meta.childNodes.length) main.appendChild(meta);
-      li.appendChild(main);
-
-      /* status carries an icon as well as a colour */
       var done = c.status !== 'in-progress';
       var st = el('span', 'cs ' + (done ? 'ok' : 'wip'));
       var ic = el('i', '', done ? '\u2713' : '\u25F7');
       ic.setAttribute('aria-hidden', 'true');
       st.appendChild(ic);
       st.appendChild(el('span', '', done ? t('cert.earned', 'earned') : t('cert.wip', 'in progress')));
-      li.appendChild(st);
+      foot.appendChild(st);
+      body.appendChild(foot);
 
-      if (c.image) {
-        li.classList.add('has-shot');
-        li.setAttribute('data-index', String(list.indexOf(c)));
-        li.tabIndex = 0;
-        li.setAttribute('role', 'button');
-        li.setAttribute('aria-label', t('cert.view', 'View certificate') + ' — ' + (c.title || ''));
-      }
+      li.appendChild(body);
       grid.appendChild(li);
     });
   }
@@ -664,10 +678,29 @@
       var list = res.list || [];
       if (!list.length) return;
       renderList(list, grid);
-      renderWall(res.credly,
+      var badgeGrid = document.getElementById('badgeGrid');
+      var badges = renderWall(res.credly,
                  document.getElementById('badgeWall'),
-                 document.getElementById('badgeGrid'),
+                 badgeGrid,
                  res.uploaded);
+
+      /* Badges zoom in the same dialog the credentials use, so one Escape,
+         one focus trap and one set of arrow keys cover both sections. */
+      if (badges && badges.length && badgeGrid) {
+        var seen = badges.map(function (bg) {
+          return { title: bg.title, issuer: bg.issuer, image: bg.img,
+                   date: '', credentialId: '', verificationUrl: bg.url || '' };
+        });
+        var openBadge = lightbox(seen, function () { return seen; });
+        badgeGrid.addEventListener('click', function (e) {
+          /* let people who mean to leave the page still leave it */
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+          var tile = e.target.closest('[data-badge]');
+          if (!tile) return;
+          e.preventDefault();
+          openBadge(Number(tile.getAttribute('data-badge')), tile);
+        });
+      }
 
       /* The note starts hidden in the markup: with no JS, or if this fetch
          fails, the inline rows are what is on screen, and "scans appear here
@@ -675,26 +708,16 @@
          It is revealed only once we know there is genuinely nothing to show. */
       var shots = list.filter(function (c) { return !!c.image; });
       if (note) note.hidden = shots.length > 0;
-      if (!shots.length) return;
 
-      var open = lightbox(list, function () { return shots; });
+      /* Every credential opens, not only the ones with a scan. A card with
+         badge artwork or nothing but a monogram still has an issuer, a date
+         and an id worth reading, and the button is already there. */
+      var open = lightbox(list, function () { return list; });
       grid.addEventListener('click', function (e) {
-        var card = e.target.closest('.crow.has-shot');
-        if (!card) return;
+        var btn = e.target.closest('.cc-open');
+        if (!btn) return;
         e.preventDefault();
-        open(Number(card.getAttribute('data-index')), card);
-      });
-      grid.addEventListener('keydown', function (e) {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        var card = e.target.closest('.crow.has-shot');
-        if (!card) return;
-        e.preventDefault();
-        open(Number(card.getAttribute('data-index')), card);
-      });
-      grid.querySelectorAll('.crow.has-shot').forEach(function (c) {
-        c.tabIndex = 0;
-        c.setAttribute('role', 'button');
-        c.setAttribute('aria-label', t('cert.view', 'View certificate'));
+        open(Number(btn.getAttribute('data-index')), btn);
       });
     });
   }

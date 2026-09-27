@@ -12,20 +12,20 @@
      solved against every surface it can land on (--bg, --s1, --s2 and its own
      tint), not against the background alone. */
   --bg:#0c0c0e; --s1:#141417; --s2:#1b1b1f;
-  --line:rgba(255,255,255,.14); --line-2:rgba(255,255,255,.30);
-  --line-strong:rgba(255,255,255,.22); --edge:rgba(255,255,255,.055);
+  --line:rgba(255,255,255,.17); --line-2:rgba(255,255,255,.30);
+  --line-strong:rgba(255,255,255,.27); --edge:rgba(255,255,255,.055);
   --ink:#f3f2ef; --ink-2:#b4b3bd; --ink-3:#8e8d98;
-  --accent:#9194e5; --accent-dim:rgba(145,148,229,.15);
+  --accent:#9b9fff; --accent-dim:rgba(155,159,255,.16);
   /* the partner hues a two-series chart needs; deliberately not a third and
      fourth brand colour */
-  --accent-2:#9194e5; --accent-3:#b4b3bd; --violet:#9194e5;
-  /* text on an accent fill; near-black scores 7.04:1 on this periwinkle,
+  --accent-2:#9b9fff; --accent-3:#b4b3bd; --violet:#9b9fff;
+  /* text on an accent fill; near-black scores 8.19:1 on this periwinkle,
      white only 2.5:1, so the dark theme inverts it */
   --on-accent:#0c0c0e;
   --good:#7bd88f; --warn:#f2c14e; --serious:#ffa657; --critical:#ff6b6b;
   --dot:rgba(255,255,255,.06);
-  --wash-1:rgba(145,148,229,.11); --wash-2:rgba(255,255,255,.045); --wash-3:rgba(255,255,255,.035);
-  --grain-o:.022;
+  --wash-1:rgba(155,159,255,.12); --wash-2:rgba(255,255,255,.045); --wash-3:rgba(255,255,255,.035);
+  --grain-o:.012;
   --tile:var(--s1); --tile-2:var(--s2);
   --maxw:1500px; --pad:clamp(20px,5vw,72px); --r:5px; --measure:66ch;
   --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -36,12 +36,12 @@
 
 :root[data-theme="light"]{
   --bg:#f4f3ef; --s1:#ffffff; --s2:#ebe9e3;
-  --line:rgba(12,12,13,.15); --line-2:rgba(12,12,13,.32);
-  --line-strong:rgba(12,12,13,.24); --edge:rgba(255,255,255,.9);
+  --line:rgba(12,12,13,.17); --line-2:rgba(12,12,13,.32);
+  --line-strong:rgba(12,12,13,.27); --edge:rgba(255,255,255,.9);
   --ink:#0c0c0d; --ink-2:#3d3d44; --ink-3:#676770;
-  --accent:#3b40d1; --accent-dim:rgba(59,64,209,.11);
-  --accent-2:#3b40d1; --accent-3:#3d3d44; --violet:#3b40d1;
-  /* and back again: white scores 7.36:1 on the deeper indigo */
+  --accent:#3237e0; --accent-dim:rgba(50,55,224,.12);
+  --accent-2:#3237e0; --accent-3:#3d3d44; --violet:#3237e0;
+  /* and back again: white scores 7.61:1 on the deeper indigo */
   --on-accent:#ffffff;
   --good:#246328; --warn:#725100; --serious:#8a4408; --critical:#a2231b;
   /* Three textures stacked — dot grid, line grid, three washes — read as
@@ -49,7 +49,7 @@
      texture hides in shadow and shows on paper. Light keeps one tinted wash
      and halves the rest; the grey washes go entirely. */
   --dot:rgba(12,12,13,.055);
-  --wash-1:rgba(59,64,209,.055); --wash-2:transparent; --wash-3:transparent;
+  --wash-1:rgba(50,55,224,.06); --wash-2:transparent; --wash-3:transparent;
   --grain-o:.010;
   --tile:var(--s1); --tile-2:var(--s2)
 }
@@ -57,12 +57,12 @@
 @media (prefers-color-scheme: light){
   :root:not([data-theme]){
   --bg:#f4f3ef; --s1:#ffffff; --s2:#ebe9e3;
-  --line:rgba(12,12,13,.15); --line-2:rgba(12,12,13,.32);
-  --line-strong:rgba(12,12,13,.24); --edge:rgba(255,255,255,.9);
+  --line:rgba(12,12,13,.17); --line-2:rgba(12,12,13,.32);
+  --line-strong:rgba(12,12,13,.27); --edge:rgba(255,255,255,.9);
   --ink:#0c0c0d; --ink-2:#3d3d44; --ink-3:#676770;
-  --accent:#3b40d1; --accent-dim:rgba(59,64,209,.11);
-  --accent-2:#3b40d1; --accent-3:#3d3d44; --violet:#3b40d1;
-  /* and back again: white scores 7.36:1 on the deeper indigo */
+  --accent:#3237e0; --accent-dim:rgba(50,55,224,.12);
+  --accent-2:#3237e0; --accent-3:#3d3d44; --violet:#3237e0;
+  /* and back again: white scores 7.61:1 on the deeper indigo */
   --on-accent:#ffffff;
   --good:#246328; --warn:#725100; --serious:#8a4408; --critical:#a2231b;
   /* Three textures stacked — dot grid, line grid, three washes — read as
@@ -70,7 +70,7 @@
      texture hides in shadow and shows on paper. Light keeps one tinted wash
      and halves the rest; the grey washes go entirely. */
   --dot:rgba(12,12,13,.055);
-  --wash-1:rgba(59,64,209,.055); --wash-2:transparent; --wash-3:transparent;
+  --wash-1:rgba(50,55,224,.06); --wash-2:transparent; --wash-3:transparent;
   --grain-o:.010;
   --tile:var(--s1); --tile-2:var(--s2)
 }
@@ -221,7 +221,7 @@ kbd{font-family:var(--mono);font-size:.64rem;color:var(--ink-3)}
     radial-gradient(58% 46% at 50% 42%, var(--glow-1), transparent 72%),
     radial-gradient(46% 34% at 70% 70%, var(--glow-2), transparent 74%)}
 :root{--glow-1:rgba(145,148,229,.20); --glow-2:rgba(145,148,229,.10)}
-:root[data-theme="light"]{--glow-1:rgba(59,64,209,.13); --glow-2:rgba(59,64,209,.07)}
+:root[data-theme="light"]{--glow-1:rgba(50,55,224,.14); --glow-2:rgba(50,55,224,.08)}
 
 .hero-foot{display:grid;grid-template-columns:minmax(0,1fr) auto;
   gap:clamp(16px,2.4vw,44px);align-items:center;margin-top:clamp(18px,2.2vw,30px);
@@ -1289,66 +1289,80 @@ html.fx .socials a,html.fx .to-top{
 html.fx .cursor-glow{opacity:1}
 @media (prefers-reduced-motion:reduce){.cursor-glow{display:none}}
 
-/* --- credentials: dense rows. The mark is small, so a missing badge costs
-   the layout nothing; six empty image plates were the problem before. --- */
-.crows{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0}
-/* A certificate is a landscape document, so the slot it sits in is one too:
-   a square crop of a certificate is a crop of its blank middle. */
-/* Eleven full-width rows left a third of the line empty between the issuer
-   and the chips, and ran the section to twice the height it needed. Two
-   columns above 1080px use that width instead. */
-.crows{display:grid;gap:0}
-@media (min-width:1080px){
-  .crows{grid-template-columns:repeat(2,minmax(0,1fr));
-         column-gap:clamp(28px,3.4vw,54px)}
-  .crows > .crow:nth-child(2){border-top:0}
-}
-.crow{display:grid;grid-template-columns:88px minmax(0,1fr) auto;align-items:center;
-  gap:15px;padding:13px 0;border-top:1px solid var(--line);position:relative}
-.crow:first-child{border-top:0}
-/* Most rows have no artwork yet, so a filled accent plate on each of them
-   reads as eleven coloured blocks rather than as a list of credentials.
-   The empty state is a quiet neutral tile; the accent is spent on the row
-   that actually has something to show. */
-.cmark{display:grid;place-items:center;width:88px;height:62px;border-radius:7px;
-  background:var(--s2);border:1px solid var(--line);color:var(--ink-3);overflow:hidden;
-  font-family:var(--mono);font-size:.8rem;font-weight:600;letter-spacing:.06em}
-.crow:hover .cmark{border-color:var(--line-2);color:var(--ink-2)}
-.cmark.has-badge{background:transparent}
-.cmark img{width:100%;height:100%;object-fit:contain}
-.cmain{display:grid;min-width:0}
-.cmain b{font-size:.94rem;font-weight:600;letter-spacing:-.01em;line-height:1.3}
-.cissuer{font-size:.78rem;color:var(--ink-3);margin-top:2px}
+/* --- credentials: cards. The scan is the point of a credential card, so it
+   gets the top of the card at a readable size instead of an 88px chip; the
+   whole card opens the same zoom dialog the badges use. --- */
+.crows{list-style:none;margin:10px 0 0;padding:0;
+  display:grid;gap:clamp(14px,1.6vw,20px);
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.ccard{position:relative;display:grid;grid-template-rows:auto 1fr;min-width:0;
+  border:1px solid var(--line);border-radius:calc(var(--r) + 5px);background:var(--s1);
+  overflow:hidden;
+  box-shadow:inset 0 1px 0 var(--edge), 0 1px 2px rgba(0,0,0,.05), 0 12px 28px -22px rgba(0,0,0,.5);
+  transition:border-color .22s,transform .22s var(--ease),box-shadow .22s}
+.ccard:hover,.ccard:focus-within{border-color:var(--line-2);transform:translateY(-3px);
+  box-shadow:inset 0 1px 0 var(--edge), 0 2px 4px rgba(0,0,0,.07), 0 20px 40px -24px rgba(0,0,0,.62)}
+/* a certificate is a landscape document, so the slot it sits in is one too */
+.cc-shot{position:relative;display:grid;place-items:center;aspect-ratio:16/10;
+  background:var(--s2);border-bottom:1px solid var(--line);overflow:hidden;
+  font-family:var(--mono);font-size:1.5rem;font-weight:600;letter-spacing:.08em;color:var(--ink-3)}
+/* Absolutely positioned, because height:100% cannot resolve against a box
+   sized by aspect-ratio: it falls back to the image's own ratio, overflows
+   the slot and is clipped, which looks exactly like object-fit:cover. */
+.cc-shot img{position:absolute;inset:0;width:100%;height:100%;display:block;
+  transition:transform .45s var(--ease)}
+/* A certificate is a document, and the point of showing it is that it can be
+   read as one — cropping to fill the slot cuts the signature line off the
+   bottom. It is contained whole, on the deeper surface so the paper edge
+   still reads against the card. */
+.cc-shot.is-scan img{object-fit:contain;padding:8px}
+.cc-shot.is-badge{background:var(--s1)}
+.cc-shot.is-badge img{object-fit:contain;padding:14px}
+.ccard:hover .cc-shot img,.ccard:focus-within .cc-shot img{transform:scale(1.035)}
+/* the zoom cue: always faintly present so the card reads as openable on a
+   touch screen too, and it brightens on hover rather than appearing */
+.cc-zoom{position:absolute;right:9px;bottom:9px;display:grid;place-items:center;
+  width:28px;height:28px;border-radius:50%;
+  background:color-mix(in srgb,var(--bg) 72%,transparent);
+  border:1px solid var(--line);color:var(--ink-2);opacity:.75;
+  transition:opacity .2s,background .2s,border-color .2s,color .2s}
+.ccard:hover .cc-zoom,.ccard:focus-within .cc-zoom{opacity:1;color:var(--on-accent);
+  background:var(--accent);border-color:var(--accent)}
+.cc-body{display:grid;align-content:start;gap:3px;padding:13px 14px 12px}
+.cc-title{display:block;font-size:.95rem;font-weight:600;letter-spacing:-.01em;line-height:1.3;
+  color:var(--ink);transition:color .2s}
+/* The card's hit area is a bare button laid over the whole card, so the
+   target is the card itself and not a 20px line of text. It carries the
+   credential's name as its label, and the verify chip sits above it. */
+.cc-open{position:absolute;inset:0;z-index:0;cursor:pointer;
+  border:0;padding:0;background:none;border-radius:inherit;appearance:none}
+.ccard:hover .cc-title,.ccard:focus-within .cc-title{color:var(--accent)}
+.cc-open:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.cc-issuer{font-size:.79rem;color:var(--ink-2)}
 /* issued / number / expiry, in the mono face so the id reads as an id */
-.cfacts{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:7px;
-  font-family:var(--mono);font-size:.64rem;letter-spacing:.02em;color:var(--ink-3)}
-.cfacts .sep{font-style:normal;opacity:.5}
-/* the chip is also a 24px tap target when it is a verification link, and the
-   plain-label version matches it so the two kinds sit on the same baseline */
-.cplat{display:inline-flex;align-items:center;min-height:24px;
+.cc-facts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:5px;
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.02em;color:var(--ink-3)}
+.cc-facts .sep{font-style:normal;opacity:.5}
+.cc-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+/* the chip is also a 24px tap target when it is a verification link, and it
+   sits above the card button so it can still be clicked on its own */
+.cplat{position:relative;z-index:1;display:inline-flex;align-items:center;min-height:24px;
   font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-3);
   border:1px solid var(--line);border-radius:100px;padding:2px 10px;white-space:nowrap}
 a.cplat.is-link{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
-a.cplat.is-link:hover{background:var(--accent-dim)}
-.cplat-none{display:block}
-/* status reads by icon and word, not by colour alone */
-/* Ten identical "earned" pills say nothing ten times and drown the one row
-   that is different. Earned is the resting state of a credentials list, so
-   it reads as a check and the word goes to screen readers only; the pill is
-   spent on the exception. */
-.cs.ok{border:0;background:none;padding:0;min-height:24px}
+a.cplat.is-link:hover{background:var(--accent-dim);border-color:var(--accent)}
+.cplat-none{display:none}
+/* status reads by icon and word, not by colour alone. "Earned" is the
+   resting state of a credentials list, so it reads as a check and the word
+   goes to screen readers only; the pill is spent on the exception. */
+.cs{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;margin-left:auto}
+.cs i{font-style:normal;font-size:.72rem;line-height:1}
+.cs.ok{color:var(--good);border:0;background:none;padding:0;min-height:24px}
 .cs.ok > span{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
   overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 .cs.ok i{font-size:.95rem;line-height:1}
-.cs{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.6rem;
-  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
-.cs i{font-style:normal;font-size:.72rem;line-height:1}
-.cs.ok{color:var(--good)}
 .cs.wip{color:var(--warn)}
-.crow.has-shot{cursor:pointer}
-.crow.has-shot::after{content:"";position:absolute;inset:-1px -10px;border-radius:8px;
-  background:var(--accent-dim);opacity:0;transition:opacity .2s;z-index:-1}
-.crow.has-shot:hover::after,.crow.has-shot:focus-visible::after{opacity:1}
 .cert-note{margin-top:16px;font-family:var(--mono);font-size:.66rem;color:var(--ink-3)}
 
 /* ---------- credentials: badge wall, ledger, platforms ---------- */
@@ -1412,22 +1426,12 @@ a.cplat.is-link:hover{background:var(--accent-dim)}
     filter:drop-shadow(0 3px 8px rgba(12,12,13,.22))}
 }
 
-/* the ledger thumbnail carries artwork or a scan; the monogram is the floor */
-.cmark.has-badge,.cmark.has-shot-img{background:transparent;border:1px solid var(--line)}
-.cmark.has-badge img{object-fit:contain;padding:2px}
-/* a certificate scan is a landscape page: cropping to its centre yields
-   blank paper, so the thumbnail is anchored to the masthead, which is
-   the part that identifies it */
-.cmark.has-shot-img{background:var(--s2)}
-.cmark.has-shot-img img{object-fit:cover;object-position:center top}
-/* a row whose thumbnail opens the full scan says so without a hover */
-.cmark.has-shot-img{position:relative}
-.cmark.has-shot-img::after{content:"";position:absolute;right:3px;bottom:3px;
-  width:15px;height:15px;border-radius:4px;background:var(--bg);opacity:.86;
-  -webkit-mask:var(--zoom-i) center/9px 9px no-repeat;mask:var(--zoom-i) center/9px 9px no-repeat;
-  box-shadow:0 0 0 999px var(--bg) inset}
-.crow.has-shot:hover .cmark.has-shot-img::after{background:var(--accent)}
-:root{--zoom-i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3'%3E%3Cpath d='M4 9V4h5M20 15v5h-5M15 4h5v5M9 20H4v-5'/%3E%3C/svg%3E")}
+/* The monogram plate. Only the CTF cards still use it now that credentials
+   are cards, but it keeps its own base so those marks do not depend on a
+   rule that belongs to another component. */
+.cmark{display:grid;place-items:center;border-radius:7px;overflow:hidden;
+  background:var(--s2);border:1px solid var(--line);color:var(--ink-3);
+  font-family:var(--mono);font-size:.8rem;font-weight:600;letter-spacing:.06em}
 
 /* platforms: two panels, each with its figures and the issuer's own badge */
 .plat-band{margin-top:clamp(14px,1.6vw,20px)}
@@ -1439,7 +1443,10 @@ a.cplat.is-link:hover{background:var(--accent-dim)}
   background:var(--accent-dim);border-color:transparent;color:var(--accent)}
 .ctf-top > b{font-size:1.02rem;font-weight:600;letter-spacing:-.01em;transition:color .2s}
 .ctf > p{margin:12px 0 0;font-size:.85rem;color:var(--ink-3);line-height:1.55}
-.ctf-live{display:block;width:249px;max-width:100%;height:auto;margin-top:16px;
+/* TryHackMe mints this strip at 249px and no larger, so displaying it at
+   249 CSS px is exactly 1x — half-resolution on a 2x screen. Held to 168px
+   it has 1.48x device pixels to draw with and reads sharp. */
+.ctf-live{display:block;width:168px;max-width:100%;height:auto;margin-top:16px;
   border:1px solid var(--line);border-radius:6px}
 .plat-note{margin-top:14px;font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;
   color:var(--ink-3);grid-column:1/-1}
@@ -1484,12 +1491,9 @@ a.ctf:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-ra
 @keyframes certIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .cert-enter{animation:certIn .45s var(--ease) both;animation-delay:var(--stagger,0ms)}
 @media (prefers-reduced-motion:reduce){.cert-enter{animation:none}}
-@media (max-width:640px){
-  /* on a phone the status belongs on the title line, where it is scanned,
-     and the platform chip tucks under it — two stacked chips made every row
-     a third taller for nothing */
-  .crow{grid-template-columns:68px minmax(0,1fr) auto;row-gap:6px}
-  .crow .cmark{width:68px;height:48px}
-  .crow .cs{justify-self:end;align-self:start}
-  .crow .cplat-none{display:none}
+@media (max-width:560px){
+  /* one card per row on a phone, and a shorter preview so the title and the
+     facts are still above the fold of the card */
+  .crows{grid-template-columns:1fr}
+  .cc-shot{aspect-ratio:16/9}
 }
