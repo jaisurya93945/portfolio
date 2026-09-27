@@ -40,7 +40,7 @@
     "profileUrl": "https://profile.hackthebox.com/profile/01a0908b-02ca-7053-89e6-470823381aa3",
     "focus": "Machines and challenges across web, pwn and forensics",
     "focusKey": "ctf.htb.f",
-    "liveBadge": "",
+    "liveBadge": "assets/img/badges/htb-live.png",
     "liveBadgeAlt": "Hack The Box badge",
     "stats": []
   }

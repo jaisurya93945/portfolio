@@ -1,4 +1,77 @@
 {
   "profileUrl": "https://www.credly.com/users/jaisurya1602",
-  "badges": []
+  "badges": [
+    {
+      "id": "04a22b7a-c6fc-49ee-bd33-3fb634578e1c",
+      "title": "Fortinet Cybersecurity and Cloud Fundamentals 1.0",
+      "issuer": "Fortinet",
+      "description": "The Fortinet Cybersecurity and Cloud Fundamentals 1.0 badge recognizes that the badge earner has mastered the technical skills and knowledge required for an entry-level role in cybersecurity. The knowledge domain covers today’s threat landscape and the fundamentals of cybersecurity.",
+      "issuedOn": "2026-09-25",
+      "url": "https://www.credly.com/badges/04a22b7a-c6fc-49ee-bd33-3fb634578e1c/public_url",
+      "image": "assets/img/badges/credly-fortinet-cybersecurity-and-cloud-fundamentals-1-0.png"
+    },
+    {
+      "id": "69cc1a14-97d0-407e-9664-b39e54dd8c92",
+      "title": "Fortinet NSE 1 Certified in Cybersecurity",
+      "issuer": "Fortinet",
+      "description": "The NSE 1 in Cybersecurity certification validates that the badge earner has mastered the technical skills and knowledge required for an entry-level role in cybersecurity. The knowledge domain covers today’s threat landscape and the fundamentals of cybersecurity.",
+      "issuedOn": "2026-09-25",
+      "url": "https://www.credly.com/badges/69cc1a14-97d0-407e-9664-b39e54dd8c92/public_url",
+      "image": "assets/img/badges/credly-fortinet-nse-1-certified-in-cybersecurity.png"
+    },
+    {
+      "id": "1fc658d3-8519-443c-b160-5be972071823",
+      "title": "LFS180: Introduction to DevSecOps for Managers",
+      "issuer": "The Linux Foundation",
+      "description": "Earners of the LFS180: Introduction to DevSecOps for Managers badge understand DevSecOps principles and recognize basic concepts such as value stream management, platform optimization, and Continuous Delivery. Recipients have also learned about setting effective metrics, cybersecurity fundamentals, and agile contracting within government frameworks. Equipped with this knowledge, they are prepared ",
+      "issuedOn": "2024-08-13",
+      "url": "https://www.credly.com/badges/1fc658d3-8519-443c-b160-5be972071823/public_url",
+      "image": "assets/img/badges/credly-lfs180-introduction-to-devsecops-for-managers.png"
+    },
+    {
+      "id": "d05f7344-d3c4-4660-9d21-d1155eca1cb1",
+      "title": "Ethical Hacker",
+      "issuer": "Cisco",
+      "description": "Cisco verifies the earner of this badge successfully completed the Ethical Hacker course. The holder of this student level credential has a broad understanding of the legal and compliance requirements and is proficient in the art of scoping, executing, reporting vulnerability assessments, and recommending mitigation strategies. The holder has completed up to 34 hands-on activities using Kali Linux",
+      "issuedOn": "2024-06-17",
+      "url": "https://www.credly.com/badges/d05f7344-d3c4-4660-9d21-d1155eca1cb1/public_url",
+      "image": "assets/img/badges/credly-ethical-hacker.png"
+    },
+    {
+      "id": "4be8c53f-fdf1-46aa-81a5-871e4fc9e6ae",
+      "title": "LFC108: Cybersecurity Essentials",
+      "issuer": "The Linux Foundation",
+      "description": "Earners of the LFC108: Cybersecurity Essentials badge can apply security practices and precautions during online activities to minimize risks and securely protect personal and professional information from exposure and compromise. They can also identify what to do if a data breach occurs.",
+      "issuedOn": "2024-04-01",
+      "url": "https://www.credly.com/badges/4be8c53f-fdf1-46aa-81a5-871e4fc9e6ae/public_url",
+      "image": "assets/img/badges/credly-lfc108-cybersecurity-essentials.png"
+    },
+    {
+      "id": "72cd2812-b7fa-4ac2-8653-66cfe028985b",
+      "title": "LFEL1006: Securing Projects with OpenSSF Scorecard",
+      "issuer": "The Linux Foundation",
+      "description": "Earners of the LFEL1006: Securing Projects with OpenSSF Scorecard badge have demonstrated a working knowledge of OpenSSF Scorecard. They have a strong understanding of how Scorecard can be integrated with any GitHub project, and how to strategically incorporate it to help improve security on any software development lifecycle.",
+      "issuedOn": "2024-02-12",
+      "url": "https://www.credly.com/badges/72cd2812-b7fa-4ac2-8653-66cfe028985b/public_url",
+      "image": "assets/img/badges/credly-lfel1006-securing-projects-with-openssf-scorecard.png"
+    },
+    {
+      "id": "f8f3f95b-0196-418d-8c45-a5aa23d2e42d",
+      "title": "LFQ101: Fundamentals of Quantum Computing",
+      "issuer": "The Linux Foundation",
+      "description": "Earners of the LFQ101: Fundamentals of Quantum Computing badge understand the fundamentals, current capabilities, and probable technological disruptions quantum computing may bring. They grasp the technological, governmental, and industrial implications as the technology matures and how it could be used for complex decision making. They are able to determine use cases for quantum computing and dis",
+      "issuedOn": "2024-02-12",
+      "url": "https://www.credly.com/badges/f8f3f95b-0196-418d-8c45-a5aa23d2e42d/public_url",
+      "image": "assets/img/badges/credly-lfq101-fundamentals-of-quantum-computing.png"
+    },
+    {
+      "id": "htb-badge-214",
+      "title": "Awarded the badge Script Kiddie from Hack The Box!",
+      "issuer": "Hack The Box",
+      "description": "",
+      "issuedOn": "",
+      "image": "assets/img/badges/htb-badge-214.png",
+      "url": "https://labs.hackthebox.com/achievement/badge/1830127/214"
+    }
+  ]
 }
