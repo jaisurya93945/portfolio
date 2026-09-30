@@ -456,6 +456,15 @@ def og(html, prop):
     return m.group(1) if m else ''
 
 
+def htb_name(og_title):
+    """The achievement page is a share card, so its og:title is a sentence:
+    "Awarded the badge Script Kiddie from Hack The Box!". The badge is called
+    Script Kiddie; the rest is the sentence wrapped around it."""
+    t = (og_title or '').split('|')[0].strip()
+    m = re.match(r'^Awarded the badge\s+(.+?)\s+from\s+Hack\s*The\s*Box[!.]?$', t, re.I)
+    return (m.group(1) if m else t).strip()
+
+
 def sync_htb_badges():
     """Named achievement badges. One host serves the artwork straight from the
     achievement URL and another serves a page whose social preview carries the
@@ -477,7 +486,7 @@ def sync_htb_badges():
             if not html:
                 continue
             if not title:
-                title = (og(html, 'title') or '').split('|')[0].strip()
+                title = htb_name(og(html, 'title'))
             if not path:
                 img = og(html, 'image')
                 if img:
