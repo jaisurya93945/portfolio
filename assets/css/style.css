@@ -654,6 +654,9 @@ a.t:hover .t-go{color:var(--accent)}
   /* small tiles stay two-up so a phone does not scroll past five of them */
   .c3{grid-column:span 6}
   .c4,.c5,.c6,.c7,.c8,.c9{grid-column:span 12}
+  /* except in contact, where the two small tiles carry prose rather than a
+     numeral: half a phone width turns a role list into a column of fragments */
+  #contact .t.c3{grid-column:span 12}
 }
 
 /* --- hero, as bento tiles --- */
@@ -870,8 +873,10 @@ h2,h3{font-weight:600;letter-spacing:-.03em}
 /* the posture card is twice the height of a figure tile, so it spans both
    rows and the four figures sit beside it as a tidy 2x2 rather than
    stretching into mostly-empty panels */
-.posture-card{grid-row:span 2}
-@media (max-width:900px){.posture-card{grid-row:auto}}
+/* The card used to span two grid rows with nothing ever placed in the second
+   one, so half the width of that row was empty. It takes its natural height
+   now and the figures beside it fill the row with it. */
+.posture-card{grid-row:auto}
 .t.quiet{background:transparent;border-color:transparent;padding-inline:0}
 .bento{--tgap:clamp(14px,1.5vw,20px);row-gap:clamp(14px,1.5vw,20px)}
 
@@ -886,7 +891,7 @@ a.t.link:hover h3{color:var(--accent)}
 .t-go{color:var(--ink-3)}
 
 /* figures: big numerals inside their panel */
-.t.stat{min-height:0;justify-content:flex-start}
+.t.stat{min-height:0;justify-content:center}
 .t.stat b{font-size:clamp(1.9rem,3.8vw,3rem);font-weight:700;letter-spacing:-.04em;line-height:1}
 .t.stat span{margin-top:7px;font-family:var(--mono);font-size:.78rem;
              letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
