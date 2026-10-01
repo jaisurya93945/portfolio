@@ -678,6 +678,10 @@
       var list = res.list || [];
       if (!list.length) return;
       renderList(list, grid);
+      /* the heading's count span matched the badge wall's but nothing ever
+         filled it, so it sat empty in the markup */
+      var certCount = document.getElementById('certCount');
+      if (certCount) certCount.textContent = String(list.length);
       var badgeGrid = document.getElementById('badgeGrid');
       var badges = renderWall(res.credly,
                  document.getElementById('badgeWall'),

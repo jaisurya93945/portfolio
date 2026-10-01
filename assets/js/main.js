@@ -195,6 +195,13 @@
     for (var i = 0; i < sections.length; i++) {
       if (sections[i].getBoundingClientRect().top <= 130) cur = sections[i].id;
     }
+    /* The last section can never clear the 130px test: the scroll clamps at
+       the bottom of the page before its top gets that high, so the nav kept
+       the previous section lit while you were reading the final one. */
+    if (sections.length &&
+        window.innerHeight + y >= document.documentElement.scrollHeight - 2) {
+      cur = sections[sections.length - 1].id;
+    }
     navLinks.forEach(function (a) { a.classList.toggle('current', a.getAttribute('href') === '#' + cur); });
     if (rail) {
       rail.classList.toggle('on', y > innerHeight * 0.65);
