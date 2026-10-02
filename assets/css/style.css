@@ -496,11 +496,8 @@ kbd{font-family:var(--mono);font-size:.76rem;color:var(--ink-3)}
 .contact{padding-bottom:clamp(48px,6vw,84px)}
 .contact-inner{max-width:880px}
 .contact-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:8px;margin-top:30px}
-.ccard{padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--s1);transition:border-color .2s}
-.ccard:not(.static):hover{border-color:var(--accent)}
-.ccard h4{font-family:var(--mono);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
-.ccard p{margin-top:6px;font-size:.88rem;color:var(--ink)}
+/* (the old contact-card grid that lived here is gone; its .ccard rules were
+   bleeding padding into the credential cards, which reuse the class name) */
 
 .footer{border-top:1px solid var(--line);padding:22px var(--pad)}
 .footer-big{display:none}
@@ -1507,4 +1504,155 @@ a.ctf:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-ra
      facts are still above the fold of the card */
   .crows{grid-template-columns:1fr}
   .cc-shot{aspect-ratio:16/9}
+}
+
+/* =========================================================
+   Highlights. One accent on near-black reads as plain, so the accent gets a
+   second, cooler hue to run into: the hero word and the headline figures go
+   periwinkle into cyan, section rules pick the accent up and fade it out, and
+   the ambient light behind the page carries a little of both.
+   Every gradient endpoint is solved against every surface it can land on —
+   dark #9b9fff 8.19:1 and #5ce1e6 12.44:1, light #3237e0 6.86:1 and #0369a1
+   5.34:1 — because the contrast gate skips text with a transparent fill and
+   cannot check gradient text for itself.
+   ========================================================= */
+:root{--hi:#5ce1e6;--hi-dim:rgba(92,225,230,.12);
+  --grad:linear-gradient(100deg,var(--accent) 0%,var(--hi) 100%);
+  /* these still carried the previous accent's RGB */
+  --glow-1:rgba(155,159,255,.20);--glow-2:rgba(92,225,230,.09);
+  --wash-2:rgba(92,225,230,.06)}
+:root[data-theme="light"]{--hi:#0369a1;--hi-dim:rgba(3,105,161,.10);
+  --glow-1:rgba(50,55,224,.13);--glow-2:rgba(3,105,161,.07);--wash-2:rgba(3,105,161,.03)}
+@media (prefers-color-scheme:light){:root:not([data-theme]){--hi:#0369a1;--hi-dim:rgba(3,105,161,.10);
+  --glow-1:rgba(50,55,224,.13);--glow-2:rgba(3,105,161,.07);--wash-2:rgba(3,105,161,.03)}}
+
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  /* fit-content, so the gradient spans the glyphs and not the empty column */
+  .hs-code,.ring-mid strong,.t.stat b{width:fit-content;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent}
+  .ring-mid .slash{-webkit-text-fill-color:var(--ink-3)}
+}
+/* Windows high-contrast drops backgrounds; a transparent fill would vanish */
+@media (forced-colors:active){
+  .hs-code,.ring-mid strong,.t.stat b{background:none;
+    -webkit-text-fill-color:CanvasText;color:CanvasText}
+}
+
+/* The gradient sits on top of a solid accent fill, so anything measuring
+   the label against its background measures it against the lower-contrast
+   end of the gradient rather than against nothing. */
+.btn-primary{background-color:var(--accent);background-image:var(--grad);border:0}
+.btn-primary:hover{filter:brightness(1.07) saturate(1.06)}
+
+/* section rules take the accent and let it fade, instead of a flat hairline */
+.lbl::after{background:linear-gradient(90deg,
+  color-mix(in srgb,var(--accent) 65%,transparent) 0%,
+  color-mix(in srgb,var(--hi) 30%,transparent) 32%,
+  var(--line) 58%, transparent 100%)}
+
+/* work cards and credentials light up on hover rather than only lifting */
+a.t.link:hover,.ccard:hover,.ccard:focus-within{
+  box-shadow:inset 0 1px 0 var(--edge),
+    0 0 0 1px color-mix(in srgb,var(--accent) 34%,transparent),
+    0 24px 50px -30px color-mix(in srgb,var(--accent) 60%,transparent)}
+
+/* ---- the status line: a compact pill, not a banner ----
+   It was 12.6px uppercase mono at .1em tracking across a full-width band with
+   a rule under it, which made the first thing under the nav the loudest. Sentence
+   case in the text face, inside a pill tinted by the same green as its dot. */
+.hero-top{border-bottom:0;padding-bottom:clamp(10px,1.2vw,16px);gap:10px 16px}
+.hero-status{font-family:var(--sans);font-size:.78rem;font-weight:500;
+  letter-spacing:0;text-transform:none;color:var(--ink);
+  padding:5px 13px 5px 11px;border-radius:100px;
+  border:1px solid color-mix(in srgb,var(--good) 34%,transparent);
+  background:color-mix(in srgb,var(--good) 9%,transparent)}
+.hero-loc{font-size:.75rem;letter-spacing:.02em}
+/* a fit-content block ignores text-align, so the right-hand hero word has to
+   be pushed over explicitly — and centred once the hero stacks */
+.hs-r .hs-code{margin-left:auto}
+@media (max-width:1140px){.hs-r .hs-code{margin-inline:auto}}
+
+/* =========================================================
+   Credentials, as a showcase. The panel that boxed the cards is gone — it put
+   cards inside a card under a second "Certifications" heading inside the first —
+   the grid fills the row instead of leaving forty per cent of it empty, and each
+   preview is a lit stage: the document floats on soft accent and cyan light with
+   a real shadow beneath it, and lifts toward you on hover.
+   ========================================================= */
+:root{--doc-shadow:drop-shadow(0 18px 26px rgba(0,0,0,.52))}
+:root[data-theme="light"]{--doc-shadow:drop-shadow(0 14px 22px rgba(12,12,13,.22))}
+@media (prefers-color-scheme:light){:root:not([data-theme]){--doc-shadow:drop-shadow(0 14px 22px rgba(12,12,13,.22))}}
+
+.cert-panel,.cert-panel:hover{background:none;border:0;padding:0;box-shadow:none}
+.crows{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));margin-top:4px}
+
+.cc-shot,.cc-shot.is-scan,.cc-shot.is-badge{aspect-ratio:16/9;
+  background:
+    radial-gradient(70% 85% at 50% 118%,var(--hi-dim),transparent 70%),
+    radial-gradient(75% 90% at 50% -18%,var(--accent-dim),transparent 72%),
+    var(--s2)}
+.cc-shot.is-scan img{padding:clamp(14px,2.2vw,26px);filter:var(--doc-shadow)}
+.cc-shot.is-badge img{padding:clamp(18px,2.6vw,32px);filter:var(--doc-shadow)}
+.ccard:hover .cc-shot img,.ccard:focus-within .cc-shot img{transform:translateY(-5px) scale(1.035)}
+
+/* the monogram stands in for missing artwork, in the same gradient */
+.cc-mono{font-family:var(--mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:600;letter-spacing:.1em}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .cc-mono{background:var(--grad);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent}}
+
+/* earned / in progress, on the preview where the eye lands first */
+.cc-state{position:absolute;top:12px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px 4px 8px;border-radius:100px;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--good);background:color-mix(in srgb,var(--bg) 72%,transparent);
+  border:1px solid color-mix(in srgb,var(--good) 40%,transparent);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.cc-state.wip{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent)}
+.cc-state i{font-style:normal}
+
+.cc-body{padding:16px 18px 18px}
+.cc-title{font-size:1.02rem}
+.cc-issuer{font-size:.84rem;color:var(--ink-2)}
+/* issued / id / renews as labelled values in a row, not a dot-joined run */
+.cc-facts{display:flex;flex-wrap:wrap;gap:12px 28px;margin:14px 0 0;padding-top:13px;
+  border-top:1px solid var(--line)}
+.cc-fact{display:grid;gap:3px;min-width:0}
+.cc-fact dt{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.cc-fact dd{margin:0;font-family:var(--mono);font-size:.84rem;color:var(--ink);overflow-wrap:anywhere}
+
+.cc-foot{margin-top:16px}
+.cc-verify{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;min-height:34px;
+  padding:6px 14px;border-radius:100px;font-size:.84rem;font-weight:500;color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);background:var(--accent-dim);
+  transition:background .2s,border-color .2s}
+.cc-verify:hover,.cc-verify:focus-visible{border-color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 24%,transparent)}
+.cc-via{font-family:var(--mono);font-size:.75rem;color:var(--ink-2)}
+.cc-via::before{content:"\00b7";margin-right:7px;color:var(--ink-3)}
+.cc-go{display:inline-grid}
+
+/* the count moved out of the duplicate inner heading into the section label */
+.lbl-n{font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;color:var(--accent);
+  padding:1px 9px;border-radius:100px;background:var(--accent-dim);
+  border:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.lbl-n:empty{display:none}
+
+/* the zoom dialog gets the same stage, so opening a card feels like the card */
+.cb-figure{background:
+  radial-gradient(70% 80% at 50% 112%,var(--hi-dim),transparent 70%),
+  radial-gradient(70% 80% at 50% -12%,var(--accent-dim),transparent 72%),var(--s2)}
+.cb-figure img{filter:var(--doc-shadow)}
+
+/* the two figure tiles were lit only by their numerals; a corner of the cyan
+   gives the space under them somewhere to fall */
+.t.stat{background-image:radial-gradient(100% 80% at 100% 100%,var(--hi-dim),transparent 62%)}
+/* the light theme lifts every panel with a shadow at :root[data-theme] .t
+   specificity; the unboxed credentials panel has to out-rank it to stay flat */
+:root .t.cert-panel,:root[data-theme] .t.cert-panel{box-shadow:none;background:none;border:0}
+@media (max-width:560px){
+  /* on a phone the document fills the width and ran under the EARNED pill;
+     it drops below the pill instead of the pill sitting on its corner */
+  .cc-shot.is-scan img,.cc-shot.is-badge img{padding-top:48px}
 }

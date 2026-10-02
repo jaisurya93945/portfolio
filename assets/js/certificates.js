@@ -293,13 +293,14 @@
         var im = el('img');
         im.src = art; im.loading = 'lazy'; im.decoding = 'async'; im.alt = '';
         im.addEventListener('error', function () {
-          shot.textContent = mark(c);
+          im.remove();
+          shot.insertBefore(el('span', 'cc-mono', mark(c)), shot.firstChild);
           shot.className = 'cc-shot is-mark';
         });
         shot.appendChild(im);
         shot.classList.add(scan ? 'is-scan' : 'is-badge');
       } else {
-        shot.textContent = mark(c);
+        shot.appendChild(el('span', 'cc-mono', mark(c)));
         shot.classList.add('is-mark');
       }
       /* the zoom cue tells you the card opens before you hover it */
@@ -311,7 +312,7 @@
       shot.appendChild(cue);
       li.appendChild(shot);
 
-      var body = el('span', 'cc-body');
+      var body = el('div', 'cc-body');
 
       /* The title stays text and the button is a bare overlay the size of the
          card, so the hit area really is the card rather than a 20px line of
@@ -327,41 +328,54 @@
 
       if (c.issuer) body.appendChild(el('span', 'cc-issuer', c.issuer));
 
-      /* Issued, numbered, expiring: the three facts that separate a
-         credential from a claim. Each appears only when it is known. */
+      /* Issued, numbered, renewing - the three facts that separate a credential
+         from a claim - as labelled pairs. A run of values joined by dots left a
+         separator hanging at the end of a line whenever the row wrapped. */
       var facts = [];
-      if (c.date) facts.push(when(c.date));
-      if (c.credentialId) facts.push(c.credentialId);
-      if (c.expires) facts.push(t('cert.renews', 'renews') + ' ' + when(c.expires));
+      if (c.date) facts.push([t('cert.issued', 'Issued'), when(c.date)]);
+      if (c.credentialId) facts.push([t('cert.credid', 'Credential ID'), c.credentialId]);
+      if (c.expires) facts.push([t('cert.renews', 'renews'), when(c.expires)]);
       if (facts.length) {
-        var meta = el('span', 'cc-facts');
-        facts.forEach(function (f, n) {
-          if (n) meta.appendChild(el('i', 'sep', '\u00b7'));
-          meta.appendChild(el('span', '', f));
+        var dl = el('dl', 'cc-facts');
+        facts.forEach(function (f) {
+          var g = el('div', 'cc-fact');
+          g.appendChild(el('dt', '', f[0]));
+          g.appendChild(el('dd', '', f[1]));
+          dl.appendChild(g);
         });
-        body.appendChild(meta);
+        body.appendChild(dl);
       }
 
-      var foot = el('span', 'cc-foot');
-      if (c.platform) {
-        var href = verifyUrl(c), pl;
+      /* earned or in progress reads off the preview, where the eye lands first */
+      var done = c.status !== 'in-progress';
+      var st = el('span', 'cc-state ' + (done ? 'ok' : 'wip'));
+      var ic = el('i', '', done ? '✓' : '◷');
+      ic.setAttribute('aria-hidden', 'true');
+      st.appendChild(ic);
+      st.appendChild(el('span', '', done ? t('cert.earned', 'earned') : t('cert.wip', 'in progress')));
+      shot.appendChild(st);
+
+      /* The platform only earns a place when it says something the issuer line
+         does not: a way to verify, or a platform other than the issuer.
+         "EC-Council" printed under "EC-Council" said the same thing twice. */
+      var href = verifyUrl(c);
+      if (href || (c.platform && c.platform !== c.issuer)) {
+        var foot = el('span', 'cc-foot'), pl;
         if (href) {
-          pl = el('a', 'cplat is-link', c.platform);
+          pl = el('a', 'cc-verify', t('cert.verify', 'Verify credential'));
           pl.href = href; pl.target = '_blank'; pl.rel = 'noopener noreferrer';
-          pl.setAttribute('aria-label', t('cert.verify', 'Verify credential') + ' \u2014 ' + c.platform);
+          if (c.platform) pl.appendChild(el('span', 'cc-via', c.platform));
+          var go = el('span', 'cc-go');
+          go.setAttribute('aria-hidden', 'true');
+          go.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" ' +
+            'stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+          pl.appendChild(go);
         } else {
           pl = el('span', 'cplat', c.platform);
         }
         foot.appendChild(pl);
+        body.appendChild(foot);
       }
-      var done = c.status !== 'in-progress';
-      var st = el('span', 'cs ' + (done ? 'ok' : 'wip'));
-      var ic = el('i', '', done ? '\u2713' : '\u25F7');
-      ic.setAttribute('aria-hidden', 'true');
-      st.appendChild(ic);
-      st.appendChild(el('span', '', done ? t('cert.earned', 'earned') : t('cert.wip', 'in progress')));
-      foot.appendChild(st);
-      body.appendChild(foot);
 
       li.appendChild(body);
       grid.appendChild(li);
